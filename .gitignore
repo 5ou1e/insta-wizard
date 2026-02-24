@@ -1,0 +1,64 @@
+# --- virtualenv / python cache ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.coverage.*
+.tox/
+.nox/
+.cache/
+
+# --- build artifacts ---
+dist/
+build/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# --- IDE ---
+.idea/
+.vscode/
+*.iml
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- env / secrets ---
+.env
+.env.*
+!.env.example
+*.env
+
+# --- logs ---
+*.log
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- type check / compiled ---
+.pyre/
+.pytype/
+
+# --- python version managers ---
+.python-version
+
+# --- local dev data ---
+tmp/
+temp/
+*.db
+*.sqlite3
+
+# --- keys / certs ---
+*.pem
+*.key
+*.p12
+
+.claude

@@ -1,0 +1,67 @@
+from dataclasses import dataclass
+from typing import cast
+
+from insta_wizard.common.generators import (
+    generate_uuid_v4_string,
+)
+from insta_wizard.mobile.commands._responses.friendships.friendships_user_following import (
+    FriendshipsUserFollowingResponse,
+)
+from insta_wizard.mobile.common import constants
+from insta_wizard.mobile.common.command import (
+    Command,
+    CommandHandler,
+)
+from insta_wizard.mobile.common.requesters.api_requester import (
+    ApiRequestExecutor,
+)
+from insta_wizard.mobile.exceptions import (
+    MobileClientError,
+)
+from insta_wizard.mobile.models.state import (
+    MobileClientState,
+)
+
+
+@dataclass(slots=True)
+class FriendshipsUserFollowing(Command[FriendshipsUserFollowingResponse]):
+    """Получить список подписок пользователя (поддерживает поиск, с использованием параметра query)"""
+
+    user_id: str
+    query: str | None = None
+    max_id: int | None = None
+
+
+class FriendshipsUserFollowingHandler(
+    CommandHandler[FriendshipsUserFollowing, FriendshipsUserFollowingResponse]
+):
+    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
+        self.api = api
+        self.state = state
+
+    async def __call__(self, command: FriendshipsUserFollowing) -> FriendshipsUserFollowingResponse:
+        params = {
+            "rank_token": generate_uuid_v4_string(),
+        }
+        if command.max_id:
+            params["max_id"] = (str(command.max_id),)
+
+        if command.query:
+            params.update(
+                {
+                    "search_surface": "follow_list_page",
+                    "query": command.query,
+                    "enable_groups": "true",
+                }
+            )
+
+        resp = await self.api.call_api(
+            method="GET",
+            uri=constants.FRIENDSHIPS_USER_FOLLOWING_URI.format(user_id=command.user_id),
+            params=params,
+        )
+
+        if resp.get("status") == "ok":
+            return cast(FriendshipsUserFollowingResponse, resp)
+
+        raise MobileClientError()
