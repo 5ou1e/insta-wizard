@@ -1,6 +1,10 @@
 # insta-wizard
 <small>[Русский](README.ru.md)</small>
 
+[![PyPI](https://img.shields.io/pypi/v/insta-wizard)](https://pypi.org/project/insta-wizard/)
+[![Python](https://img.shields.io/pypi/pyversions/insta-wizard)](https://pypi.org/project/insta-wizard/)
+[![License](https://img.shields.io/github/license/5ou1e/insta-wizard)](LICENSE)
+
 Async Python library for working with Instagram.
 
 It provides two clients:
