@@ -19,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountEditProfile(Command[AccountEditProfileResponse]):
-    """Изменить информацию об аккаунте (требует авторизацию)"""
+    """Edit account info (requires authentication)"""
 
     username: str
     first_name: str | None

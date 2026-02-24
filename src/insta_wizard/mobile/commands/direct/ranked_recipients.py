@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Literal, cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_ranked_recipients import (
+from insta_wizard.mobile.commands._responses.direct.ranked_recipients import (
     DirectV2RankedRecipientsResponse,
 )
 from insta_wizard.mobile.common import constants

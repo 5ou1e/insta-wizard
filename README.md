@@ -1,49 +1,24 @@
 # insta-wizard
 <small>[Русский](README.ru.md)</small>
 
+[![PyPI](https://img.shields.io/pypi/v/insta-wizard)](https://pypi.org/project/insta-wizard/)
+[![Python](https://img.shields.io/pypi/pyversions/insta-wizard)](https://pypi.org/project/insta-wizard/)
+[![License](https://img.shields.io/github/license/5ou1e/insta-wizard)](LICENSE)
+
 Async Python library for working with Instagram.
 
-It provides two clients:
-- **`MobileInstagramClient`** — works with the **private mobile API** by imitating the official Android app's API behavior
-- **`WebInstagramClient`** — works with the **web API** by imitating browser behavior
+Manage profiles, follow and unfollow users, send Direct messages, like and comment on media, fetch user info — and much more, all through a clean async interface.
 
-Use it to log in, manage profiles, follow/unfollow users, work with Direct messages, like/comment on media, fetch user data, and more.
+It provides two clients:
+- **`MobileInstagramClient`** — imitates the official Android app, works with the **private mobile API (v374)**
+- **`WebInstagramClient`** — works with the **web API** by imitating browser behavior
 
 Includes proxy support, device/profile presets, and flexible session/cookie state management.
 
-It offers two usage styles: high-level **Sections** (recommended) and low-level typed **Commands** for full request control.
+Two usage styles: high-level **Sections** (recommended) and low-level typed **Commands** for full request control.
 
 > **Status:** Active development (API may change between versions).
 > **Planned:** automated checkpoint flows, account registration, broader API coverage.
-
----
-
-## Clients overview
-
-| Client | Description |
-|---|---|
-| `MobileInstagramClient` | Primary client. Uses the private mobile API |
-| `WebInstagramClient` | Client for working with the Instagram web API, imitating browser behavior |
-
-The **mobile client** covers most Instagram functionality. The web client offers similar functionality but works with different Instagram API endpoints, imitating browser behavior.
-
-## Key features
-
-**Mobile client** — imitates the Android app API behavior, uses private mobile API:
-- Login, profile management (edit bio, name, profile picture)
-- Search users, get user info by ID or username
-- Follow / unfollow, manage followers and following lists
-- Browse timeline, stories tray, suggested reels
-- Direct messages: inbox, pending, group thread management (create, approve, decline, hide, mute)
-- Comments: get, add, like, unlike
-- Notifications and activity inbox
-- Live and Clips discovery
-
-**Web client** — imitates browser behavior, uses web API:
-- Login
-- Follow / unfollow
-- Like / unlike media
-- Add / like / unlike comments
 
 ---
 
@@ -69,6 +44,35 @@ async def main():
 
 asyncio.run(main())
 ```
+
+---
+
+## Clients overview
+
+| Client | Description                                                                          |
+|---|--------------------------------------------------------------------------------------|
+| `MobileInstagramClient` | Client for working with the Instagram private API, imitates the official Android app |
+| `WebInstagramClient` | Client for working with the Instagram web API, imitating browser behavior            |
+
+The **mobile client** covers most Instagram functionality. The web client offers similar functionality but works with different Instagram API endpoints.
+
+## Key features
+
+**Mobile client**:
+- Login, profile management (edit bio, name, profile picture)
+- Search users, get user info by ID or username
+- Follow / unfollow, manage followers and following lists
+- Browse timeline, stories tray, suggested reels
+- Direct messages: inbox, pending, send text messages and reactions, group thread management (create, approve, decline, hide, mute)
+- Comments: get, add, like, unlike
+- Notifications and activity inbox
+- Live and Clips discovery
+
+**Web client**:
+- Login
+- Follow / unfollow
+- Like / unlike media
+- Add / like / unlike comments
 
 ---
 
@@ -119,7 +123,7 @@ await client.media.unlike_comment(comment_id)
 | `users` | user info by id / username, web profile, search |
 | `friendships` | follow, unfollow, remove follower, followers/following lists, friendship status |
 | `feed` | timeline, stories tray, suggested reels |
-| `direct` | inbox, pending, presence, group thread management |
+| `direct` | inbox, pending, presence, send messages and reactions, group thread management |
 | `media` | comments (get / add / like / unlike), blocked users list |
 | `notifications` | notification settings, badge count |
 | `news` | activity inbox |
@@ -424,7 +428,7 @@ Planned features and improvements:
 - [ ] Automated checkpoint passing
 - [ ] Account registration
 - [ ] More Instagram API methods
-- [ ] httpcloak transport support (TLS fingerprint spoofing for stronger browser emulation)
+- [ ] Synchronous client API
 
 ---
 

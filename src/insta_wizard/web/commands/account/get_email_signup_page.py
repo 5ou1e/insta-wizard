@@ -16,7 +16,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class GetEmailSignupPage(Command[GetEmailSignupPageResult]):
-    """Перейти на страницу регистрацци"""
+    """Navigate to the registration page"""
 
     pass
 

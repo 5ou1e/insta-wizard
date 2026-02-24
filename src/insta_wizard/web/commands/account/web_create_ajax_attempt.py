@@ -16,7 +16,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class WebCreateAjaxAttempt(Command[WebCreateAjaxAttemptResult]):
-    """Отправить запрос на попытку регистрации аккаунта"""
+    """Send account registration attempt request"""
 
     username: str
     password: str

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_get_presence import (
+from insta_wizard.mobile.commands._responses.direct.get_presence import (
     DirectV2GetPresenceResponse,
 )
 from insta_wizard.mobile.common import constants

@@ -16,7 +16,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class WebCreateAjax(Command[WebCreateAjaxResult]):
-    """Завершающий запрос регистрации аккаунта"""
+    """Final account registration request"""
 
     username: str
     password: str

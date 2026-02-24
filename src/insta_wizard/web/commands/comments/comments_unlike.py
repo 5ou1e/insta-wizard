@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class CommentsUnlike(Command[CommentsUnlikeResult]):
-    """Убрать лайк с комментария к публикации"""
+    """Unlike a comment on a media post"""
 
     comment_id: str  # 17873106636540219
 

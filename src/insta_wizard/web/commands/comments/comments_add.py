@@ -16,7 +16,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class CommentsAdd(Command[CommentsAddResult]):
-    """Добавить комментарий к публикации"""
+    """Add a comment to a media post"""
 
     media_id: str  # 3772108794026055709
     replied_to_comment_id: str  # comment_id 17925698052169518

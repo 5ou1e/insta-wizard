@@ -18,7 +18,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountCurrentUser(Command[AccountCurrentUserResponse]):
-    """Получить информацию о текущем пользователе (требует авторизации)"""
+    """Get current user info (requires authentication)"""
 
     pass
 

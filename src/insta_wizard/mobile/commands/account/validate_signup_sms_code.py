@@ -20,7 +20,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountValidateSignupSmsCode(Command[AccountValidateSignupSmsCodeResponse]):
-    """Отправить код полученный в смс при регистрации аккаунта"""
+    """Submit SMS verification code during account registration"""
 
     phone_number: str
     code: int | str

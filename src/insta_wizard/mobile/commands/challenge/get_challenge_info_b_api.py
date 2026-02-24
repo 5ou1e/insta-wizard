@@ -21,7 +21,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class ChallengeGetChallengeInfoBApi(Command[ChallengeGetChallengeInfoBApiResponse]):
-    """Получить информацию о чекпоинте"""
+    """Get checkpoint info"""
 
     challenge_data: ChallengeRequiredData
 

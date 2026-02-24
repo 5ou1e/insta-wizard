@@ -23,7 +23,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountLogin(Command[AccountLoginResponse]):
-    """Отправить запрос на авторизацию в аккаунт с помощью логина и пароля"""
+    """Send login request with username and password"""
 
     username: str
     password: str

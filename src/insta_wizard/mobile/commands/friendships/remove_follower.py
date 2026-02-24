@@ -24,7 +24,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class FriendshipsRemoveFollower(Command[FriendshipsRemoveFollowerResponse]):
-    """Удалить пользователя из своих подписчиков"""
+    """Remove a user from your followers"""
 
     user_id: str
 

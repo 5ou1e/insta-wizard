@@ -10,29 +10,23 @@ from insta_wizard.mobile.models.challenge import (
 
 @dataclass(kw_only=True, slots=True)
 class MobileClientError(InstaWizardError):
-    @property
-    def title(self) -> str:
-        return "Ошибка Mobile IG-клиента"
-
     def __str__(self) -> str:
-        return self.title
+        return "Mobile IG client error"
 
 
 @dataclass(kw_only=True, slots=True)
 class ResponseJsonDecodeError(MobileClientError):
-    @property
-    def title(self) -> str:
-        return "Ошибка при конвертации ответа в JSON формат"
+    def __str__(self) -> str:
+        return "Error converting response to JSON format"
 
 
 @dataclass(kw_only=True, slots=True)
 class ResponseParsingError(MobileClientError):
-    """Ошибка парсинга значений из ответа от инстаграм"""
+    """Raised when parsing values from Instagram response fails."""
 
     msg: str
 
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return self.msg
 
 
@@ -40,9 +34,8 @@ class ResponseParsingError(MobileClientError):
 class NetworkError(MobileClientError):
     message: str
 
-    @property
-    def title(self) -> str:
-        return "Ошибка сети"
+    def __str__(self) -> str:
+        return "Network error"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -56,23 +49,20 @@ class UnexpectedResponseContentTypeError(MobileClientError):
     expected: str
     returned: str
 
-    @property
-    def title(self) -> str:
-        return f"Инстаграм вернул ответ не в том виде, который ожидался: expected={self.expected}, returned={self.returned}, status_code={self.response.status}"
+    def __str__(self) -> str:
+        return f"Instagram returned response in unexpected format: expected={self.expected}, returned={self.returned}, status_code={self.response.status}"
 
 
 @dataclass(kw_only=True, slots=True)
 class AuthorizationMissingError(MobileClientError):
-    @property
-    def title(self) -> str:
-        return "Отсутствует authorization-header"
+    def __str__(self) -> str:
+        return "Authorization header is missing"
 
 
 @dataclass(kw_only=True, slots=True)
 class BadResponseError(MobileClientError):
-    @property
-    def title(self) -> str:
-        return "Некорректный ответ от Instagram"
+    def __str__(self) -> str:
+        return "Invalid response from Instagram"
 
 
 # --------------------------------------------
@@ -83,8 +73,7 @@ class ChallengeRequiredError(MobileClientError):
     response_json: dict
     challenge_data: ChallengeRequiredData | None = None
 
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return f"ChallengeRequired, api_path={self.challenge_data.api_path}"
 
 
@@ -93,86 +82,74 @@ class ChallengeRequiredError(MobileClientError):
 
 @dataclass(kw_only=True, slots=True)
 class LoginRequiredError(InstagramResponseError):
-    @property
-    def title(self) -> str:
-        return "Инстаграм сбросил авторизацию"
+    def __str__(self) -> str:
+        return "Instagram revoked authorization"
 
 
 @dataclass(kw_only=True, slots=True)
 class NotFoundError(InstagramResponseError):
-    @property
-    def title(self) -> str:
-        return "Ресурс не найден"
+    def __str__(self) -> str:
+        return "Resource not found"
 
 
 @dataclass(kw_only=True, slots=True)
 class BadRequestError(InstagramResponseError):
-    @property
-    def title(self) -> str:
-        return "Некорректный запрос"
+    def __str__(self) -> str:
+        return "Bad request"
 
 
 @dataclass(kw_only=True, slots=True)
 class TooManyRequestsError(InstagramResponseError):
-    @property
-    def title(self) -> str:
-        return "Слишком частые запросы (status_code=429)"
+    def __str__(self) -> str:
+        return "Too many requests (status_code=429)"
 
 
 @dataclass(kw_only=True, slots=True)
 class LoginError(MobileClientError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка при авторизации"
+    def __str__(self) -> str:
+        return "Authorization error"
 
 
 @dataclass(kw_only=True, slots=True)
 class LoginBadPasswordError(LoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Неверный пароль"
+    def __str__(self) -> str:
+        return "Wrong password"
 
 
 @dataclass(kw_only=True, slots=True)
 class LoginUnknownError(LoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Неизвестная ошибка авторизации"
+    def __str__(self) -> str:
+        return "Unknown authorization error"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginError(MobileClientError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации: TwoStepVerificationRequired"
+    def __str__(self) -> str:
+        return "Authorization error: TwoStepVerificationRequired"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginBadPasswordError(BloksLoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации: неверный пароль"
+    def __str__(self) -> str:
+        return "Authorization error: wrong password"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginAssistiveLoginConfirmationNeededError(BloksLoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return (
-            "Ошибка авторизации: инстаграм просит пройти подтверждение assistive_login_confirmation"
-        )
+    def __str__(self) -> str:
+        return "Authorization error: Instagram requires assistive_login_confirmation"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -180,126 +157,110 @@ class BloksLoginAuthenticationConfiramtionRequiredError(BloksLoginBadPasswordErr
     response_json: dict
     masked_email: str | None = None
 
-    @property
-    def title(self) -> str:
-        return f"Ошибка авторизации: Пароль, который вы ввели, неправильный. Чтобы войти, используйте ссылку, которую мы отправили на..., (извлеченный из ответа email - {self.masked_email})"
+    def __str__(self) -> str:
+        return f"Authorization error: wrong password. To sign in, use the link we sent to... (email extracted from response: {self.masked_email})"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginBloksCAAAccountRecoveryAuthMethodControllerError(BloksLoginBadPasswordError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации: инстаграм предлагает восстановление/подтверждение через метод (SMS/почта/другое)"
+    def __str__(self) -> str:
+        return "Authorization error: Instagram suggests account recovery/confirmation via method (SMS/email/other)"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginUnknownError(BloksLoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Неизвестная ошибка авторизации"
+    def __str__(self) -> str:
+        return "Unknown authorization error"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginAccountNotFoundError(BloksLoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации: аккаунт с таким юзернеймом не найден"
+    def __str__(self) -> str:
+        return "Authorization error: account with this username not found"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksLoginTwoStepVerificationRequiredError(BloksLoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации: TwoStepVerificationRequired"
+    def __str__(self) -> str:
+        return "Authorization error: TwoStepVerificationRequired"
 
 
 @dataclass(kw_only=True, slots=True)
 class UnauthorizedError(InstagramResponseError):
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return "Unauthorized"
 
 
 @dataclass(kw_only=True, slots=True)
 class OopsAnErrorOccurred(InstagramResponseError):
-    @property
-    def title(self) -> str:
-        return "Oops an error occured"
+    def __str__(self) -> str:
+        return "Oops an error occurred"
 
 
 @dataclass(kw_only=True, slots=True)
 class UserIdNotFound(NotFoundError):
-    @property
-    def title(self) -> str:
-        return "Пользователь с таким ID не найден"
+    def __str__(self) -> str:
+        return "User with this ID not found"
 
 
 @dataclass(kw_only=True, slots=True)
 class UserNotFoundError(MobileClientError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Пользователь не найден"
+    def __str__(self) -> str:
+        return "User not found"
 
 
 @dataclass(kw_only=True, slots=True)
 class FeedbackRequiredError(InstagramResponseError):
     data: FeedbackRequiredData
 
-    @property
-    def title(self) -> str:
-        return "Действие заблокировано"
+    def __str__(self) -> str:
+        return "Action is blocked"
 
 
 # @dataclass(kw_only=True, slots=True)
 # class NodeTaoSystemExceptionError(MobileClientError):
 #
-#     @property
-#     def title(self) -> str:
-#         return f"NodeTaoSystemException"
+#     def __str__(self) -> str:
+#         return "NodeTaoSystemException"
 
 
 @dataclass(kw_only=True, slots=True)
 class InstagramBackend572Error(InstagramResponseError):
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return "InstagramBackend572Error"
 
 
 @dataclass(kw_only=True, slots=True)
 class PayloadReturnedIsNullError(InstagramResponseError):
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return "PayloadReturnedIsNullError"
 
 
 @dataclass(kw_only=True, slots=True)
 class MethodNotAllowedError(InstagramResponseError):
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return "MethodNotAllowedError"
 
 
 @dataclass(kw_only=True, slots=True)
 class AuthPlatformCheckpointWrongOrIncorrectCodeError(MobileClientError):
-    @property
-    def title(self) -> str:
-        return "Неверный код или срок действия кода истек"
+    def __str__(self) -> str:
+        return "Invalid code or code has expired"
 
 
 @dataclass(kw_only=True, slots=True)
 class BloksRegistrationError(MobileClientError):
     msg: str
 
-    @property
-    def title(self) -> str:
-        return f"Ошибка регистрации: {self.msg}"
+    def __str__(self) -> str:
+        return f"Registration error: {self.msg}"

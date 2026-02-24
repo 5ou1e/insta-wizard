@@ -21,7 +21,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class UseAuthPlatformSendCodeAgainMutation(Command[UseAuthPlatformSendCodeAgainMutationResult]):
-    """Запросить отправку повторного кода подтверждения при чекпоинте авторизации AuthPlatform"""
+    """Request resending verification code for AuthPlatform login checkpoint"""
 
     encrypted_ap_context: str
 

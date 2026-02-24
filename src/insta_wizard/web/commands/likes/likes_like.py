@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class LikesLike(Command[LikesLikeResult]):
-    """Поставить лайк на публикацию"""
+    """Like a media post"""
 
     media_id: str  # 17873106636540219
 

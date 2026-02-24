@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_async_get_pending_requests_preview import (
+from insta_wizard.mobile.commands._responses.direct.async_get_pending_requests_preview import (
     DirectV2AsyncGetPendingRequestsPreviewResponse,
 )
 from insta_wizard.mobile.common import constants

@@ -93,7 +93,7 @@ class AccountCreateValidatedHandler(
             "qs_stamp": "",  # not send in aiograpi for sms-reg flow
             # "_csrftoken": self.token,  # C#
             "sn_nonce": sn_nonce,
-            "sn_result": "GOOGLE_PLAY_UNAVAILABLE:SERVICE_INVALID",  # or "sn_result": "MLA" or "API_ERROR:+null" (API sharp) or "API_ERROR: class X.2mY:7: " (bilo v regere api sms s github)
+            "sn_result": "GOOGLE_PLAY_UNAVAILABLE:SERVICE_INVALID",  # or "sn_result": "MLA" or "API_ERROR:+null" (API sharp) or "API_ERROR: class X.2mY:7: "
         }
         payload = build_signed_body(data)
 

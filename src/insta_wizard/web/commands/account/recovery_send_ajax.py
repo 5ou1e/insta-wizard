@@ -18,7 +18,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class AccountRecoverySendAjax(Command[AccountRecoverySendAjaxResult]):
-    """Отправить ссылку для восстановления пароля на почту"""
+    """Send password recovery link to email"""
 
     email_or_username: str
 

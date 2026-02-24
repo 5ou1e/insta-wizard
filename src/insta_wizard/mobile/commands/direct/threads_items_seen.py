@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_threads_items_seen import (
+from insta_wizard.mobile.commands._responses.direct.threads_items_seen import (
     DirectV2ThreadsItemsSeenResponse,
 )
 from insta_wizard.mobile.common import constants

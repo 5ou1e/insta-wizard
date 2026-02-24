@@ -18,7 +18,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True, kw_only=True)
 class UserInfo(Command[UserInfoResponse]):
-    """Получить информацию о пользователе по его user_id"""
+    """Get user info by user_id"""
 
     user_id: str
 

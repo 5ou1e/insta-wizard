@@ -6,7 +6,7 @@ from insta_wizard.common.generators import (
     current_timestamp_ms,
     generate_uuid_v4_string,
 )
-from insta_wizard.mobile.commands._responses.feed.feed_injected_reels_media import (
+from insta_wizard.mobile.commands._responses.feed.injected_reels_media import (
     FeedInjectedReelsMediaResponse,
 )
 from insta_wizard.mobile.common import constants

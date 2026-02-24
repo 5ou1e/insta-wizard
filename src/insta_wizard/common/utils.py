@@ -27,7 +27,7 @@ def dumps(data: dict | list) -> str:
 
 
 def auth_data_from_authorization_header(authorization: str) -> dict:
-    """Extract auth data from authorization header"""
+    """Extract auth data dictionary from authorization header"""
 
     b64part = authorization.rsplit(":", 1)[-1]
     if not b64part:

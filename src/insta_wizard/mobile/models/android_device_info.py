@@ -29,9 +29,9 @@ class AndroidDeviceInfo(DataClassDictMixin):
     battery_level: int
     is_charging: bool
 
-    android_id: str  # android-1923fjnma8123 с версии android 8.0 для каждого приложения свой
-    device_id: str  # UUID v4 Сбрасывается при переустановке приложения
-    phone_id: str  # UUID v4 ID устройства в рамках "семьи" приложений Meta (Instagram, Facebook, WhatsApp)
+    android_id: str  # android-1923fjnma8123; since Android 8.0 each app has its own
+    device_id: str  # UUID v4; reset on app reinstall
+    phone_id: str  # UUID v4; device ID within the Meta app family (Instagram, Facebook, WhatsApp)
     adid: str  # Google Advertising ID
 
     @staticmethod
@@ -41,7 +41,7 @@ class AndroidDeviceInfo(DataClassDictMixin):
         ]
         if missing:
             raise ValueError(
-                f"AndroidDeviceInfo: значения отсутствуют или невалидные: {', '.join(missing)}"
+                f"AndroidDeviceInfo: missing or invalid values: {', '.join(missing)}"
             )
 
     @classmethod
@@ -111,26 +111,18 @@ class AndroidDeviceInfo(DataClassDictMixin):
         )
 
     def with_(self, **overrides) -> "AndroidDeviceInfo":
-        """Возвращает копию с переопределёнными полями. Аналог BrowserDeviceInfo.with_()."""
+        """Returns a copy with overridden fields. Analogous to BrowserDeviceInfo.with_()."""
         return replace(self, **overrides)
 
     @classmethod
     def from_preset(cls, preset: "AndroidPreset", **overrides) -> "AndroidDeviceInfo":
-        """Создать девайс из пресета. Пример: AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale='ru_RU')"""
+        """Create a device from a preset. Example: AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale='ru_RU')"""
         return AndroidPreset.create(preset, **overrides)
 
     @classmethod
     def random(cls, **kwargs) -> "AndroidDeviceInfo":
-        """Случайный девайс из всех доступных пресетов."""
+        """Random device from all available presets."""
         return AndroidPreset.random(**kwargs)
-
-
-# ---------------------------------------------------------------------------
-# Hardware profiles — параметры восстановлены из реальных Instagram UAs.
-# Формат UA: Instagram X.X Android ({os_api_level}/{os_version}; {dpi}dpi;
-#            {resolution}; {manufacturer}/{brand}; {model}; {device}; {cpu}; ...)
-# Все профили совместимы с Instagram v374+ (min_sdk=28).
-# ---------------------------------------------------------------------------
 
 
 @dataclass(frozen=True, slots=True)
@@ -138,7 +130,7 @@ class _AndroidHardwareProfile:
     manufacturer: str
     brand: str
     model: str
-    device: str  # кодовое имя устройства
+    device: str  # device codename
     cpu: str
     dpi: str
     resolution: str
@@ -148,9 +140,7 @@ class _AndroidHardwareProfile:
 
 class AndroidPreset(StrEnum):
     """
-    Пресеты популярных Android-устройств для мобильного клиента Instagram.
-
-    Использование::
+    Usage::
         device = AndroidPreset.create(AndroidPreset.SAMSUNG_S23, timezone="Europe/Berlin")
         device = AndroidPreset.random()
     """
@@ -172,11 +162,6 @@ class AndroidPreset(StrEnum):
         is_charging: bool | None = None,
         **overrides,
     ) -> AndroidDeviceInfo:
-        """
-        Создать AndroidDeviceInfo из пресета.
-        Сессионные поля (UUIDs, battery) генерируются автоматически.
-        Любой параметр можно переопределить через **overrides.
-        """
         hw = _HARDWARE_PROFILES[preset]
         return AndroidDeviceInfo.create(
             **asdict(hw),
@@ -195,9 +180,6 @@ class AndroidPreset(StrEnum):
         timezone: str = "Europe/London",
         **overrides,
     ) -> AndroidDeviceInfo:
-        """
-        Случайный девайс из пула пресетов.
-        """
         preset = secrets.choice(list(_HARDWARE_PROFILES))
         return cls.create(preset, locale=locale, timezone=timezone, **overrides)
 

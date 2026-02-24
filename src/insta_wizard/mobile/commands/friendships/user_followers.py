@@ -25,7 +25,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class FriendshipsUserFollowers(Command[FriendshipsUserFollowersResponse]):
-    """Получить подписчиков пользователя (поддерживает поиск, с использованием параметра query)"""
+    """Get user followers (supports search via query parameter)"""
 
     user_id: str
     query: str | None = None

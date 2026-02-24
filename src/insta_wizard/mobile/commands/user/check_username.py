@@ -18,7 +18,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class UsersCheckUsername(Command[UsersCheckUsernameResponse]):
-    """Провeрить доступность username"""
+    """Check username availability"""
 
     username: str
 

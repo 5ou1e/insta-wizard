@@ -23,7 +23,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class BloksProcessClientDataAndRedirectBApi(Command[BloksProcessClientDataAndRedirectBApiResponse]):
-    pass
+    waterfall_id: str
 
 
 class BloksProcessClientDataAndRedirectBApiHandler(
@@ -49,7 +49,7 @@ class BloksProcessClientDataAndRedirectBApiHandler(
                     "family_device_id": False,
                     "device_id": self.state.device.android_id,
                     "offline_experiment_group": self.state.version_info.offline_experiment_group,
-                    "waterfall_id": self.state.local_data.waterfall_id,
+                    "waterfall_id": command.waterfall_id,
                     "logout_source": "",
                     "show_internal_settings": False,
                     "last_auto_login_time": 0,

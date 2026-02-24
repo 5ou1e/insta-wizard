@@ -176,7 +176,7 @@ def _print_help(
     base_pkg: str,
     *,
     title: str | None = None,
-    groups: tuple[str, ...] = ("commands", "flows", "experimental"),
+    groups: tuple[str, ...] = ("commands", "flows"),
     show_module: bool = False,
     max_desc: int = 140,
     console_width: int = 160,

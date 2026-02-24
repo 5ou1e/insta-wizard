@@ -19,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class UserWebProfileInfo(Command[UserWebProfileInfoResponse]):
-    """Получить информацию о пользователе по его username (webprofileinfo)"""
+    """Get user info by username (webprofileinfo)"""
 
     username: str
 

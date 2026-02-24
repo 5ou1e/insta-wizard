@@ -123,87 +123,93 @@ from insta_wizard.mobile.commands.creatives.write_supported_capabilities import 
     CreativesWriteSupportedCapabilities,
     CreativesWriteSupportedCapabilitiesHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_async_get_pending_requests_preview import (
+from insta_wizard.mobile.commands.direct.async_get_pending_requests_preview import (
     DirectV2AsyncGetPendingRequestsPreview,
     DirectV2AsyncGetPendingRequestsPreviewHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_create_group_thread import (
+from insta_wizard.mobile.commands.direct.create_group_thread import (
     DirectV2CreateGroupThread,
     DirectV2CreateGroupThreadHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_get_pending_requests_preview import (
+from insta_wizard.mobile.commands.direct.get_pending_requests_preview import (
     DirectV2GetPendingRequestsPreview,
     DirectV2GetPendingRequestsPreviewHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_get_presence import (
+from insta_wizard.mobile.commands.direct.get_presence import (
     DirectV2GetPresence,
     DirectV2GetPresenceHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_get_presence_active_now import (
+from insta_wizard.mobile.commands.direct.get_presence_active_now import (
     DirectV2GetPresenceActiveNow,
     DirectV2GetPresenceActiveNowHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_has_interop_upgraded import (
+from insta_wizard.mobile.commands.direct.has_interop_upgraded import (
     DirectV2HasInteropUpgraded,
     DirectV2HasInteropUpgradedHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_inbox import (
+from insta_wizard.mobile.commands.direct.inbox import (
     DirectV2Inbox,
     DirectV2InboxHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_ranked_recipients import (
+from insta_wizard.mobile.commands.direct.ranked_recipients import (
     DirectV2RankedRecipients,
     DirectV2RankedRecipientsHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_add_user import (
+from insta_wizard.mobile.commands.direct.threads_add_user import (
     DirectV2ThreadsAddUser,
     DirectV2ThreadsAddUserHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_approve import (
+from insta_wizard.mobile.commands.direct.threads_approve import (
     DirectV2ThreadsApprove,
     DirectV2ThreadsApproveHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_approve_multiple import (
+from insta_wizard.mobile.commands.direct.threads_approve_multiple import (
     DirectV2ThreadsApproveMultiple,
     DirectV2ThreadsApproveMultipleHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_decline import (
+from insta_wizard.mobile.commands.direct.threads_broadcast_reaction import DirectV2ThreadsBroadcastReaction, \
+    DirectV2ThreadsBroadcastReactionHandler
+from insta_wizard.mobile.commands.direct.threads_broadcast_text import DirectV2ThreadsBroadcastText, \
+    DirectV2ThreadsBroadcastTextHandler
+from insta_wizard.mobile.commands.direct.threads_decline import (
     DirectV2ThreadsDecline,
     DirectV2ThreadsDeclineHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_decline_all import (
+from insta_wizard.mobile.commands.direct.threads_decline_all import (
     DirectV2ThreadsDeclineAll,
     DirectV2ThreadsDeclineAllHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_decline_multiple import (
+from insta_wizard.mobile.commands.direct.threads_decline_multiple import (
     DirectV2ThreadsDeclineMultiple,
     DirectV2ThreadsDeclineMultipleHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_hide import (
+from insta_wizard.mobile.commands.direct.threads_delete_items_locally import \
+    DirectV2ThreadsDeleteItemsLocally, DirectV2ThreadsDeleteItemsLocallyHandler
+from insta_wizard.mobile.commands.direct.threads_hide import (
     DirectV2ThreadsHide,
     DirectV2ThreadsHideHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_items_delete import (
+from insta_wizard.mobile.commands.direct.threads_items_delete import (
     DirectV2ThreadsItemsDelete,
     DirectV2ThreadsItemsDeleteHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_items_seen import (
+from insta_wizard.mobile.commands.direct.threads_items_seen import (
     DirectV2ThreadsItemsSeen,
     DirectV2ThreadsItemsSeenHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_leave import (
+from insta_wizard.mobile.commands.direct.threads_leave import (
     DirectV2ThreadsLeave,
     DirectV2ThreadsLeaveHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_mute import (
+from insta_wizard.mobile.commands.direct.threads_mute import (
     DirectV2ThreadsMute,
     DirectV2ThreadsMuteHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_unmute import (
+from insta_wizard.mobile.commands.direct.threads_unmute import (
     DirectV2ThreadsUnmute,
     DirectV2ThreadsUnmuteHandler,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_update_title import (
+from insta_wizard.mobile.commands.direct.threads_update_title import (
     DirectV2ThreadsUpdateTitle,
     DirectV2ThreadsUpdateTitleHandler,
 )
@@ -239,6 +245,7 @@ from insta_wizard.mobile.commands.friendships.remove_follower import (
     FriendshipsRemoveFollower,
     FriendshipsRemoveFollowerHandler,
 )
+from insta_wizard.mobile.commands.friendships.show import FriendshipsShow, FriendshipsShowHandler
 from insta_wizard.mobile.commands.friendships.show_many import (
     FriendshipsShowMany,
     FriendshipsShowManyHandler,
@@ -341,10 +348,6 @@ from insta_wizard.mobile.common.command import CommandHandler
 from insta_wizard.mobile.flows.bloks_login import (
     BloksLogin,
     BloksLoginHandler,
-)
-from insta_wizard.mobile.flows.set_profile_picture import (
-    SetProfilePicture,
-    SetProfilePictureHandler,
 )
 from insta_wizard.mobile.models.deps import ClientDeps
 
@@ -719,8 +722,22 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         api=d.api,
         bus=d.bus,
     ),
-    SetProfilePicture: lambda d: SetProfilePictureHandler(
-        bus=d.bus,
+    # ----------- NEW ----------
+    FriendshipsShow: lambda d: FriendshipsShowHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    DirectV2ThreadsDeleteItemsLocally: lambda d: DirectV2ThreadsDeleteItemsLocallyHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    DirectV2ThreadsBroadcastReaction: lambda d: DirectV2ThreadsBroadcastReactionHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    DirectV2ThreadsBroadcastText: lambda d: DirectV2ThreadsBroadcastTextHandler(
+        api=d.api,
+        state=d.state,
     ),
 }
 

@@ -17,7 +17,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class MediaComments(Command[MediaCommentsResponse]):
-    """Получить список комментариев к публикации"""
+    """Get comments for a media post"""
 
     media_id: str
     min_id: str = None

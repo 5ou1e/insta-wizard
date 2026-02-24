@@ -1,6 +1,5 @@
 from insta_wizard.common.exceptions import InstaWizardError
 from insta_wizard.common.logger import InstagramClientLogger, StdLoggingInstagramClientLogger
-from insta_wizard.common.models import ProxyInfo
 from insta_wizard.common.transport.aiohttp_transport import AioHttpTransport
 from insta_wizard.common.transport.base import (
     HttpTransport,
@@ -8,6 +7,7 @@ from insta_wizard.common.transport.base import (
 from insta_wizard.common.transport.models import (
     TransportSettings,
 )
+from insta_wizard.common.models import ProxyInfo
 from insta_wizard.web.common.command import (
     Command,
     CommandBus,
@@ -45,6 +45,8 @@ from insta_wizard.web.sections import (
 
 
 class WebInstagramClient:
+    """ Client for working with Instagram web API """
+
     account: AccountSection
     challenge: ChallengeSection
     comments: CommentsSection
@@ -91,7 +93,7 @@ class WebInstagramClient:
             logger=self._logger,
         )
 
-        self._bus = CommandBus(factories=COMMAND_FACTORIES)
+        self._bus = self._build_bus()
 
         self._initializer = StateInitializer(
             state=self.state,
@@ -150,6 +152,9 @@ class WebInstagramClient:
     async def close(self):
         await self._transport.close()
 
+    def _build_bus(self) -> CommandBus:
+        return CommandBus(factories=COMMAND_FACTORIES)
+
     async def execute(self, command: Command[R]) -> R:
         return await self._bus.execute(command)
 
@@ -167,11 +172,11 @@ class WebInstagramClient:
 
     def dump_state(self) -> dict:
         """
-        Сериализует текущее состояние клиента в dict.
-        Содержит: параметры браузера, сессионные данные и куки.
-        Не содержит: прокси, настройки транспорта, логгер — они передаются при создании клиента.
+        Serializes the current client state into a dict.
+        Contains: browser parameters, session data and cookies.
+        Does not contain: proxy and transport settings.
 
-        Пример сохранения::
+        Example::
 
             state = client.dump_state()
             with open("session.json", "wb") as f:
@@ -185,10 +190,9 @@ class WebInstagramClient:
 
     def load_state(self, state: dict) -> None:
         """
-        Восстанавливает состояние клиента из dict, полученного через dump_state().
-        Транспорт, прокси и логгер остаются неизменными.
+        Restores client state from a dict obtained via dump_state().
 
-        Пример загрузки::
+        Example::
 
             with open("session.json", "rb") as f:
                 state = orjson.loads(f.read())
@@ -200,7 +204,7 @@ class WebInstagramClient:
             self.state.device = new_device
             self.state.local_data.load_from_dict(state["local_data"])
         except Exception as e:
-            raise InstaWizardError(f"Не удалось загрузить WebClientState: {e}") from e
+            raise InstaWizardError(f"Failed to load client state: {e}") from e
 
     async def initialize_state(self):
         await self._initializer()

@@ -20,7 +20,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountSendConfirmEmail(Command[AccountSendConfirmEmailResponse]):
-    """Установить эл.адрес аккаунту и отправить ссылку подтверждения"""
+    """Set account email and send confirmation link"""
 
     email: str
 

@@ -54,7 +54,7 @@ def iter_python_files(pkg_dir: Path) -> Iterable[Path]:
 
 def collect_items(pkg_dir: Path) -> list[tuple[str, list[str]]]:
     """
-    pkg_dir: .../web/commands OR .../web/flows OR .../web/experimental
+    pkg_dir: .../web/commands OR .../web/flows
     """
     if not pkg_dir.exists():
         return []
@@ -125,7 +125,7 @@ def main() -> None:
     if not root_dir.exists():
         raise SystemExit(f"Root dir not found: {root_dir}")
 
-    for subpkg in ("commands", "flows", "experimental"):
+    for subpkg in ("commands", "flows"):
         write_exports(root_dir, subpkg)
 
 

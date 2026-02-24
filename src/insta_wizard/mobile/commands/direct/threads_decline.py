@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_threads_leave import (
-    DirectV2ThreadsLeaveResponse,
+from insta_wizard.mobile.commands._responses.direct.threads_decline import (
+    DirectV2ThreadsDeclineResponse,
 )
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
@@ -18,25 +18,25 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class DirectV2ThreadsLeave(Command[DirectV2ThreadsLeaveResponse]):
+class DirectV2ThreadsDecline(Command[DirectV2ThreadsDeclineResponse]):
     thread_id: str
 
 
-class DirectV2ThreadsLeaveHandler(
-    CommandHandler[DirectV2ThreadsLeave, DirectV2ThreadsLeaveResponse]
+class DirectV2ThreadsDeclineHandler(
+    CommandHandler[DirectV2ThreadsDecline, DirectV2ThreadsDeclineResponse]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state
 
-    async def __call__(self, command: DirectV2ThreadsLeave) -> DirectV2ThreadsLeaveResponse:
+    async def __call__(self, command: DirectV2ThreadsDecline) -> DirectV2ThreadsDeclineResponse:
         payload = {
             "_uuid": self.state.device.device_id,
         }
 
         resp = await self.api.call_api(
             method="POST",
-            uri=constants.DIRECT_V2_THREADS_LEAVE_URI.format(thread_id=command.thread_id),
+            uri=constants.DIRECT_V2_GET_THREADS_DECLINE_URI.format(thread_id=command.thread_id),
             data=payload,
         )
-        return cast(DirectV2ThreadsLeaveResponse, resp)
+        return cast(DirectV2ThreadsDeclineResponse, resp)

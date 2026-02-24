@@ -20,7 +20,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class BloksSendLoginRequest(Command[BloksSendLoginRequestResponse]):
-    """Авторизоваться в аккаунт с помощью логина и пароля"""
+    """Log in with username and password"""
 
     username: str
     enc_password: str

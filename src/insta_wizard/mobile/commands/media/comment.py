@@ -19,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class MediaComment(Command[MediaCommentResponse]):
-    """Опубликовать комментарий к публикации"""
+    """Post a comment on a media"""
 
     media_id: str
     comment_text: str

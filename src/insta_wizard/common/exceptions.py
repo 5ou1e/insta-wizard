@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 class InstaWizardError(Exception):
-    """Базовый класс ошибок InstaWizard"""
+    """Base InstaWizard error class."""
 
     pass
 
@@ -10,7 +10,7 @@ class InstaWizardError(Exception):
 @dataclass(kw_only=True, slots=True)
 class AuthPlatformChallengeCodeNotFound(InstaWizardError):
     def __str__(self):
-        return "Код на почте не найден"
+        return "Code not found in email"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -18,7 +18,7 @@ class ChallengeHandlingFailedError(InstaWizardError):
     msg: str
 
     def __str__(self):
-        return f"Не удалось пройти чекпоинт: {self.msg}"
+        return f"Failed to pass checkpoint: {self.msg}"
 
 
 class SmsCodeTimeout(InstaWizardError):

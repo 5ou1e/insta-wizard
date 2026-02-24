@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_has_interop_upgraded import (
+from insta_wizard.mobile.commands._responses.direct.has_interop_upgraded import (
     DirectV2HasInteropUpgradedResponse,
 )
 from insta_wizard.mobile.common import constants

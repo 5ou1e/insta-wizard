@@ -20,7 +20,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountSetBiography(Command[AccountSetBiographyResponse]):
-    """Изменить био в профиле аккаунта"""
+    """Update account biography"""
 
     bio_text: str
 

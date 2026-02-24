@@ -14,7 +14,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class AccountsEditWebFormData(Command[AccountsEditWebFormDataResult]):
-    """Получить данные об аккаунте, со страницы редактирования профиля"""
+    """Get account data from the profile edit page"""
 
     pass
 

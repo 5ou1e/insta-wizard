@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class SendSignupSmsCodeAjax(Command[SendSignupSmsCodeAjaxResult]):
-    """Отправить код из смс при регистрации"""
+    """Send SMS code during registration"""
 
     phone_number: str
     captcha_token: str | None = None

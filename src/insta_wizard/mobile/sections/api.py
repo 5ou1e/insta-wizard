@@ -1,3 +1,5 @@
+from typing import Literal
+
 from insta_wizard.mobile.commands._responses.friendships.friendships_user_followers import (
     FriendshipsUserFollowersResponse,
 )
@@ -54,61 +56,76 @@ from insta_wizard.mobile.commands.challenge.get_challenge_info_b_api import (
 from insta_wizard.mobile.commands.clips.discover_stream import (
     ClipsDiscoverStream,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_create_group_thread import (
+from insta_wizard.mobile.commands.direct.async_get_pending_requests_preview import (
+    DirectV2AsyncGetPendingRequestsPreview,
+)
+from insta_wizard.mobile.commands.direct.create_group_thread import (
     DirectV2CreateGroupThread,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_get_pending_requests_preview import (
+from insta_wizard.mobile.commands.direct.get_pending_requests_preview import (
     DirectV2GetPendingRequestsPreview,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_get_presence import (
+from insta_wizard.mobile.commands.direct.get_presence import (
     DirectV2GetPresence,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_get_presence_active_now import (
+from insta_wizard.mobile.commands.direct.get_presence_active_now import (
     DirectV2GetPresenceActiveNow,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_inbox import (
+from insta_wizard.mobile.commands.direct.has_interop_upgraded import (
+    DirectV2HasInteropUpgraded,
+)
+from insta_wizard.mobile.commands.direct.inbox import (
     DirectV2Inbox,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_ranked_recipients import (
+from insta_wizard.mobile.commands.direct.ranked_recipients import (
     DirectV2RankedRecipients,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_add_user import (
+from insta_wizard.mobile.commands.direct.threads_add_user import (
     DirectV2ThreadsAddUser,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_approve import (
+from insta_wizard.mobile.commands.direct.threads_approve import (
     DirectV2ThreadsApprove,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_approve_multiple import (
+from insta_wizard.mobile.commands.direct.threads_approve_multiple import (
     DirectV2ThreadsApproveMultiple,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_decline import (
+from insta_wizard.mobile.commands.direct.threads_broadcast_reaction import (
+    DirectV2ThreadsBroadcastReaction,
+)
+from insta_wizard.mobile.commands.direct.threads_broadcast_text import (
+    DirectV2ThreadsBroadcastText,
+)
+from insta_wizard.mobile.commands.direct.threads_decline import (
     DirectV2ThreadsDecline,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_decline_all import (
+from insta_wizard.mobile.commands.direct.threads_decline_all import (
     DirectV2ThreadsDeclineAll,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_decline_multiple import (
+from insta_wizard.mobile.commands.direct.threads_decline_multiple import (
     DirectV2ThreadsDeclineMultiple,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_hide import (
+from insta_wizard.mobile.commands.direct.threads_delete_items_locally import (
+    DirectV2ThreadsDeleteItemsLocally,
+)
+from insta_wizard.mobile.commands.direct.threads_hide import (
     DirectV2ThreadsHide,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_items_delete import (
+from insta_wizard.mobile.commands.direct.threads_items_delete import (
     DirectV2ThreadsItemsDelete,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_items_seen import (
+from insta_wizard.mobile.commands.direct.threads_items_seen import (
     DirectV2ThreadsItemsSeen,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_leave import (
+from insta_wizard.mobile.commands.direct.threads_leave import (
     DirectV2ThreadsLeave,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_mute import (
+from insta_wizard.mobile.commands.direct.threads_mute import (
     DirectV2ThreadsMute,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_unmute import (
+from insta_wizard.mobile.commands.direct.threads_unmute import (
     DirectV2ThreadsUnmute,
 )
-from insta_wizard.mobile.commands.direct.direct_v2_threads_update_title import (
+from insta_wizard.mobile.commands.direct.threads_update_title import (
     DirectV2ThreadsUpdateTitle,
 )
 from insta_wizard.mobile.commands.feed.get_feed_timeline_i_api import (
@@ -125,6 +142,7 @@ from insta_wizard.mobile.commands.friendships.create import (
 )
 from insta_wizard.mobile.commands.friendships.destroy import FriendshipsDestroy
 from insta_wizard.mobile.commands.friendships.remove_follower import FriendshipsRemoveFollower
+from insta_wizard.mobile.commands.friendships.show import FriendshipsShow
 from insta_wizard.mobile.commands.friendships.show_many import (
     FriendshipsShowMany,
     FriendshipsShowManyResponse,
@@ -186,6 +204,7 @@ class BaseSection:
 
 class AccountSection(BaseSection):
     async def get_current_user(self):
+        """Get current user info (requires authentication)"""
         return await self.bus.execute(AccountCurrentUser())
 
     async def edit_profile(
@@ -198,6 +217,7 @@ class AccountSection(BaseSection):
         phone_number,
         gender,
     ):
+        """Edit account info (requires authentication)"""
         return await self.bus.execute(
             AccountEditProfile(
                 username=username,
@@ -211,27 +231,34 @@ class AccountSection(BaseSection):
         )
 
     async def update_profile_name(self, first_name: str):
+        """Update account profile name"""
         return await self.bus.execute(AccountUpdateProfileName(first_name=first_name))
 
     async def set_bio(self, bio_text: str):
+        """Update account biography"""
         return await self.bus.execute(AccountSetBiography(bio_text=bio_text))
 
     async def set_profile_picture(self, upload_id):
+        """Set account profile picture (requires upload_id)"""
         return await self.bus.execute(AccountChangeProfilePicture(upload_id=str(upload_id)))
 
     async def get_presence_disabled(self):
         return await self.bus.execute(AccountGetPresenceDisabled())
 
     async def login(self, username: str, password: str):
+        """Send login request with username and password"""
         return await self.bus.execute(AccountLogin(username=username, password=password))
 
     async def check_phone_number(self, phone_number: str):
+        """Check if phone number is available"""
         return await self.bus.execute(AccountCheckPhoneNumber(phone_number=phone_number))
 
     async def send_signup_sms_code(self, phone_number: str):
+        """Request SMS code for account registration"""
         return await self.bus.execute(AccountSendSignupSmsCode(phone_number=phone_number))
 
     async def validate_signup_sms_code(self, phone_number: str, code: int | str):
+        """Submit SMS verification code during account registration"""
         return await self.bus.execute(
             AccountValidateSignupSmsCode(phone_number=phone_number, code=code)
         )
@@ -269,14 +296,17 @@ class AccountSection(BaseSection):
         return await self.bus.execute(AccountSecurityInfo())
 
     async def send_confirm_email(self, email: str):
+        """Set account email and send confirmation link"""
         return await self.bus.execute(AccountSendConfirmEmail(email=email))
 
     async def send_confirm_phone_number(self, phone_number: str) -> dict:
+        """Set account phone number and send confirmation code"""
         return await self.bus.execute(AccountSendConfirmPhoneNumber(phone_number=phone_number))
 
 
 class ChallengeSection(BaseSection):
     async def get_challenge_info(self, challenge_data: ChallengeRequiredData):
+        """Get checkpoint info"""
         return await self.bus.execute(ChallengeGetChallengeInfoBApi(challenge_data=challenge_data))
 
 
@@ -298,7 +328,7 @@ class DirectSection(BaseSection):
     async def get_presence_active_now(self):
         return await self.bus.execute(DirectV2GetPresenceActiveNow())
 
-    async def get_ranked_recipients(self, mode: str = "raven"):
+    async def get_ranked_recipients(self, mode: Literal["raven", "reshare"] = "raven"):
         return await self.bus.execute(DirectV2RankedRecipients(mode=mode))
 
     async def create_group_thread(self, recipient_users: list[str], thread_title: str):
@@ -354,6 +384,39 @@ class DirectSection(BaseSection):
             DirectV2ThreadsAddUser(thread_id=thread_id, user_ids=user_ids)
         )
 
+    async def send_message(self, recipient_users: list[str], text: str):
+        """Send a text message to users"""
+        return await self.bus.execute(
+            DirectV2ThreadsBroadcastText(recipient_users=recipient_users, text=text)
+        )
+
+    async def send_reaction(
+        self,
+        thread_ids: list[str],
+        item_id: str,
+        reaction_type: str,
+        reaction_action_source: str,
+    ):
+        return await self.bus.execute(
+            DirectV2ThreadsBroadcastReaction(
+                thread_ids=thread_ids,
+                item_id=item_id,
+                reaction_type=reaction_type,
+                reaction_action_source=reaction_action_source,
+            )
+        )
+
+    async def delete_thread_items_locally(self, thread_id: str, item_ids: list[str]):
+        return await self.bus.execute(
+            DirectV2ThreadsDeleteItemsLocally(thread_id=thread_id, item_ids=item_ids)
+        )
+
+    async def get_pending_async(self):
+        return await self.bus.execute(DirectV2AsyncGetPendingRequestsPreview())
+
+    async def has_interop_upgraded(self):
+        return await self.bus.execute(DirectV2HasInteropUpgraded())
+
 
 class FeedSection(BaseSection):
     async def get_timeline(self):
@@ -368,12 +431,15 @@ class FeedSection(BaseSection):
 
 class FriendshipsSection(BaseSection):
     async def follow(self, user_id: str):
+        """Follow a user"""
         return await self.bus.execute(FriendshipsCreate(user_id=user_id))
 
     async def unfollow(self, user_id: str):
+        """Unfollow a user"""
         return await self.bus.execute(FriendshipsDestroy(user_id=user_id))
 
     async def remove_follower(self, user_id: str):
+        """Remove a user from your followers"""
         return await self.bus.execute(FriendshipsRemoveFollower(user_id=user_id))
 
     async def get_user_followers(
@@ -382,6 +448,7 @@ class FriendshipsSection(BaseSection):
         query: str | None = None,
         max_id: int | None = None,
     ) -> FriendshipsUserFollowersResponse:
+        """Get user followers (supports search via query parameter)"""
         return await self.bus.execute(
             FriendshipsUserFollowers(
                 user_id=user_id,
@@ -396,6 +463,7 @@ class FriendshipsSection(BaseSection):
         query: str | None = None,
         max_id: int | None = None,
     ) -> FriendshipsUserFollowingResponse:
+        """Get user following list (supports search via query parameter)"""
         return await self.bus.execute(
             FriendshipsUserFollowing(
                 user_id=user_id,
@@ -405,7 +473,12 @@ class FriendshipsSection(BaseSection):
         )
 
     async def get_status(self, user_ids: list[str | int]) -> FriendshipsShowManyResponse:
+        """Get friendship status for multiple users"""
         return await self.bus.execute(FriendshipsShowMany(user_ids=user_ids))
+
+    async def get_status_single(self, user_id: str | int):
+        """Get friendship status with a user"""
+        return await self.bus.execute(FriendshipsShow(user_id=user_id))
 
 
 class LiveSection(BaseSection):
@@ -423,6 +496,7 @@ class MediaSection(BaseSection):
         min_id: str = None,
         max_id: str = None,
     ):
+        """Get comments for a media post"""
         return await self.bus.execute(
             MediaComments(
                 media_id=media_id,
@@ -437,6 +511,7 @@ class MediaSection(BaseSection):
         comment_text: str,
         replied_to_comment_id: int | None = None,
     ):
+        """Post a comment on a media"""
         await self.bus.execute(
             MediaComment(
                 media_id=media_id,
@@ -446,9 +521,11 @@ class MediaSection(BaseSection):
         )
 
     async def like_comment(self, comment_id: int):
+        """Like a comment"""
         return await self.bus.execute(MediaCommentLike(comment_id=comment_id))
 
     async def unlike_comment(self, comment_id: int):
+        """Unlike a comment"""
         return await self.bus.execute(MediaCommentUnlike(comment_id=comment_id))
 
 
@@ -467,12 +544,15 @@ class NotificationSection(BaseSection):
 
 class UserSection(BaseSection):
     async def get_info(self, user_id: str) -> UserInfoResponse:
+        """Get user info by user_id"""
         return await self.bus.execute(UserInfo(user_id=user_id))
 
     async def get_info_by_username(self, username: str):
+        """Get user info by username"""
         return await self.bus.execute(UserUsernameInfo(username=username))
 
     async def get_web_profile(self, username: str):
+        """Get user info by username (webprofileinfo)"""
         return await self.bus.execute(UserWebProfileInfo(username=username))
 
     async def get_limited_interactions_reminder(self):

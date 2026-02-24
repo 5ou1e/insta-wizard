@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class CommentsLike(Command[CommentsLikeResult]):
-    """Поставить лайк на комментарий к публикации"""
+    """Like a comment on a media post"""
 
     comment_id: str  # 17873106636540219
 

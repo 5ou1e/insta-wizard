@@ -84,6 +84,7 @@ class AccountSection(BaseSection):
         first_name: str,
         username: str,
     ):
+        """Edit account profile"""
         return await self.bus.execute(
             AccountsEdit(
                 biography=biography,
@@ -95,15 +96,19 @@ class AccountSection(BaseSection):
         )
 
     async def get_edit_form_data(self):
+        """Get account data from the profile edit page"""
         return await self.bus.execute(AccountsEditWebFormData())
 
     async def check_age_eligibility(self, day: int, month: int, year: int):
+        """Check if registration is allowed with the given birth date"""
         return await self.bus.execute(CheckAgeEligibility(day=day, month=month, year=year))
 
     async def recovery_send_ajax(self, email_or_username: str):
+        """Send password recovery link to email"""
         return await self.bus.execute(AccountRecoverySendAjax(email_or_username=email_or_username))
 
     async def login_ajax(self, username: str, enc_password: str, jazoest: str):
+        """Log in with username and password"""
         return await self.bus.execute(
             AccountsLoginAjax(
                 username=username,
@@ -117,6 +122,7 @@ class AccountSection(BaseSection):
         phone_number: str,
         captcha_token: str | None = None,
     ):
+        """Send SMS code during registration"""
         return await self.bus.execute(
             SendSignupSmsCodeAjax(
                 phone_number=phone_number,
@@ -135,6 +141,7 @@ class AccountSection(BaseSection):
         year: int,
         sms_code: int | str,
     ):
+        """Final account registration request"""
         return await self.bus.execute(
             WebCreateAjax(
                 username=username,
@@ -155,6 +162,7 @@ class AccountSection(BaseSection):
         first_name: str,
         phone_number: str,
     ):
+        """Send account registration attempt request"""
         return await self.bus.execute(
             WebCreateAjaxAttempt(
                 username=username,
@@ -165,16 +173,19 @@ class AccountSection(BaseSection):
         )
 
     async def get_email_signup_page(self):
+        """Navigate to the registration page"""
         return await self.bus.execute(GetEmailSignupPage())
 
 
 class ChallengeSection(BaseSection):
     async def get_challenge_info(self):
+        """Get checkpoint info"""
         return await self.bus.execute(ChallengeWeb())
 
 
 class CommentsSection(BaseSection):
     async def add(self, media_id: str, replied_to_comment_id: str):
+        """Add a comment to a media post"""
         return await self.bus.execute(
             CommentsAdd(
                 media_id=media_id,
@@ -183,28 +194,35 @@ class CommentsSection(BaseSection):
         )
 
     async def like(self, comment_id: str):
+        """Like a comment on a media post"""
         return await self.bus.execute(CommentsLike(comment_id=comment_id))
 
     async def unlike(self, comment_id: str):
+        """Unlike a comment on a media post"""
         return await self.bus.execute(CommentsUnlike(comment_id=comment_id))
 
 
 class FriendshipsSection(BaseSection):
     async def create(self, user_id: str):
+        """Follow a user"""
         return await self.bus.execute(FriendshipsCreate(user_id=user_id))
 
     async def follow(self, user_id: str):
+        """Follow a user"""
         return await self.bus.execute(FriendshipsFollow(user_id=user_id))
 
     async def unfollow(self, user_id: str):
+        """Unfollow a user"""
         return await self.bus.execute(FriendshipsDestroy(user_id=user_id))
 
 
 class LikesSection(BaseSection):
     async def like(self, media_id: str):
+        """Like a media post"""
         return await self.bus.execute(LikesLike(media_id=media_id))
 
     async def unlike(self, media_id: str):
+        """Unlike a media post"""
         return await self.bus.execute(LikesUnlike(media_id=media_id))
 
 
@@ -213,9 +231,11 @@ class NavigationSection(BaseSection):
         return await self.bus.execute(Navigate(url=url))
 
     async def get_home_page(self):
+        """Navigate to the Instagram home page"""
         return await self.bus.execute(GetInstagramHomePage())
 
     async def get_shared_data(self):
+        """Get SharedData configs"""
         return await self.bus.execute(GetSharedData())
 
     async def get_web_mid(self):

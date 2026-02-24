@@ -20,7 +20,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountSendConfirmPhoneNumber(Command[AccountSendConfirmPhoneNumberResponse]):
-    """Установить аккаунту номер телефона и отправить код подтверждения"""
+    """Set account phone number and send confirmation code"""
 
     phone_number: str
 

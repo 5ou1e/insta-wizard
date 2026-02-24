@@ -19,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountUpdateProfileName(Command[AccountUpdateProfileNameResponse]):
-    """Изменить имя в профиле аккаунта"""
+    """Update account profile name"""
 
     first_name: str
 

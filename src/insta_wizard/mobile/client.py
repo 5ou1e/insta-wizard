@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from insta_wizard.common.exceptions import InstaWizardError
 from insta_wizard.common.logger import InstagramClientLogger, StdLoggingInstagramClientLogger
-from insta_wizard.common.models import ProxyInfo
 from insta_wizard.common.transport.aiohttp_transport import AioHttpTransport
 from insta_wizard.common.transport.base import (
     HttpTransport,
@@ -10,6 +9,7 @@ from insta_wizard.common.transport.base import (
 from insta_wizard.common.transport.models import (
     TransportSettings,
 )
+from insta_wizard.common.models import ProxyInfo
 from insta_wizard.mobile.common.command import (
     Command,
     CommandBus,
@@ -56,8 +56,9 @@ from insta_wizard.mobile.sections.graphql_query import (
 )
 from insta_wizard.mobile.sections.graphql_www import GraphqlWWW
 
-
 class MobileInstagramClient:
+    """ Client for working with Instagram private API """
+
     account: AccountSection
     users: UserSection
     friendships: FriendshipsSection
@@ -79,6 +80,12 @@ class MobileInstagramClient:
         transport_settings: TransportSettings | None = None,
         logger: InstagramClientLogger | None = None,
     ):
+        if version not in self._supported_versions():
+            raise ValueError(
+                f"Version {version} not supported. "
+                f"Available versions: {', '.join(self._supported_versions())}"
+            )
+
         device = device or AndroidDeviceInfo.from_preset(AndroidPreset.SAMSUNG_A16)
         local_data = local_data or MobileClientLocalData.create()
         self._logger = logger or StdLoggingInstagramClientLogger()
@@ -103,7 +110,7 @@ class MobileInstagramClient:
             logger=self._logger,
         )
 
-        self._bus = CommandBus(factories=COMMAND_FACTORIES)
+        self._bus = self._build_bus()
 
         graph_deps = {
             "state": self.state,
@@ -139,6 +146,9 @@ class MobileInstagramClient:
 
         self._bus.bind_deps(deps)
 
+    def _supported_versions(self) -> frozenset[InstagramAppVersion]:
+        return frozenset({InstagramAppVersion.V374})
+
     def _build_transport(
         self,
         settings: TransportSettings,
@@ -150,6 +160,9 @@ class MobileInstagramClient:
             proxy_url=proxy.url if proxy else None,
             timeout=settings.max_network_wait_time,
         )
+
+    def _build_bus(self) -> CommandBus:
+        return CommandBus(factories=COMMAND_FACTORIES)
 
     async def execute(self, command: Command[R]) -> R:
         return await self._bus.execute(command)
@@ -171,11 +184,10 @@ class MobileInstagramClient:
 
     def dump_state(self) -> dict:
         """
-        Сериализует текущее состояние клиента в dict.
-        Содержит: версию приложения, параметры устройства, сессионные данные.
-        Не содержит: прокси, настройки транспорта, логгер — они передаются при создании клиента.
+        Serializes the current client state into a dict.
+        Contains: app version, device parameters, session data.
 
-        Пример сохранения::
+        Example::
 
             state = client.dump_state()
             with open("session.json", "wb") as f:
@@ -190,10 +202,9 @@ class MobileInstagramClient:
 
     def load_state(self, state: dict) -> None:
         """
-        Восстанавливает состояние клиента из dict, полученного через dump_state().
-        Транспорт, прокси и логгер остаются неизменными.
+        Restores client state from a dict obtained via dump_state().
 
-        Пример загрузки::
+        Example::
 
             with open("session.json", "rb") as f:
                 state = orjson.loads(f.read())
@@ -211,7 +222,7 @@ class MobileInstagramClient:
             self.state.local_data = new_local_data
             self.state.version_info = new_version_info
         except Exception as e:
-            raise InstaWizardError(f"Не удалось загрузить MobileClientState: {e}") from e
+            raise InstaWizardError(f"Failed to load client state: {e}") from e
 
     async def login(self, username: str, password: str):
         return await self._bus.execute(BloksLogin(username=username, password=password))

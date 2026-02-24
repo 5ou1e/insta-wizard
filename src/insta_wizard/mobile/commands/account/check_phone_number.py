@@ -20,7 +20,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountCheckPhoneNumber(Command[AccountCheckPhoneNumberResponse]):
-    """Проверить свободен ли номер телефона"""
+    """Check if phone number is available"""
 
     phone_number: str
 

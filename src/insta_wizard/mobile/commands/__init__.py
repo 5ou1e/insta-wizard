@@ -35,29 +35,30 @@ from .clips.discover_stream import ClipsDiscoverStream
 from .clips.user_share_to_fb_config import ClipsUserShareToFbConfig
 from .consent.get_signup_config import ConsentGetSignupConfig
 from .creatives.write_supported_capabilities import CreativesWriteSupportedCapabilities
-from .direct.direct_v2_async_get_pending_requests_preview import (
-    DirectV2AsyncGetPendingRequestsPreview,
-)
-from .direct.direct_v2_create_group_thread import DirectV2CreateGroupThread
-from .direct.direct_v2_get_pending_requests_preview import DirectV2GetPendingRequestsPreview
-from .direct.direct_v2_get_presence import DirectV2GetPresence
-from .direct.direct_v2_get_presence_active_now import DirectV2GetPresenceActiveNow
-from .direct.direct_v2_has_interop_upgraded import DirectV2HasInteropUpgraded
-from .direct.direct_v2_inbox import DirectV2Inbox
-from .direct.direct_v2_ranked_recipients import DirectV2RankedRecipients
-from .direct.direct_v2_threads_add_user import DirectV2ThreadsAddUser
-from .direct.direct_v2_threads_approve import DirectV2ThreadsApprove
-from .direct.direct_v2_threads_approve_multiple import DirectV2ThreadsApproveMultiple
-from .direct.direct_v2_threads_decline import DirectV2ThreadsDecline
-from .direct.direct_v2_threads_decline_all import DirectV2ThreadsDeclineAll
-from .direct.direct_v2_threads_decline_multiple import DirectV2ThreadsDeclineMultiple
-from .direct.direct_v2_threads_hide import DirectV2ThreadsHide
-from .direct.direct_v2_threads_items_delete import DirectV2ThreadsItemsDelete
-from .direct.direct_v2_threads_items_seen import DirectV2ThreadsItemsSeen
-from .direct.direct_v2_threads_leave import DirectV2ThreadsLeave
-from .direct.direct_v2_threads_mute import DirectV2ThreadsMute
-from .direct.direct_v2_threads_unmute import DirectV2ThreadsUnmute
-from .direct.direct_v2_threads_update_title import DirectV2ThreadsUpdateTitle
+from .direct.async_get_pending_requests_preview import DirectV2AsyncGetPendingRequestsPreview
+from .direct.create_group_thread import DirectV2CreateGroupThread
+from .direct.get_pending_requests_preview import DirectV2GetPendingRequestsPreview
+from .direct.get_presence import DirectV2GetPresence
+from .direct.get_presence_active_now import DirectV2GetPresenceActiveNow
+from .direct.has_interop_upgraded import DirectV2HasInteropUpgraded
+from .direct.inbox import DirectV2Inbox
+from .direct.ranked_recipients import DirectV2RankedRecipients
+from .direct.threads_add_user import DirectV2ThreadsAddUser
+from .direct.threads_approve import DirectV2ThreadsApprove
+from .direct.threads_approve_multiple import DirectV2ThreadsApproveMultiple
+from .direct.threads_broadcast_reaction import DirectV2ThreadsBroadcastReaction
+from .direct.threads_broadcast_text import DirectV2ThreadsBroadcastText
+from .direct.threads_decline import DirectV2ThreadsDecline
+from .direct.threads_decline_all import DirectV2ThreadsDeclineAll
+from .direct.threads_decline_multiple import DirectV2ThreadsDeclineMultiple
+from .direct.threads_delete_items_locally import DirectV2ThreadsDeleteItemsLocally
+from .direct.threads_hide import DirectV2ThreadsHide
+from .direct.threads_items_delete import DirectV2ThreadsItemsDelete
+from .direct.threads_items_seen import DirectV2ThreadsItemsSeen
+from .direct.threads_leave import DirectV2ThreadsLeave
+from .direct.threads_mute import DirectV2ThreadsMute
+from .direct.threads_unmute import DirectV2ThreadsUnmute
+from .direct.threads_update_title import DirectV2ThreadsUpdateTitle
 from .feed.get_feed_timeline_b_api import FeedGetFeedTimelineBApi
 from .feed.get_feed_timeline_i_api import FeedGetFeedTimelineIApi
 from .feed.get_reels_tray import FeedGetReelsTray
@@ -66,6 +67,7 @@ from .fetch_rmd import FetchRmd
 from .friendships.create import FriendshipsCreate
 from .friendships.destroy import FriendshipsDestroy
 from .friendships.remove_follower import FriendshipsRemoveFollower
+from .friendships.show import FriendshipsShow
 from .friendships.show_many import FriendshipsShowMany
 from .friendships.user_followers import FriendshipsUserFollowers
 from .friendships.user_following import FriendshipsUserFollowing
@@ -135,9 +137,12 @@ __all__ = [
     "DirectV2ThreadsAddUser",
     "DirectV2ThreadsApprove",
     "DirectV2ThreadsApproveMultiple",
+    "DirectV2ThreadsBroadcastReaction",
+    "DirectV2ThreadsBroadcastText",
     "DirectV2ThreadsDecline",
     "DirectV2ThreadsDeclineAll",
     "DirectV2ThreadsDeclineMultiple",
+    "DirectV2ThreadsDeleteItemsLocally",
     "DirectV2ThreadsHide",
     "DirectV2ThreadsItemsDelete",
     "DirectV2ThreadsItemsSeen",
@@ -153,6 +158,7 @@ __all__ = [
     "FriendshipsCreate",
     "FriendshipsDestroy",
     "FriendshipsRemoveFollower",
+    "FriendshipsShow",
     "FriendshipsShowMany",
     "FriendshipsUserFollowers",
     "FriendshipsUserFollowing",

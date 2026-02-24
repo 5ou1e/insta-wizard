@@ -24,7 +24,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class FriendshipsCreate(Command[FriendshipsCreateResponse]):
-    """Подписаться на пользователя"""
+    """Follow a user"""
 
     user_id: str
 

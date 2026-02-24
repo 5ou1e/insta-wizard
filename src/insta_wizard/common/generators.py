@@ -87,7 +87,7 @@ def generate_waterfall_id():
 
 def generate_android_id_from_guid(guid: uuid.UUID | str) -> str:
     """
-    Генерирует AndroidID из UUID
+    Generates AndroidID for UUID
     """
 
     md5_hash = hashlib.md5(str(guid).encode()).hexdigest()

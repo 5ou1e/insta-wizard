@@ -4,7 +4,7 @@ from collections.abc import Callable, Mapping
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast
 
 if TYPE_CHECKING:
-    from build.lib.insta_wizard.web.models.deps import ClientDeps
+    from insta_wizard.web.models.deps import ClientDeps
 
 R = TypeVar("R")
 C = TypeVar("C", bound="Command[Any]")

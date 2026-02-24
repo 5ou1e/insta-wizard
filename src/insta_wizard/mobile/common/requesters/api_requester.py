@@ -16,8 +16,8 @@ from insta_wizard.common.transport.exceptions import (
 from insta_wizard.common.transport.models import (
     HttpMethod,
     HttpRequest,
-    ResponseInfo,
     TransportResponse,
+    ResponseInfo,
 )
 from insta_wizard.common.utils import (
     auth_data_from_authorization_header,

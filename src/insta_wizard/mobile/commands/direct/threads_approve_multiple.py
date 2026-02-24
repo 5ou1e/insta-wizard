@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.direct.direct_v2_threads_add_user import (
-    DirectV2ThreadsAddUserResponse,
+from insta_wizard.mobile.commands._responses.direct.threads_approve_multiple import (
+    DirectV2ThreadsApproveMultipleResponse,
 )
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
@@ -19,27 +19,28 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class DirectV2ThreadsAddUser(Command[DirectV2ThreadsAddUserResponse]):
-    thread_id: str
-    user_ids: list[str | int]
+class DirectV2ThreadsApproveMultiple(Command[DirectV2ThreadsApproveMultipleResponse]):
+    thread_ids: list[str]
 
 
-class DirectV2ThreadsAddUserHandler(
-    CommandHandler[DirectV2ThreadsAddUser, DirectV2ThreadsAddUserResponse]
+class DirectV2ThreadsApproveMultipleHandler(
+    CommandHandler[DirectV2ThreadsApproveMultiple, DirectV2ThreadsApproveMultipleResponse]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state
 
-    async def __call__(self, command: DirectV2ThreadsAddUser) -> DirectV2ThreadsAddUserResponse:
+    async def __call__(
+        self, command: DirectV2ThreadsApproveMultiple
+    ) -> DirectV2ThreadsApproveMultipleResponse:
         payload = {
             "_uuid": self.state.device.device_id,
-            "user_ids": dumps(command.user_ids),
+            "thread_ids": dumps(command.thread_ids),
         }
 
         resp = await self.api.call_api(
             method="POST",
-            uri=constants.DIRECT_V2_THREADS_ADD_USER_URI.format(thread_id=command.thread_id),
+            uri=constants.DIRECT_V2_GET_THREADS_APPROVE_MULTIPLE_URI,
             data=payload,
         )
-        return cast(DirectV2ThreadsAddUserResponse, resp)
+        return cast(DirectV2ThreadsApproveMultipleResponse, resp)

@@ -9,7 +9,7 @@ from insta_wizard.common.generators import (
     utc_offset_from_timezone,
 )
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.feed.feed_get_feed_timeline_i_api import (
+from insta_wizard.mobile.commands._responses.feed.get_feed_timeline_i_api import (
     FeedGetFeedTimelineIApiResponse,
 )
 from insta_wizard.mobile.common import constants

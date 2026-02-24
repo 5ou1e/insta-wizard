@@ -4,7 +4,7 @@ from typing import cast
 from insta_wizard.common.generators import (
     generate_uuid_v4_string,
 )
-from insta_wizard.mobile.commands._responses.direct.direct_v2_inbox import (
+from insta_wizard.mobile.commands._responses.direct.inbox import (
     DirectV2InboxResponse,
 )
 from insta_wizard.mobile.common import constants
@@ -22,8 +22,9 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class DirectV2Inbox(Command[DirectV2InboxResponse]):
-    thread_message_limit: int = 5
     limit: int = 15
+    thread_message_limit: int = 5
+    visual_message_return_type: str = "unseen"
     fetch_reason: str = "initial_snapshot"
 
 
@@ -34,7 +35,7 @@ class DirectV2InboxHandler(CommandHandler[DirectV2Inbox, DirectV2InboxResponse])
 
     async def __call__(self, command: DirectV2Inbox) -> DirectV2InboxResponse:
         params = {
-            "visual_message_return_type": "unseen",
+            "visual_message_return_type": command.visual_message_return_type,
             "igd_request_log_tracking_id": generate_uuid_v4_string(),
             "no_pending_badge": "true",
             "thread_message_limit": command.thread_message_limit,

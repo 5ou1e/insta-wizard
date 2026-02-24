@@ -21,7 +21,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class MediaCommentUnlike(Command[MediaCommentUnlikeResponse]):
-    """Убрать лайк с комментария"""
+    """Unlike a comment"""
 
     comment_id: int
 

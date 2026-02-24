@@ -19,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class AccountChangeProfilePicture(Command[AccountChangeProfilePictureResponse]):
-    """Установить аватар аккаунту (необходимо передать upload_id)"""
+    """Set account profile picture (requires upload_id)"""
 
     upload_id: str
 

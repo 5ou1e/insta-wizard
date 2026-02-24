@@ -20,8 +20,6 @@ class ProxyProtocol(StrEnum):
 
 @dataclass(kw_only=True)
 class ProxyInfo:
-    """Read-model для прокси"""
-
     protocol: "ProxyProtocol" = ProxyProtocol.HTTP
     host: str
     port: int
@@ -42,10 +40,11 @@ class ProxyInfo:
         string: str,
     ) -> "ProxyInfo":
         """
-        Поддерживаемые форматы:
+        Create a ProxyInfo instance from a string.
+        Supported formats:
          - [protocol://][user:pass@]host:port[:user:pass]
 
-        Примеры:
+        Examples:
           - 1.2.3.4:8080
           - http://1.2.3.4:8080
           - user:pass@1.2.3.4:8080
@@ -99,6 +98,7 @@ class ProxyInfo:
 
 @dataclass(kw_only=True, slots=True)
 class EncryptionInfo:
+    """ Password encryption info """
     publickeyid: int
     publickey: str
     version: int

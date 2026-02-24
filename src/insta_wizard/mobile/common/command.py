@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast
 
+
 if TYPE_CHECKING:
     from insta_wizard.mobile.models.deps import ClientDeps
 

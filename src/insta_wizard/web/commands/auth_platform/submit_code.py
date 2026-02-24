@@ -21,7 +21,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class UseAuthPlatformSubmitCodeMutation(Command[UseAuthPlatformSubmitCodeMutationResult]):
-    """Отправить код подтверждения при чекпоинте авторизации AuthPlatform"""
+    """Submit verification code for AuthPlatform login checkpoint"""
 
     code: str
     encrypted_ap_context: str

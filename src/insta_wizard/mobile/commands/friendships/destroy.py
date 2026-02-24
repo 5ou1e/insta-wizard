@@ -24,7 +24,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class FriendshipsDestroy(Command[FriendshipsDestroyResponse]):
-    """Отписаться от пользователя"""
+    """Unfollow a user"""
 
     user_id: str
 

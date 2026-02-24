@@ -2,7 +2,7 @@ from __future__ import annotations
 
 
 class TransportError(Exception):
-    """Базовая ошибка транспорта"""
+    """Base Transport Error."""
 
 
 class TransportTimeoutError(TransportError):

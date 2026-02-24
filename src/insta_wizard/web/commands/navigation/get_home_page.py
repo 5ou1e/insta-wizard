@@ -18,7 +18,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class GetInstagramHomePage(Command[GetInstagramHomePageResult]):
-    """Перейти на главную страницу Instargam"""
+    """Navigate to the Instagram home page"""
 
     pass
 

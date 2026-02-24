@@ -2,13 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Literal, TypedDict
 
-# -------------------------
-# Reused-shape blocks (same as in previous example)
-# -------------------------
-
 
 class BiographyEntity(TypedDict, total=False):
-    # In samples "entities" is empty; keep open until you see concrete fields.
     pass
 
 

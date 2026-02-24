@@ -4,6 +4,7 @@ from typing import cast
 from insta_wizard.mobile.commands._responses.friendships.friendships_show_many import (
     FriendshipsShowManyResponse,
 )
+from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
@@ -18,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class FriendshipsShowMany(Command[FriendshipsShowManyResponse]):
-    """Получить friendship-status со списком пользователей"""
+    """Get friendship status for multiple users"""
 
     user_ids: list[str | int]
 
@@ -36,7 +37,7 @@ class FriendshipsShowManyHandler(CommandHandler[FriendshipsShowMany, Friendships
 
         resp = await self.api.call_api(
             method="POST",
-            uri="friendships/show_many/",
+            uri=constants.FRIENDSHIPS_SHOW_MANY_URI,
             data=data,
         )
         return cast(FriendshipsShowManyResponse, resp)

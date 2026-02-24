@@ -20,7 +20,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class PolarisSearchBoxRefetchableQuery(Command[PolarisSearchBoxRefetchableQueryResult]):
-    """Поиск пользователей по username (GraphQL api)"""
+    """Search users by username (GraphQL API)"""
 
     query: str
 

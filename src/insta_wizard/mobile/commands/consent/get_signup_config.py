@@ -19,7 +19,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class ConsentGetSignupConfig(Command[ConsentGetSignupConfigResponse]):
-    """Получить SignupConfig с необходимыми параметрами, перед регистрацией аккаунта"""
+    """Get SignupConfig with required parameters before account registration"""
 
     main_account_selected: str = "False"
 

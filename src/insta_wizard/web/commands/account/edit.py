@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(kw_only=True, slots=True)
 class AccountsEdit(Command[AccountsEditResult]):
-    """Редактировать профиль аккаунта"""
+    """Edit account profile"""
 
     biography: str | None = None
     chaining_enabled: bool  # Показывать рекомендации аккаунтов в профилях

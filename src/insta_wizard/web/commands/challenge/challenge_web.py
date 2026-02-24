@@ -14,7 +14,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class ChallengeWeb(Command[ChallengeWebResult]):
-    """Получить информацию о чекпоинте"""
+    """Get checkpoint info"""
 
     pass
 

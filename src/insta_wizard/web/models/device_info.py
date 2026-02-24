@@ -52,18 +52,19 @@ class BrowserDeviceInfo(DataClassDictMixin):
 
     @classmethod
     def from_preset(cls, preset: BrowserPreset, **overrides) -> BrowserDeviceInfo:
+        """Create a device from a preset. Example: BrowserDeviceInfo.from_preset(BrowserPreset.CHROME_143_WIN11, locale='ru_RU')"""
         return BrowserPreset.create(preset, **overrides)
 
     @classmethod
     def random(cls, **kwargs) -> BrowserDeviceInfo:
+        """Random device from all available presets."""
         return BrowserPreset.random(**kwargs)
 
     @property
     def user_agent(self) -> str:
         os_str = self._ua_os_string()
 
-        if self.browser in ("chrome", "edge"):
-            # Edge отдельно можно доработать (Edg/...), если понадобится
+        if self.browser in "chrome":
             return (
                 f"Mozilla/5.0 ({os_str}) AppleWebKit/537.36 "
                 f"(KHTML, like Gecko) Chrome/{self.major_version}.0.0.0 Safari/537.36"
@@ -79,7 +80,7 @@ class BrowserDeviceInfo(DataClassDictMixin):
 
     @property
     def sec_ch_ua(self) -> str:
-        if self.browser in ("chrome", "edge"):
+        if self.browser in "chrome":
             return (
                 f'"Google Chrome";v="{self.major_version}", '
                 f'"Chromium";v="{self.major_version}", '

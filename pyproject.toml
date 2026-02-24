@@ -44,6 +44,7 @@ dependencies = [
     "pydantic>=2.0,<3.0",
     "aiofiles",
     "rich",
+    "brotlicffi",
 ]
 
 [project.urls]

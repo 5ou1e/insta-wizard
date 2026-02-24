@@ -14,7 +14,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class GetSharedData(Command[GetSharedDataResult]):
-    """Получить SharedData конфиги"""
+    """Get SharedData configs"""
 
     pass
 

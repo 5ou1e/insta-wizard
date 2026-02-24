@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.direct.direct_v2_threads_hide import (
+from insta_wizard.mobile.commands._responses.direct.threads_hide import (
     DirectV2ThreadsHideResponse,
 )
 from insta_wizard.mobile.common import constants
@@ -20,6 +20,7 @@ from insta_wizard.mobile.models.state import (
 @dataclass(slots=True)
 class DirectV2ThreadsHide(Command[DirectV2ThreadsHideResponse]):
     thread_id: str
+    should_move_future_requests_to_spam: bool = False
 
 
 class DirectV2ThreadsHideHandler(CommandHandler[DirectV2ThreadsHide, DirectV2ThreadsHideResponse]):
@@ -29,8 +30,11 @@ class DirectV2ThreadsHideHandler(CommandHandler[DirectV2ThreadsHide, DirectV2Thr
 
     async def __call__(self, command: DirectV2ThreadsHide) -> DirectV2ThreadsHideResponse:
         payload = {
-            "_uuid": self.state.device.device_id,
+            "should_move_future_requests_to_spam": "true"
+            if command.should_move_future_requests_to_spam
+            else "false",
             "use_unified_inbox": "true",
+            "_uuid": self.state.device.device_id,
         }
 
         resp = await self.api.call_api(

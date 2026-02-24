@@ -14,7 +14,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class FriendshipsFollow(Command[FriendshipsFollowResult]):
-    """Подписаться на пользователя"""
+    """Follow a user"""
 
     user_id: str
 

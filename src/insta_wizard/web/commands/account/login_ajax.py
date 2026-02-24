@@ -17,7 +17,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class AccountsLoginAjax(Command[AccountsLoginAjaxResult]):
-    """Авторизоваться в аккаунт с помощью логина и пароля"""
+    """Log in with username and password"""
 
     username: str
     enc_password: str

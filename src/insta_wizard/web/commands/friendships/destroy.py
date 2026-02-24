@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class FriendshipsDestroy(Command[FriendshipsDestroyResult]):
-    """Подписаться на пользователя"""
+    """Unfollow a user"""
 
     user_id: str
 

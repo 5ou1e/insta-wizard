@@ -85,4 +85,4 @@ class InstagramAppVersionInfoRegistry:
         try:
             return cls._version_configs[version]
         except KeyError:
-            raise ValueError(f"Неизвестная версия Instagram: {version}")
+            raise ValueError(f"Unknown version: {version}")

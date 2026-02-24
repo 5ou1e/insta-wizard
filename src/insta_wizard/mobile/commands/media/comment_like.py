@@ -21,7 +21,7 @@ from insta_wizard.mobile.models.state import (
 
 @dataclass(slots=True)
 class MediaCommentLike(Command[MediaCommentLikeResponse]):
-    """Поставить лайк на комментарий"""
+    """Like a comment"""
 
     comment_id: int
 

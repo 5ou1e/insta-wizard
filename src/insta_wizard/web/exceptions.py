@@ -7,22 +7,17 @@ from insta_wizard.web.models.other import CheckpointRequiredErrorData
 
 @dataclass(kw_only=True, slots=True)
 class WebClientError(InstaWizardError):
-    @property
-    def title(self) -> str:
-        return "Ошибка WEB IG-клиента"
-
     def __str__(self) -> str:
-        return self.title
+        return "Web IG client error"
 
 
 @dataclass(kw_only=True, slots=True)
 class StateParametersMissingError(WebClientError):
-    """Ошибка при отсутствии в state необходимых параметров для выполнения запросов"""
+    """Raised when the state is missing required parameters for executing requests."""
 
     msg: str
 
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return self.msg
 
 
@@ -30,19 +25,17 @@ class StateParametersMissingError(WebClientError):
 class ChallengeHandlingError(WebClientError):
     msg: str
 
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return self.msg
 
 
 @dataclass(kw_only=True, slots=True)
 class ResponseParsingError(WebClientError):
-    """Ошибки парсинга различных значений из ответов инстаграм"""
+    """Raised when parsing values from Instagram responses fails."""
 
     msg: str
 
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return self.msg
 
 
@@ -50,9 +43,8 @@ class ResponseParsingError(WebClientError):
 class NetworkError(WebClientError):
     message: str
 
-    @property
-    def title(self) -> str:
-        return "Ошибка сети"
+    def __str__(self) -> str:
+        return "Network error"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -64,9 +56,8 @@ class InstagramResponseError(WebClientError):
 class NotFoundError(InstagramResponseError):
     request_url: str | None = None
 
-    @property
-    def title(self) -> str:
-        return f"Ресурс не найден, request_url={self.request_url}"
+    def __str__(self) -> str:
+        return f"Resource not found, request_url={self.request_url}"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -75,9 +66,8 @@ class UnexpectedResponseContentTypeError(WebClientError):
     expected: str
     returned: str
 
-    @property
-    def title(self) -> str:
-        return f"Инстаграм вернул ответ не в том виде, который ожидался: expected={self.expected}, returned={self.returned}, status_code={self.response.status}"
+    def __str__(self) -> str:
+        return f"Instagram returned response in unexpected format: expected={self.expected}, returned={self.returned}, status_code={self.response.status}"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -86,9 +76,8 @@ class UnexpectedRedirectResponseError(InstagramResponseError):
     request_url: str
     location: str | None = None
 
-    @property
-    def title(self) -> str:
-        return f"Неожиданный редирект от инстаграм при запросе на url: {self.request_url}, redirect_location={self.location}"
+    def __str__(self) -> str:
+        return f"Unexpected redirect from Instagram for request url: {self.request_url}, redirect_location={self.location}"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -100,8 +89,7 @@ class BadRequestError(WebClientError):
 class CheckpointRequiredError(InstagramResponseError):
     checkpoint_data: CheckpointRequiredErrorData
 
-    @property
-    def title(self) -> str:
+    def __str__(self) -> str:
         return "CheckpointRequired"
 
 
@@ -109,65 +97,57 @@ class CheckpointRequiredError(InstagramResponseError):
 class ResetPasswordLinkExpiredError(WebClientError):
     message: str
 
-    @property
-    def title(self) -> str:
-        return "Ссылка для смены пароля недействительна"
+    def __str__(self) -> str:
+        return "Password reset link is invalid"
 
 
 @dataclass(kw_only=True, slots=True)
 class UserNotFoundError(WebClientError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Пользователь не найден"
+    def __str__(self) -> str:
+        return "User not found"
 
 
 @dataclass(kw_only=True, slots=True)
 class LoginError(WebClientError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации"
+    def __str__(self) -> str:
+        return "Authorization error"
 
 
 @dataclass(kw_only=True, slots=True)
 class LoginBadPasswordError(LoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Ошибка авторизации: неверный пароль"
+    def __str__(self) -> str:
+        return "Authorization error: wrong password"
 
 
 @dataclass(kw_only=True, slots=True)
 class UnknownLoginError(LoginError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Неизвестная ошибка авторизации"
+    def __str__(self) -> str:
+        return "Unknown authorization error"
 
 
 @dataclass(kw_only=True, slots=True)
 class ResetPasswordLinkNotSentError(WebClientError):
     response_json: dict
 
-    @property
-    def title(self) -> str:
-        return "Инстаграм не отправил ссылку на почту"
+    def __str__(self) -> str:
+        return "Instagram did not send the reset link to email"
 
 
 @dataclass(kw_only=True, slots=True)
 class SessionIDMissingError(WebClientError):
-    @property
-    def title(self) -> str:
-        return "Отсутствует sessionid"
+    def __str__(self) -> str:
+        return "Session ID is missing"
 
 
 @dataclass(kw_only=True, slots=True)
 class TooManyRequestsError(InstagramResponseError):
-    @property
-    def title(self) -> str:
-        return "Слишком частые запросы (429)"
+    def __str__(self) -> str:
+        return "Too many requests (429)"

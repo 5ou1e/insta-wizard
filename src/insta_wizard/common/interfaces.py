@@ -37,11 +37,11 @@ class SelfiePhotoProvider(Protocol):
 
 class EmailCodeProvider(Protocol):
     async def provide_code(self, masked_email: str, from_datetime: datetime) -> str:
-        """Must returns code from email for auth-platform challenge passing"""
+        """Must returns code from email"""
         ...
 
     async def provide_code_without_known_email(self, from_datetime: datetime) -> str:
-        """Must returns code from email for auth-platform challenge passing , if email is unknown"""
+        """Must returns code from email"""
         ...
 
 
@@ -57,7 +57,7 @@ class ManualPhoneSmsCodeProvider(PhoneSmsCodeProvider):
 
     async def provide_number(self, new: bool = False) -> str:
 
-        return self.number or input("Введите номер: ")
+        return self.number or input("Enter phone number: ")
 
     async def provide_code(self) -> str:
-        return input("Введите код из смс: ")
+        return input("Enter the code from the SMS")

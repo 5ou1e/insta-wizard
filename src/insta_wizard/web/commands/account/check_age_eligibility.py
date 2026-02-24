@@ -15,7 +15,7 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class CheckAgeEligibility(Command[CheckAgeEligibilityResult]):
-    """Проверить, возможна ли регистрация с введенной датой рождения"""
+    """Check if registration is allowed with the given birth date"""
 
     day: int
     month: int
