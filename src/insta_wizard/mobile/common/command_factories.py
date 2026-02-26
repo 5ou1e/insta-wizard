@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from types import MappingProxyType
 
+from insta_wizard.mobile.commands import MediaLike, MediaDelete, MediaLikers, MediaSave
 from insta_wizard.mobile.commands.account.change_profile_picture import (
     AccountChangeProfilePicture,
     AccountChangeProfilePictureHandler,
@@ -31,6 +32,7 @@ from insta_wizard.mobile.commands.account.login import (
     AccountLogin,
     AccountLoginHandler,
 )
+from insta_wizard.mobile.commands.account.logout import AccountsLogout, AccountsLogoutHandler
 from insta_wizard.mobile.commands.account.security_info import (
     AccountSecurityInfo,
     AccountSecurityInfoHandler,
@@ -279,6 +281,7 @@ from insta_wizard.mobile.commands.media.blocked import (
     MediaBlockedHandler,
 )
 from insta_wizard.mobile.commands.media.comment import MediaComment, MediaCommentHandler
+from insta_wizard.mobile.commands.media.comment_bulk_delete import MediaCommentBulkDelete, MediaCommentBulkDeleteHandler
 from insta_wizard.mobile.commands.media.comment_like import (
     MediaCommentLike,
     MediaCommentLikeHandler,
@@ -288,6 +291,12 @@ from insta_wizard.mobile.commands.media.comment_unlike import (
     MediaCommentUnlikeHandler,
 )
 from insta_wizard.mobile.commands.media.comments import MediaComments, MediaCommentsHandler
+from insta_wizard.mobile.commands.media.delete import MediaDeleteHandler
+from insta_wizard.mobile.commands.media.edit import MediaEditHandler, MediaEdit
+from insta_wizard.mobile.commands.media.like import MediaLikeHandler
+from insta_wizard.mobile.commands.media.likers import MediaLikersHandler
+from insta_wizard.mobile.commands.media.save import MediaSaveHandler
+from insta_wizard.mobile.commands.media.unlike import MediaUnlikeHandler, MediaUnlike
 from insta_wizard.mobile.commands.multiple_accounts.get_account_family import (
     MultipleAcountsGetAccountFamily,
     MultipleAcountsGetAccountFamilyHandler,
@@ -412,6 +421,31 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     # media
+    MediaLike: lambda d: MediaLikeHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    MediaUnlike: lambda d: MediaUnlikeHandler(
+        api=d.api,
+        state=d.state,
+    ),
+
+    MediaDelete: lambda d: MediaDeleteHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    MediaEdit: lambda d: MediaEditHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    MediaLikers: lambda d: MediaLikersHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    MediaSave: lambda d: MediaSaveHandler(
+        api=d.api,
+        state=d.state,
+    ),
     MediaBlocked: lambda d: MediaBlockedHandler(
         api=d.api,
         state=d.state,
@@ -421,6 +455,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     MediaComment: lambda d: MediaCommentHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    MediaCommentBulkDelete: lambda d: MediaCommentBulkDeleteHandler(
         api=d.api,
         state=d.state,
     ),
@@ -636,6 +674,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         api=d.api,
         state=d.state,
     ),
+    AccountsLogout: lambda d: AccountsLogoutHandler(
+        api=d.api,
+        state=d.state,
+    ),
     AccountCheckPhoneNumber: lambda d: AccountCheckPhoneNumberHandler(
         api=d.api,
         state=d.state,
@@ -740,6 +782,5 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
 }
-
 
 COMMAND_FACTORIES = MappingProxyType(COMMAND_FACTORIES)

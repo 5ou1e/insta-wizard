@@ -18,6 +18,7 @@ class MobileClientLocalData(DataClassDictMixin):
     shbid: str | None = None
     shbts: str | None = None
     rur: str | None = None
+    direct_region_hint: str | None = None
     www_claim: str | None = None
     public_key: str | None = None  # /api/v1/launcher/mobileconfig/
     public_key_id: int | None = None  # /api/v1/launcher/mobileconfig/
@@ -42,6 +43,7 @@ class MobileClientLocalData(DataClassDictMixin):
         shbid: str | None = None,
         shbts: str | None = None,
         rur: str | None = None,
+        direct_region_hint: str | None = None,
         www_claim: str | None = None,
         public_key: str | None = None,
         public_key_id: int | None = None,
@@ -67,6 +69,7 @@ class MobileClientLocalData(DataClassDictMixin):
             shbid=shbid,
             shbts=shbts,
             rur=rur,
+            direct_region_hint=direct_region_hint,
             www_claim=www_claim,
             public_key=public_key,
             public_key_id=public_key_id,

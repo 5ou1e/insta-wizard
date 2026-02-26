@@ -1,3 +1,4 @@
+import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
@@ -7,6 +8,7 @@ from yarl import URL
 from insta_wizard.web.common.constants import WWW_INSTAGRAM_URL
 from insta_wizard.web.common.utils import generate_web_session_id
 
+DS_USER_ID_FROM_SESSIONID_RE = re.compile(r"^\s*(\d+)(?::|%3a)", re.IGNORECASE)
 
 @dataclass(kw_only=True, slots=True)
 class WebClientLocalData:
@@ -26,6 +28,7 @@ class WebClientLocalData:
         web_session_id: str | None = None,
         cookies: dict | None = None,
     ) -> "WebClientLocalData":
+        """ Creates LocalData, use it instead of _init_ method"""
         if not web_session_id:
             web_session_id = generate_web_session_id()
 
@@ -39,6 +42,12 @@ class WebClientLocalData:
         )
 
         if cookies:
+            sessionid = cookies.get("sessionid")
+            if sessionid:
+                m = DS_USER_ID_FROM_SESSIONID_RE.match(sessionid)
+                ds_user_id = m.group(1)
+                if ds_user_id:
+                    cookies["ds_user_id"] = ds_user_id
             data.set_cookies(dict(cookies))
 
         return data

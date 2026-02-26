@@ -1,0 +1,46 @@
+
+from dataclasses import dataclass
+from typing import cast, TypedDict
+
+from insta_wizard.mobile.common import constants
+from insta_wizard.mobile.common.command import (
+    Command,
+    CommandHandler,
+)
+from insta_wizard.mobile.common.requesters.api_requester import (
+    ApiRequestExecutor,
+)
+from insta_wizard.mobile.common.utils import build_signed_body
+from insta_wizard.mobile.models.state import (
+    MobileClientState,
+)
+
+class MediaEditResponse(TypedDict):
+    pass
+
+@dataclass(slots=True)
+class MediaEdit(Command[MediaEditResponse]):
+    """ Edit the media """
+    media_id: str
+    caption_text: str
+
+
+class MediaEditHandler(CommandHandler[MediaEdit, MediaEditResponse]):
+    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
+        self.api = api
+        self.state = state
+
+    async def __call__(self, command: MediaEdit) -> MediaEditResponse:
+        payload = {
+            "media_id": command.media_id,
+            "_uuid": self.state.device.device_id,
+            "caption_text": command.caption_text,
+        }
+
+        data = build_signed_body(payload)
+        resp = await self.api.call_api(
+            method="POST",
+            uri=constants.MEDIA_EDIT_URI.format(media_id=command.media_id),
+            data=data,
+        )
+        return cast(MediaEditResponse, resp)

@@ -41,7 +41,7 @@ from insta_wizard.mobile.exceptions import (
     PayloadReturnedIsNullError,
     TooManyRequestsError,
     UnauthorizedError,
-    UnexpectedResponseContentTypeError,
+    UnexpectedResponseContentTypeError, NodeTaoSystemExceptionError,
 )
 from insta_wizard.mobile.models.challenge import (
     ChallengeRequiredData,
@@ -196,16 +196,15 @@ class ApiRequestExecutor:
 
     async def _execute_request(self, request: HttpRequest) -> dict:
         response, elapsed_ms = await self._send(request)
+        data = self._parse_response_body(response)
+
+        self.logger.response(response, data)
 
         self._update_state_from_response_headers(response)
         self.state.increment_request_stats(
             len(response.content) if response.content else 0,
             elapsed_ms,
         )
-
-        data = self._parse_response_body(response)
-
-        self.logger.response(response, data)
 
         if response.status != 200:
             error = self.parse_error_from_response(request, response, data)
@@ -253,9 +252,11 @@ class ApiRequestExecutor:
 
     def _update_state_from_response_headers(self, response: TransportResponse):
         for header_name, attr_name in HEADER_MAPPINGS.items():
+            if header_name not in response.headers:
+                continue
+
             header_value = response.headers.get(header_name)
-            if header_value and hasattr(self.state.local_data, attr_name):
-                setattr(self.state.local_data, attr_name, header_value)
+            setattr(self.state.local_data, attr_name, header_value)
 
         authorization_header = response.headers.get("ig-set-authorization")
 
@@ -297,6 +298,9 @@ class ApiRequestExecutor:
                         ),
                         response=response_info,
                     )
+                if "NodeTaoSystemException" in message:
+                    return NodeTaoSystemExceptionError(response=response_info)
+
                 return BadRequestError(response=response_info)
 
             if status == 401:

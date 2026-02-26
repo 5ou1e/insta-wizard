@@ -25,7 +25,7 @@ LoginResult: TypeAlias = None
 
 @dataclass(slots=True)
 class Login(Command[LoginResult]):
-    """Авторизоваться в аккаунт с помощью логина и пароля"""
+    """Log in to account using username and password"""
 
     username: str
     password: str

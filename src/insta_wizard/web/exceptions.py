@@ -51,6 +51,8 @@ class NetworkError(WebClientError):
 class InstagramResponseError(WebClientError):
     response: ResponseInfo
 
+    def __str__(self) -> str:
+        return f"InstagramResponseError, status_code={self.response.status}, response={self.response.response_string[:100]}..."
 
 @dataclass(kw_only=True, slots=True)
 class NotFoundError(InstagramResponseError):

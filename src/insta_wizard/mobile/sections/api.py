@@ -1,5 +1,6 @@
 from typing import Literal
 
+from insta_wizard.mobile.commands import MediaLike, MediaUnlike, MediaDelete, MediaEdit, MediaLikers, MediaSave
 from insta_wizard.mobile.commands._responses.friendships.friendships_user_followers import (
     FriendshipsUserFollowersResponse,
 )
@@ -30,6 +31,7 @@ from insta_wizard.mobile.commands.account.get_presence_disabled import (
 from insta_wizard.mobile.commands.account.login import (
     AccountLogin,
 )
+from insta_wizard.mobile.commands.account.logout import AccountsLogout
 from insta_wizard.mobile.commands.account.security_info import AccountSecurityInfo
 from insta_wizard.mobile.commands.account.send_confirm_email import AccountSendConfirmEmail
 from insta_wizard.mobile.commands.account.send_confirm_phone_number import (
@@ -158,6 +160,7 @@ from insta_wizard.mobile.commands.media.blocked import (
     MediaBlocked,
 )
 from insta_wizard.mobile.commands.media.comment import MediaComment
+from insta_wizard.mobile.commands.media.comment_bulk_delete import MediaCommentBulkDelete
 from insta_wizard.mobile.commands.media.comment_like import MediaCommentLike
 from insta_wizard.mobile.commands.media.comment_unlike import MediaCommentUnlike
 from insta_wizard.mobile.commands.media.comments import MediaComments
@@ -192,13 +195,16 @@ from insta_wizard.mobile.common.command import CommandBus
 from insta_wizard.mobile.models.challenge import (
     ChallengeRequiredData,
 )
+from insta_wizard.mobile.models.state import MobileClientState
 
 
 class BaseSection:
     def __init__(
         self,
+        state: MobileClientState,
         bus: CommandBus,
     ):
+        self.state = state
         self.bus = bus
 
 
@@ -245,9 +251,15 @@ class AccountSection(BaseSection):
     async def get_presence_disabled(self):
         return await self.bus.execute(AccountGetPresenceDisabled())
 
-    async def login(self, username: str, password: str):
-        """Send login request with username and password"""
-        return await self.bus.execute(AccountLogin(username=username, password=password))
+    async def login(self, username: str, password: str) -> None:
+        """Log in with username and password"""
+        await self.bus.execute(AccountLogin(username=username, password=password))
+
+    async def logout(self) -> None:
+        """Logout of account"""
+        if not self.state.local_data.authorization:
+            return
+        await self.bus.execute(AccountsLogout())
 
     async def check_phone_number(self, phone_number: str):
         """Check if phone number is available"""
@@ -487,6 +499,31 @@ class LiveSection(BaseSection):
 
 
 class MediaSection(BaseSection):
+
+    async def like(self, media_id: str):
+        """ Like the media """
+        return await self.bus.execute(MediaLike(media_id=media_id))
+
+    async def unlike(self, media_id: str):
+        """ Unlike the media """
+        return await self.bus.execute(MediaUnlike(media_id=media_id))
+
+    async def delete(self, media_id: str):
+        """ Delete the media """
+        return await self.bus.execute(MediaDelete(media_id=media_id))
+
+    async def edit(self, media_id: str, caption_text: str):
+        """ Edit the media """
+        return await self.bus.execute(MediaEdit(media_id=media_id, caption_text=caption_text))
+
+    async def save(self, media_id: str):
+        """ Save the media """
+        return await self.bus.execute(MediaSave(media_id=media_id))
+
+    async def get_likers(self, media_id: str):
+        """ Get media likers """
+        return await self.bus.execute(MediaLikers(media_id=media_id))
+
     async def get_blocked(self):
         return await self.bus.execute(MediaBlocked())
 
@@ -519,6 +556,10 @@ class MediaSection(BaseSection):
                 replied_to_comment_id=replied_to_comment_id,
             )
         )
+    async def delete_comments(self, media_id: str, comment_ids: list[str]):
+        """Delete comments on media"""
+        return await self.bus.execute(MediaCommentBulkDelete(media_id=media_id, comment_ids=comment_ids))
+
 
     async def like_comment(self, comment_id: int):
         """Like a comment"""

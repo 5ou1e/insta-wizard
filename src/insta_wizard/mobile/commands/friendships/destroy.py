@@ -57,6 +57,6 @@ class FriendshipsDestroyHandler(CommandHandler[FriendshipsDestroy, FriendshipsDe
                 },
             )
         except NotFoundError as e:
-            raise UserIdNotFound(response=e.response) from e
+            raise UserIdNotFound() from e
 
         return cast(FriendshipsDestroyResponse, resp)

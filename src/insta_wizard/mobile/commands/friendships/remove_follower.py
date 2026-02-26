@@ -61,6 +61,6 @@ class FriendshipsRemoveFollowerHandler(
                 },
             )
         except NotFoundError as e:
-            raise UserIdNotFound(response=e.response) from e
+            raise UserIdNotFound() from e
 
         return cast(FriendshipsRemoveFollowerResponse, resp)

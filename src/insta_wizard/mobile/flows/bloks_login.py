@@ -90,13 +90,13 @@ class BloksLoginHandler(CommandHandler[BloksLogin, BloksLoginResult]):
         self.state.local_data.set_www_claim(None)
         self.state.local_data.set_waterfall_id(generate_waterfall_id())
 
-        await self.send_requests_before_login()
-        return await self.login(
+        await self.send_requests_before_login(waterfall_id=self.state.local_data.waterfall_id)
+        return await self._login(
             username=command.username,
             password=command.password,
         )
 
-    async def login(self, username: str, password: str) -> None:
+    async def _login(self, username: str, password: str) -> None:
         if self.state.local_data.public_key and self.state.local_data.public_key_id:
             enc_password = PasswordEncrypter.encrypt_v4(
                 password,
@@ -152,10 +152,12 @@ class BloksLoginHandler(CommandHandler[BloksLogin, BloksLoginResult]):
             case _:
                 raise BloksLoginUnknownError(response_json=response)
 
-    async def send_requests_before_login(self) -> None:
+    async def send_requests_before_login(self, waterfall_id: str) -> None:
         await self.bus.execute(ZrDualTokens())
         await self.bus.execute(AttestationCreateAndroidKeystoreBApi())
-        await self.bus.execute(BloksProcessClientDataAndRedirectBApi())
+        await self.bus.execute(BloksProcessClientDataAndRedirectBApi(
+            waterfall_id=waterfall_id,
+        ))
         await self.bus.execute(BloksYouthRegulationDeletePregent())
         await self.bus.execute(BloksPhoneNumberPrefillAsync())
 

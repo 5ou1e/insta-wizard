@@ -10,6 +10,7 @@ from insta_wizard.common.transport.models import (
     TransportSettings,
 )
 from insta_wizard.common.models import ProxyInfo
+from insta_wizard.mobile.commands.account.logout import AccountsLogout
 from insta_wizard.mobile.common.command import (
     Command,
     CommandBus,
@@ -120,17 +121,17 @@ class MobileInstagramClient:
         self._graphql_www = GraphqlWWW(**graph_deps)
         self._graphql_query = GraphqlQuery(**graph_deps)
 
-        self.account = AccountSection(bus=self._bus)
-        self.users = UserSection(bus=self._bus)
-        self.friendships = FriendshipsSection(bus=self._bus)
-        self.feed = FeedSection(bus=self._bus)
-        self.direct = DirectSection(bus=self._bus)
-        self.media = MediaSection(bus=self._bus)
-        self.notifications = NotificationSection(bus=self._bus)
-        self.news = NewsSection(bus=self._bus)
-        self.live = LiveSection(bus=self._bus)
-        self.clips = ClipSection(bus=self._bus)
-        self.challenge = ChallengeSection(bus=self._bus)
+        self.account = AccountSection(state=self.state, bus=self._bus)
+        self.users = UserSection(state=self.state, bus=self._bus)
+        self.friendships = FriendshipsSection(state=self.state, bus=self._bus)
+        self.feed = FeedSection(state=self.state, bus=self._bus)
+        self.direct = DirectSection(state=self.state, bus=self._bus)
+        self.media = MediaSection(state=self.state, bus=self._bus)
+        self.notifications = NotificationSection(state=self.state, bus=self._bus)
+        self.news = NewsSection(state=self.state, bus=self._bus)
+        self.live = LiveSection(state=self.state, bus=self._bus)
+        self.clips = ClipSection(state=self.state, bus=self._bus)
+        self.challenge = ChallengeSection(state=self.state, bus=self._bus)
 
         deps = ClientDeps(
             http=self._transport,
@@ -225,4 +226,14 @@ class MobileInstagramClient:
             raise InstaWizardError(f"Failed to load client state: {e}") from e
 
     async def login(self, username: str, password: str):
-        return await self._bus.execute(BloksLogin(username=username, password=password))
+        """Log in with username and password"""
+        return await self.account.login(
+            username=username,
+            password=password,
+        )
+
+    async def logout(self) -> None:
+        """Logout of account"""
+        return await self.account.logout()
+
+

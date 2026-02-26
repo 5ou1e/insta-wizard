@@ -19,7 +19,7 @@ class StateInitializer:
         self.bus = bus
 
     async def __call__(self):
-        """Переходит на хоум-пейдж и парсит необходимы для работы клиента параметры"""
+        """Navigates to the home page and parses the parameters required for the client to work"""
 
         response = await self.bus.execute(GetInstagramHomePage())
 

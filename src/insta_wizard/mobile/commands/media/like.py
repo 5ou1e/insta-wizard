@@ -1,0 +1,48 @@
+
+from dataclasses import dataclass
+from typing import cast, TypedDict
+
+from insta_wizard.mobile.common import constants
+from insta_wizard.mobile.common.command import (
+    Command,
+    CommandHandler,
+)
+from insta_wizard.mobile.common.requesters.api_requester import (
+    ApiRequestExecutor,
+)
+from insta_wizard.mobile.common.utils import build_signed_body
+from insta_wizard.mobile.models.state import (
+    MobileClientState,
+)
+
+class MediaLikeResponse(TypedDict):
+    pass
+
+@dataclass(slots=True)
+class MediaLike(Command[MediaLikeResponse]):
+    """ Like the media """
+    media_id: str
+
+
+class MediaLikeHandler(CommandHandler[MediaLike, MediaLikeResponse]):
+    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
+        self.api = api
+        self.state = state
+
+    async def __call__(self, command: MediaLike) -> MediaLikeResponse:
+        payload = {
+            # "module_name": ...,
+            "media_id": command.media_id,
+            "_uuid": self.state.device.device_id,
+            "radio_type": self.state.radio_type,
+            "inventory_source": "media_or_ad",
+            "container_module": "feed_timeline",
+        }
+
+        data = build_signed_body(payload)
+        resp = await self.api.call_api(
+            method="POST",
+            uri=constants.MEDIA_LIKE_URI.format(media_id=command.media_id),
+            data=data,
+        )
+        return cast(MediaLikeResponse, resp)

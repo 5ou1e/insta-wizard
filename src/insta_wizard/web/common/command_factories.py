@@ -20,6 +20,7 @@ from insta_wizard.web.commands.account.login_ajax import (
     AccountsLoginAjax,
     AccountsLoginAjaxHandler,
 )
+from insta_wizard.web.commands.account.logout_ajax import AccountsLogoutAjax, AccountsLogoutAjaxHandler
 from insta_wizard.web.commands.account.recovery_send_ajax import (
     AccountRecoverySendAjax,
     AccountRecoverySendAjaxHandler,
@@ -127,6 +128,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     AccountsLoginAjax: lambda d: AccountsLoginAjaxHandler(
+        api_requester=d.api_requester,
+        state=d.state,
+    ),
+    AccountsLogoutAjax: lambda d: AccountsLogoutAjaxHandler(
         api_requester=d.api_requester,
         state=d.state,
     ),

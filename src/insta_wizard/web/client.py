@@ -1,4 +1,5 @@
 from insta_wizard.common.exceptions import InstaWizardError
+from insta_wizard.common.generators import generate_jazoest
 from insta_wizard.common.logger import InstagramClientLogger, StdLoggingInstagramClientLogger
 from insta_wizard.common.transport.aiohttp_transport import AioHttpTransport
 from insta_wizard.common.transport.base import (
@@ -8,6 +9,7 @@ from insta_wizard.common.transport.models import (
     TransportSettings,
 )
 from insta_wizard.common.models import ProxyInfo
+from insta_wizard.web.commands.account.logout_ajax import AccountsLogoutAjax
 from insta_wizard.web.common.command import (
     Command,
     CommandBus,
@@ -207,7 +209,15 @@ class WebInstagramClient:
             raise InstaWizardError(f"Failed to load client state: {e}") from e
 
     async def initialize_state(self):
+        """Navigates to the home page and parses the parameters required for the client to work"""
         await self._initializer()
 
-    async def login(self, username: str, password: str):
+    async def login(self, username: str, password: str) -> None:
+        """Log in to account using username and password"""
         return await self._bus.execute(Login(username=username, password=password))
+
+    async def logout(self) -> None:
+        """Logout of account"""
+        if not self.state.sessionid:
+            return
+        await self._bus.execute(AccountsLogoutAjax(jazoest=generate_jazoest(self.state.csrftoken)))

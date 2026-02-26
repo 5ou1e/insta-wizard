@@ -42,6 +42,8 @@ class NetworkError(MobileClientError):
 class InstagramResponseError(MobileClientError):
     response: ResponseInfo
 
+    def __str__(self) -> str:
+        return f"InstagramResponseError, status_code={self.response.status}, response={self.response.response_string[:100]}..."
 
 @dataclass(kw_only=True, slots=True)
 class UnexpectedResponseContentTypeError(MobileClientError):
@@ -60,30 +62,18 @@ class AuthorizationMissingError(MobileClientError):
 
 
 @dataclass(kw_only=True, slots=True)
-class BadResponseError(MobileClientError):
-    def __str__(self) -> str:
-        return "Invalid response from Instagram"
-
-
-# --------------------------------------------
-
-
-@dataclass(kw_only=True, slots=True)
 class ChallengeRequiredError(MobileClientError):
     response_json: dict
     challenge_data: ChallengeRequiredData | None = None
 
     def __str__(self) -> str:
-        return f"ChallengeRequired, api_path={self.challenge_data.api_path}"
-
-
-# --------------------------------------------
+        return f"Challenge required, api_path={self.challenge_data.api_path}"
 
 
 @dataclass(kw_only=True, slots=True)
 class LoginRequiredError(InstagramResponseError):
     def __str__(self) -> str:
-        return "Instagram revoked authorization"
+        return "Login required error"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -95,7 +85,7 @@ class NotFoundError(InstagramResponseError):
 @dataclass(kw_only=True, slots=True)
 class BadRequestError(InstagramResponseError):
     def __str__(self) -> str:
-        return "Bad request"
+        return "Bad request, status_code={self.response.status}, response={self.response.response_string[:100]}..."
 
 
 @dataclass(kw_only=True, slots=True)
@@ -202,11 +192,11 @@ class UnauthorizedError(InstagramResponseError):
 @dataclass(kw_only=True, slots=True)
 class OopsAnErrorOccurred(InstagramResponseError):
     def __str__(self) -> str:
-        return "Oops an error occurred"
+        return "Oops, an error occurred"
 
 
 @dataclass(kw_only=True, slots=True)
-class UserIdNotFound(NotFoundError):
+class UserIdNotFound(MobileClientError):
     def __str__(self) -> str:
         return "User with this ID not found"
 
@@ -227,13 +217,6 @@ class FeedbackRequiredError(InstagramResponseError):
         return "Action is blocked"
 
 
-# @dataclass(kw_only=True, slots=True)
-# class NodeTaoSystemExceptionError(MobileClientError):
-#
-#     def __str__(self) -> str:
-#         return "NodeTaoSystemException"
-
-
 @dataclass(kw_only=True, slots=True)
 class InstagramBackend572Error(InstagramResponseError):
     def __str__(self) -> str:
@@ -244,6 +227,12 @@ class InstagramBackend572Error(InstagramResponseError):
 class PayloadReturnedIsNullError(InstagramResponseError):
     def __str__(self) -> str:
         return "PayloadReturnedIsNullError"
+
+@dataclass(kw_only=True, slots=True)
+class NodeTaoSystemExceptionError(InstagramResponseError):
+    """ Instagram backend error - {"message":"NodeTaoSystemException: tao_errno=6307... """
+    def __str__(self) -> str:
+        return "NodeTaoSystemException"
 
 
 @dataclass(kw_only=True, slots=True)

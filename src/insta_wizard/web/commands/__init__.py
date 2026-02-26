@@ -10,6 +10,7 @@ from .account.edit import AccountsEdit
 from .account.edit_web_form_data import AccountsEditWebFormData
 from .account.get_email_signup_page import GetEmailSignupPage
 from .account.login_ajax import AccountsLoginAjax
+from .account.logout_ajax import AccountsLogoutAjax
 from .account.recovery_send_ajax import AccountRecoverySendAjax
 from .account.send_sms_code_ajax import SendSignupSmsCodeAjax
 from .account.web_create_ajax import WebCreateAjax
@@ -39,6 +40,7 @@ __all__ = [
     "AccountsEditWebFormData",
     "GetEmailSignupPage",
     "AccountsLoginAjax",
+    "AccountsLogoutAjax",
     "AccountRecoverySendAjax",
     "SendSignupSmsCodeAjax",
     "WebCreateAjax",

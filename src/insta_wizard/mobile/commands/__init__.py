@@ -12,6 +12,7 @@ from .account.current_user import AccountCurrentUser
 from .account.edit_profile import AccountEditProfile
 from .account.get_presence_disabled import AccountGetPresenceDisabled
 from .account.login import AccountLogin
+from .account.logout import AccountsLogout
 from .account.security_info import AccountSecurityInfo
 from .account.send_confirm_email import AccountSendConfirmEmail
 from .account.send_confirm_phone_number import AccountSendConfirmPhoneNumber
@@ -77,9 +78,16 @@ from .live.get_good_time_for_live import LiveGetGoodTimeForLive
 from .loom.fetch_config import LoomFetchConfig
 from .media.blocked import MediaBlocked
 from .media.comment import MediaComment
+from .media.comment_bulk_delete import MediaCommentBulkDelete
 from .media.comment_like import MediaCommentLike
 from .media.comment_unlike import MediaCommentUnlike
 from .media.comments import MediaComments
+from .media.delete import MediaDelete
+from .media.edit import MediaEdit
+from .media.like import MediaLike
+from .media.likers import MediaLikers
+from .media.save import MediaSave
+from .media.unlike import MediaUnlike
 from .multiple_accounts.get_account_family import MultipleAcountsGetAccountFamily
 from .news.news_inbox import NewsInbox
 from .notifications.badge import NotificationsBadge
@@ -103,6 +111,7 @@ __all__ = [
     "AccountEditProfile",
     "AccountGetPresenceDisabled",
     "AccountLogin",
+    "AccountsLogout",
     "AccountSecurityInfo",
     "AccountSendConfirmEmail",
     "AccountSendConfirmPhoneNumber",
@@ -168,9 +177,16 @@ __all__ = [
     "LoomFetchConfig",
     "MediaBlocked",
     "MediaComment",
+    "MediaCommentBulkDelete",
     "MediaCommentLike",
     "MediaCommentUnlike",
     "MediaComments",
+    "MediaDelete",
+    "MediaEdit",
+    "MediaLike",
+    "MediaLikers",
+    "MediaSave",
+    "MediaUnlike",
     "MultipleAcountsGetAccountFamily",
     "NewsInbox",
     "NotificationsBadge",

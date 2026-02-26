@@ -117,30 +117,25 @@ await client.media.unlike_comment(comment_id)
 
 **All mobile client sections:**
 
-| Section | What it covers |
-|---|---|
-| `account` | login, get current user, edit profile, set bio, set profile picture |
-| `users` | user info by id / username, web profile, search |
+| Section | What it covers                                                             |
+|---|----------------------------------------------------------------------------|
+| `account` | login / logout, get current user, edit profile, set bio, set profile picture |
+| `users` | user info by id / username, web profile, search                            |
 | `friendships` | follow, unfollow, remove follower, followers/following lists, friendship status |
-| `feed` | timeline, stories tray, suggested reels |
+| `media` | like, unlike, save, edit, delete, comments (get / add / like / unlike)     |
 | `direct` | inbox, pending, presence, send messages and reactions, group thread management |
-| `media` | comments (get / add / like / unlike), blocked users list |
-| `notifications` | notification settings, badge count |
-| `news` | activity inbox |
-| `live` | good time for live |
-| `clips` | discover stream |
-| `challenge` | challenge info |
+| `feed` | timeline, stories tray, suggested reels                                    |
+| `challenge` | challenge info                                                             |
 
 **Web client sections:**
 
-| Section | What it covers |
-|---|---|
-| `account` | edit profile, age eligibility |
-| `navigation` | load pages, get shared data |
-| `friendships` | follow, unfollow |
+| Section | What it covers              |
+|---|-----------------------------|
+| `account` | profile info, edit profile  |
+| `friendships` | follow, unfollow            |
 | `comments` | add / like / unlike comment |
-| `likes` | like / unlike media |
-| `challenge` | challenge info |
+| `likes` | like / unlike media         |
+| `challenge` | challenge info              |
 
 ### 2. Commands
 
