@@ -5,7 +5,7 @@
 
 import pytest
 
-from insta_wizard.common.models import ProxyInfo, ProxyProtocol
+from insta_wizard.common.models.proxy import ProxyInfo, ProxyProtocol
 
 
 class TestProxyInfoParsingFormats:

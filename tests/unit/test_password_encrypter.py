@@ -12,7 +12,7 @@ import struct
 
 import pytest
 
-from insta_wizard.common.models import EncryptionInfo
+from insta_wizard.common.models.other import EncryptionInfo
 from insta_wizard.common.password_encrypter import PasswordEncrypter
 
 # Паттерны ожидаемого формата вывода

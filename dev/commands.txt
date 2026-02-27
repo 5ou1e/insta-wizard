@@ -1,0 +1,5 @@
+
+twine upload --repository testpypi dist/*
+
+twine check dist/*
+twine upload dist/*
