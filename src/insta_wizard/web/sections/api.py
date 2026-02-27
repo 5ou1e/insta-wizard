@@ -1,3 +1,4 @@
+from insta_wizard.common.logger import InstagramClientLogger
 from insta_wizard.web.commands.account.check_age_eligibility import (
     CheckAgeEligibility,
 )
@@ -24,9 +25,6 @@ from insta_wizard.web.commands.account.web_create_ajax import (
 )
 from insta_wizard.web.commands.account.web_create_ajax_attempt import (
     WebCreateAjaxAttempt,
-)
-from insta_wizard.web.commands.challenge.challenge_web import (
-    ChallengeWeb,
 )
 from insta_wizard.web.commands.comments.comments_add import (
     CommentsAdd,
@@ -70,8 +68,10 @@ from insta_wizard.web.common.command import CommandBus
 class BaseSection:
     def __init__(
         self,
+        logger: InstagramClientLogger,
         bus: CommandBus,
     ):
+        self.logger = logger
         self.bus = bus
 
 
@@ -175,12 +175,6 @@ class AccountSection(BaseSection):
     async def get_email_signup_page(self):
         """Navigate to the registration page"""
         return await self.bus.execute(GetEmailSignupPage())
-
-
-class ChallengeSection(BaseSection):
-    async def get_challenge_info(self):
-        """Get checkpoint info"""
-        return await self.bus.execute(ChallengeWeb())
 
 
 class CommentsSection(BaseSection):

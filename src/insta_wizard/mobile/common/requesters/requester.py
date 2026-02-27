@@ -34,7 +34,8 @@ from insta_wizard.mobile.exceptions import (
     OopsAnErrorOccurred,
     PayloadReturnedIsNullError,
     TooManyRequestsError,
-    UnexpectedResponseContentTypeError, NodeTaoSystemExceptionError,
+    UnexpectedResponseContentTypeError,
+    NodeTaoSystemExceptionError,
 )
 from insta_wizard.mobile.models.challenge import (
     ChallengeRequiredData,
@@ -79,7 +80,6 @@ class RequestExecutor:
             len(response.content) if response.content else 0,
             elapsed_ms,
         )
-
 
         if response.status != 200:
             error = self.parse_error_from_response(request, response, data)

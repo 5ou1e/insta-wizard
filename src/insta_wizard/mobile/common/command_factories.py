@@ -101,13 +101,13 @@ from insta_wizard.mobile.commands.bloks.youth_regulation_delete_pregent import (
     BloksYouthRegulationDeletePregent,
     BloksYouthRegulationDeletePregentHandler,
 )
-from insta_wizard.mobile.commands.challenge.get_challenge_info_b_api import (
-    ChallengeGetChallengeInfoBApi,
-    ChallengeGetChallengeInfoBApiHandler,
+from insta_wizard.mobile.commands.challenge.get_challenge_info import (
+    ChallengeGetChallengeInfo,
+    ChallengeGetChallengeInfoHandler,
 )
-from insta_wizard.mobile.commands.challenge.post_challenge_b_api import (
-    ChallengePOSTChallengeInfoBApi,
-    ChallengePOSTChallengeInfoBApiHandler,
+from insta_wizard.mobile.commands.challenge.challenge_action import (
+    ChallengeAction,
+    ChallengeActionHandler,
 )
 from insta_wizard.mobile.commands.clips.discover_stream import (
     ClipsDiscoverStream,
@@ -169,10 +169,14 @@ from insta_wizard.mobile.commands.direct.threads_approve_multiple import (
     DirectV2ThreadsApproveMultiple,
     DirectV2ThreadsApproveMultipleHandler,
 )
-from insta_wizard.mobile.commands.direct.threads_broadcast_reaction import DirectV2ThreadsBroadcastReaction, \
-    DirectV2ThreadsBroadcastReactionHandler
-from insta_wizard.mobile.commands.direct.threads_broadcast_text import DirectV2ThreadsBroadcastText, \
-    DirectV2ThreadsBroadcastTextHandler
+from insta_wizard.mobile.commands.direct.threads_broadcast_reaction import (
+    DirectV2ThreadsBroadcastReaction,
+    DirectV2ThreadsBroadcastReactionHandler,
+)
+from insta_wizard.mobile.commands.direct.threads_broadcast_text import (
+    DirectV2ThreadsBroadcastText,
+    DirectV2ThreadsBroadcastTextHandler,
+)
 from insta_wizard.mobile.commands.direct.threads_decline import (
     DirectV2ThreadsDecline,
     DirectV2ThreadsDeclineHandler,
@@ -185,8 +189,10 @@ from insta_wizard.mobile.commands.direct.threads_decline_multiple import (
     DirectV2ThreadsDeclineMultiple,
     DirectV2ThreadsDeclineMultipleHandler,
 )
-from insta_wizard.mobile.commands.direct.threads_delete_items_locally import \
-    DirectV2ThreadsDeleteItemsLocally, DirectV2ThreadsDeleteItemsLocallyHandler
+from insta_wizard.mobile.commands.direct.threads_delete_items_locally import (
+    DirectV2ThreadsDeleteItemsLocally,
+    DirectV2ThreadsDeleteItemsLocallyHandler,
+)
 from insta_wizard.mobile.commands.direct.threads_hide import (
     DirectV2ThreadsHide,
     DirectV2ThreadsHideHandler,
@@ -281,7 +287,10 @@ from insta_wizard.mobile.commands.media.blocked import (
     MediaBlockedHandler,
 )
 from insta_wizard.mobile.commands.media.comment import MediaComment, MediaCommentHandler
-from insta_wizard.mobile.commands.media.comment_bulk_delete import MediaCommentBulkDelete, MediaCommentBulkDeleteHandler
+from insta_wizard.mobile.commands.media.comment_bulk_delete import (
+    MediaCommentBulkDelete,
+    MediaCommentBulkDeleteHandler,
+)
 from insta_wizard.mobile.commands.media.comment_like import (
     MediaCommentLike,
     MediaCommentLikeHandler,
@@ -358,6 +367,7 @@ from insta_wizard.mobile.flows.bloks_login import (
     BloksLogin,
     BloksLoginHandler,
 )
+
 from insta_wizard.mobile.models.deps import ClientDeps
 
 COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
@@ -429,7 +439,6 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         api=d.api,
         state=d.state,
     ),
-
     MediaDelete: lambda d: MediaDeleteHandler(
         api=d.api,
         state=d.state,
@@ -618,11 +627,11 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     # challenge
-    ChallengeGetChallengeInfoBApi: lambda d: ChallengeGetChallengeInfoBApiHandler(
+    ChallengeGetChallengeInfo: lambda d: ChallengeGetChallengeInfoHandler(
         api=d.api,
         state=d.state,
     ),
-    ChallengePOSTChallengeInfoBApi: lambda d: ChallengePOSTChallengeInfoBApiHandler(
+    ChallengeAction: lambda d: ChallengeActionHandler(
         api=d.api,
         state=d.state,
     ),

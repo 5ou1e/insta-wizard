@@ -20,7 +20,10 @@ from insta_wizard.web.commands.account.login_ajax import (
     AccountsLoginAjax,
     AccountsLoginAjaxHandler,
 )
-from insta_wizard.web.commands.account.logout_ajax import AccountsLogoutAjax, AccountsLogoutAjaxHandler
+from insta_wizard.web.commands.account.logout_ajax import (
+    AccountsLogoutAjax,
+    AccountsLogoutAjaxHandler,
+)
 from insta_wizard.web.commands.account.recovery_send_ajax import (
     AccountRecoverySendAjax,
     AccountRecoverySendAjaxHandler,
@@ -57,6 +60,10 @@ from insta_wizard.web.commands.challenge.challenge_web import (
     ChallengeWeb,
     ChallengeWebHandler,
 )
+from insta_wizard.web.commands.challenge.challenge_web_action import (
+    ChallengeWebAction,
+    ChallengeWebActionHandler,
+)
 from insta_wizard.web.commands.comments.comments_add import CommentsAdd, CommentsAddHandler
 from insta_wizard.web.commands.comments.comments_like import CommentsLike, CommentsLikeHandler
 from insta_wizard.web.commands.comments.comments_unlike import CommentsUnlike, CommentsUnlikeHandler
@@ -92,6 +99,7 @@ from insta_wizard.web.commands.search.polaris_search_box import (
 )
 from insta_wizard.web.common.command import CommandHandler
 from insta_wizard.web.flows.login import Login, LoginHandler
+
 from insta_wizard.web.models.deps import ClientDeps
 
 COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
@@ -116,6 +124,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     ChallengeWeb: lambda d: ChallengeWebHandler(
+        api_requester=d.api_requester,
+        state=d.state,
+    ),
+    ChallengeWebAction: lambda d: ChallengeWebActionHandler(
         api_requester=d.api_requester,
         state=d.state,
     ),
@@ -200,6 +212,7 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         api_requester=d.api_requester,
         state=d.state,
     ),
+    # flows
     Login: lambda d: LoginHandler(state=d.state, initializer=d.initializer, bus=d.bus),
 }
 

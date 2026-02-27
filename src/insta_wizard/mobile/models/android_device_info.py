@@ -40,9 +40,7 @@ class AndroidDeviceInfo(DataClassDictMixin):
             k for k, v in fields.items() if v is None or (isinstance(v, str) and not v.strip())
         ]
         if missing:
-            raise ValueError(
-                f"AndroidDeviceInfo: missing or invalid values: {', '.join(missing)}"
-            )
+            raise ValueError(f"AndroidDeviceInfo: missing or invalid values: {', '.join(missing)}")
 
     @classmethod
     def create(

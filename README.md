@@ -15,10 +15,11 @@ It provides two clients:
 
 Includes proxy support, device/profile presets, and flexible session/cookie state management.
 
-Two usage styles: high-level **Sections** (recommended) and low-level typed **Commands** for full request control.
+> **Planned:** account registration, broader API coverage.
 
 > **Status:** Active development (API may change between versions).
-> **Planned:** automated checkpoint flows, account registration, broader API coverage.
+
+
 
 ---
 
@@ -67,12 +68,14 @@ The **mobile client** covers most Instagram functionality. The web client offers
 - Comments: get, add, like, unlike
 - Notifications and activity inbox
 - Live and Clips discovery
+- Checkpoint detection and passing
 
 **Web client**:
 - Login
 - Follow / unfollow
 - Like / unlike media
 - Add / like / unlike comments
+- Checkpoint detection and passing
 
 ---
 
@@ -113,9 +116,23 @@ comments = await client.media.get_comments(media_id)
 await client.media.add_comment(media_id, "great post!")
 await client.media.like_comment(comment_id)
 await client.media.unlike_comment(comment_id)
+
+# Challenge (session checkpoints)
+from insta_wizard.mobile.exceptions import ChallengeRequiredError
+from insta_wizard.common.models.checkpoint import VettedDeltaCheckpoint, ScrapingWarningCheckpoint
+
+try:
+    me = await client.account.get_current_user()
+except ChallengeRequiredError as e:
+    checkpoint = await client.challenge.get_challenge_info(e.challenge_data)
+    match checkpoint:
+        case VettedDeltaCheckpoint():
+            await client.challenge.pass_vetted_delta(choice="0")  # "It was me"
+        case ScrapingWarningCheckpoint():
+            await client.challenge.pass_scraping_warning()
 ```
 
-**All mobile client sections:**
+**Mobile client sections:**
 
 | Section | What it covers                                                             |
 |---|----------------------------------------------------------------------------|
@@ -125,7 +142,7 @@ await client.media.unlike_comment(comment_id)
 | `media` | like, unlike, save, edit, delete, comments (get / add / like / unlike)     |
 | `direct` | inbox, pending, presence, send messages and reactions, group thread management |
 | `feed` | timeline, stories tray, suggested reels                                    |
-| `challenge` | challenge info                                                             |
+| `challenge` | checkpoint detection and passing (VettedDelta, ScrapingWarning)            |
 
 **Web client sections:**
 
@@ -135,7 +152,7 @@ await client.media.unlike_comment(comment_id)
 | `friendships` | follow, unfollow            |
 | `comments` | add / like / unlike comment |
 | `likes` | like / unlike media         |
-| `challenge` | challenge info              |
+| `challenge` | checkpoint detection and passing (VettedDelta, ScrapingWarning) |
 
 ### 2. Commands
 
@@ -336,17 +353,10 @@ Available presets: `CHROME_143_WIN11`, `CHROME_143_MACOS`.
 ```python
 import asyncio
 from insta_wizard import WebInstagramClient
-from insta_wizard.web.flows.login import Login
-from insta_wizard.web.exceptions import CheckpointRequiredError
 
 async def main():
     async with WebInstagramClient() as client:
-        try:
-            await client.execute(Login(username="...", password="..."))
-        except CheckpointRequiredError:
-            # Automated checkpoint passing is planned — see Roadmap
-            pass
-
+        await client.account.login("...", "...")
         cookies = client.get_cookies()
 
 asyncio.run(main())
@@ -356,7 +366,7 @@ asyncio.run(main())
 
 ```python
 async with WebInstagramClient() as client:
-    await client.execute(Login(username="...", password="..."))
+    await client.account.login("...", "...")
     await client.friendships.follow("1200123809")  # numeric user ID as string
 ```
 
@@ -386,7 +396,10 @@ Key exceptions to handle:
 
 | Exception | When |
 |---|---|
-| `ChallengeRequiredError` | Instagram requires a challenge (captcha / 2FA) |
+| `ChallengeRequiredError` | Session checkpoint required (raised during normal API usage) |
+| `LoginChallengeRequiredError` | Challenge required during login (base class) |
+| `LoginTwoStepVerificationRequiredError` | Two-step verification code required during login |
+| `LoginUnknownChallengeRequiredError` | Unknown challenge encountered during login |
 | `LoginError` | Authorization failed |
 | `LoginBadPasswordError` | Wrong password |
 | `TooManyRequestsError` | Rate limited (HTTP 429) |
@@ -399,7 +412,8 @@ Key exceptions to handle:
 
 | Exception | When |
 |---|---|
-| `CheckpointRequiredError` | Checkpoint on login |
+| `CheckpointRequiredError` | Session checkpoint required (raised during normal API usage) |
+| `LoginCheckpointRequiredError` | Checkpoint required during login |
 | `LoginError` | Authorization failed |
 | `LoginBadPasswordError` | Wrong password |
 | `TooManyRequestsError` | Rate limited (HTTP 429) |
@@ -420,7 +434,7 @@ Key exceptions to handle:
 
 Planned features and improvements:
 
-- [ ] Automated checkpoint passing
+- [ ] Login checkpoints passing
 - [ ] Account registration
 - [ ] More Instagram API methods
 - [ ] Synchronous client API

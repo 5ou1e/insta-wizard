@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from typing import cast, TypedDict
 
@@ -16,14 +15,18 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
+
 class MediaSaveResponse(TypedDict):
     pass
 
+
 @dataclass(slots=True)
 class MediaSave(Command[MediaSaveResponse]):
-    """ Save the media """
+    """Save the media"""
+
     media_id: str
     added_collection_ids: list[str] | None = None
+
 
 class MediaSaveHandler(CommandHandler[MediaSave, MediaSaveResponse]):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
@@ -36,9 +39,7 @@ class MediaSaveHandler(CommandHandler[MediaSave, MediaSaveResponse]):
         }
         if command.added_collection_ids:
             added_collection_ids = dumps(command.added_collection_ids)
-            payload.update(
-                {"added_collection_ids": added_collection_ids}
-            )
+            payload.update({"added_collection_ids": added_collection_ids})
         data = build_signed_body(payload)
         resp = await self.api.call_api(
             method="POST",

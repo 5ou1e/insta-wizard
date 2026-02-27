@@ -8,7 +8,7 @@ from insta_wizard.common.transport.base import (
 from insta_wizard.common.transport.models import (
     TransportSettings,
 )
-from insta_wizard.common.models import ProxyInfo
+from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.web.commands.account.logout_ajax import AccountsLogoutAjax
 from insta_wizard.web.common.command import (
     Command,
@@ -47,7 +47,7 @@ from insta_wizard.web.sections import (
 
 
 class WebInstagramClient:
-    """ Client for working with Instagram web API """
+    """Client for working with Instagram web API"""
 
     account: AccountSection
     challenge: ChallengeSection
@@ -114,12 +114,12 @@ class WebInstagramClient:
         )
         self._bus.bind_deps(deps)
 
-        self.account = AccountSection(bus=self._bus)
-        self.challenge = ChallengeSection(bus=self._bus)
-        self.comments = CommentsSection(bus=self._bus)
-        self.friendships = FriendshipsSection(bus=self._bus)
-        self.likes = LikesSection(bus=self._bus)
-        self.navigation = NavigationSection(bus=self._bus)
+        self.account = AccountSection(bus=self._bus, logger=self._logger)
+        self.challenge = ChallengeSection(bus=self._bus, logger=self._logger)
+        self.comments = CommentsSection(bus=self._bus, logger=self._logger)
+        self.friendships = FriendshipsSection(bus=self._bus, logger=self._logger)
+        self.likes = LikesSection(bus=self._bus, logger=self._logger)
+        self.navigation = NavigationSection(bus=self._bus, logger=self._logger)
 
         self.state.local_data.set_cookies(
             {

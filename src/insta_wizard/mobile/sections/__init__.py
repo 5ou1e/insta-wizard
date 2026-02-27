@@ -1,6 +1,5 @@
 from insta_wizard.mobile.sections.api import (
     AccountSection,
-    ChallengeSection,
     ClipSection,
     DirectSection,
     FeedSection,
@@ -11,6 +10,7 @@ from insta_wizard.mobile.sections.api import (
     NotificationSection,
     UserSection,
 )
+from insta_wizard.mobile.sections.challenge import ChallengeSection
 
 __all__ = [
     "AccountSection",

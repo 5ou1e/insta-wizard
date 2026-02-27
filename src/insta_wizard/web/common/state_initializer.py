@@ -3,7 +3,7 @@ import re
 
 import orjson
 
-from insta_wizard.common.models import EncryptionInfo
+from insta_wizard.common.models.other import EncryptionInfo
 from insta_wizard.web.commands.navigation.get_home_page import (
     GetInstagramHomePage,
 )

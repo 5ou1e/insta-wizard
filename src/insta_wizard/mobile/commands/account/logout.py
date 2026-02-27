@@ -13,12 +13,15 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
+
 class AccountsLogoutResponse(TypedDict):
     pass
+
 
 @dataclass(slots=True)
 class AccountsLogout(Command[AccountsLogoutResponse]):
     """Logout of account"""
+
     pass
 
 

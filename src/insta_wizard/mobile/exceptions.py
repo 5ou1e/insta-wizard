@@ -45,6 +45,7 @@ class InstagramResponseError(MobileClientError):
     def __str__(self) -> str:
         return f"InstagramResponseError, status_code={self.response.status}, response={self.response.response_string[:100]}..."
 
+
 @dataclass(kw_only=True, slots=True)
 class UnexpectedResponseContentTypeError(MobileClientError):
     response: ResponseInfo
@@ -64,7 +65,7 @@ class AuthorizationMissingError(MobileClientError):
 @dataclass(kw_only=True, slots=True)
 class ChallengeRequiredError(MobileClientError):
     response_json: dict
-    challenge_data: ChallengeRequiredData | None = None
+    challenge_data: ChallengeRequiredData
 
     def __str__(self) -> str:
         return f"Challenge required, api_path={self.challenge_data.api_path}"
@@ -85,7 +86,7 @@ class NotFoundError(InstagramResponseError):
 @dataclass(kw_only=True, slots=True)
 class BadRequestError(InstagramResponseError):
     def __str__(self) -> str:
-        return "Bad request, status_code={self.response.status}, response={self.response.response_string[:100]}..."
+        return f"Bad request, status_code={self.response.status}, response={self.response.response_string[:100]}..."
 
 
 @dataclass(kw_only=True, slots=True)
@@ -123,7 +124,7 @@ class BloksLoginError(MobileClientError):
     response_json: dict
 
     def __str__(self) -> str:
-        return "Authorization error: TwoStepVerificationRequired"
+        return "Authorization error"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -176,11 +177,34 @@ class BloksLoginAccountNotFoundError(BloksLoginError):
 
 
 @dataclass(kw_only=True, slots=True)
-class BloksLoginTwoStepVerificationRequiredError(BloksLoginError):
+class LoginChallengeRequiredError(MobileClientError):
+    """Login challenge required"""
+
     response_json: dict
 
     def __str__(self) -> str:
-        return "Authorization error: TwoStepVerificationRequired"
+        return "Login challenge required"
+
+
+@dataclass(kw_only=True, slots=True)
+class LoginTwoStepVerificationRequiredError(LoginChallengeRequiredError):
+    """Two-step verification challenge required during login"""
+
+    response_json: dict
+
+    def __str__(self) -> str:
+        return "Two step verification challenge required during login"
+
+
+@dataclass(kw_only=True, slots=True)
+class LoginUnknownChallengeRequiredError(LoginChallengeRequiredError):
+    """Unknown challenge during login"""
+
+    response_json: dict
+    challenge_data: ChallengeRequiredData
+
+    def __str__(self) -> str:
+        return "Unknown challenge during login"
 
 
 @dataclass(kw_only=True, slots=True)
@@ -228,9 +252,11 @@ class PayloadReturnedIsNullError(InstagramResponseError):
     def __str__(self) -> str:
         return "PayloadReturnedIsNullError"
 
+
 @dataclass(kw_only=True, slots=True)
 class NodeTaoSystemExceptionError(InstagramResponseError):
-    """ Instagram backend error - {"message":"NodeTaoSystemException: tao_errno=6307... """
+    """Instagram backend error - {"message":"NodeTaoSystemException: tao_errno=6307..."""
+
     def __str__(self) -> str:
         return "NodeTaoSystemException"
 

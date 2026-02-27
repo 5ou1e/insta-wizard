@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.mobile.commands._responses.post_challenge_b_api import (
-    ChallengePOSTChallengeInfoBApiResponse,
+    ChallengeActionResponse,
 )
 from insta_wizard.mobile.common.command import (
     Command,
@@ -18,21 +18,19 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class ChallengePOSTChallengeInfoBApi(Command[ChallengePOSTChallengeInfoBApiResponse]):
+class ChallengeAction(Command[ChallengeActionResponse]):
     choice: str
 
 
-class ChallengePOSTChallengeInfoBApiHandler(
-    CommandHandler[ChallengePOSTChallengeInfoBApi, ChallengePOSTChallengeInfoBApiResponse]
-):
+class ChallengeActionHandler(CommandHandler[ChallengeAction, ChallengeActionResponse]):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state
 
     async def __call__(
         self,
-        command: ChallengePOSTChallengeInfoBApi,
-    ) -> ChallengePOSTChallengeInfoBApiResponse:
+        command: ChallengeAction,
+    ) -> ChallengeActionResponse:
         """При успехе возвращает - {'action': 'close', 'status': 'ok'}"""
         uri = "challenge/"
 
@@ -44,4 +42,4 @@ class ChallengePOSTChallengeInfoBApiHandler(
             uri=uri,
             data=data,
         )
-        return cast(ChallengePOSTChallengeInfoBApiResponse, resp)
+        return cast(ChallengeActionResponse, resp)

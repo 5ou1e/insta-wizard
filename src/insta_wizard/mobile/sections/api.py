@@ -1,6 +1,13 @@
 from typing import Literal
 
-from insta_wizard.mobile.commands import MediaLike, MediaUnlike, MediaDelete, MediaEdit, MediaLikers, MediaSave
+from insta_wizard.mobile.commands import (
+    MediaLike,
+    MediaUnlike,
+    MediaDelete,
+    MediaEdit,
+    MediaLikers,
+    MediaSave,
+)
 from insta_wizard.mobile.commands._responses.friendships.friendships_user_followers import (
     FriendshipsUserFollowersResponse,
 )
@@ -28,9 +35,6 @@ from insta_wizard.mobile.commands.account.edit_profile import (
 from insta_wizard.mobile.commands.account.get_presence_disabled import (
     AccountGetPresenceDisabled,
 )
-from insta_wizard.mobile.commands.account.login import (
-    AccountLogin,
-)
 from insta_wizard.mobile.commands.account.logout import AccountsLogout
 from insta_wizard.mobile.commands.account.security_info import AccountSecurityInfo
 from insta_wizard.mobile.commands.account.send_confirm_email import AccountSendConfirmEmail
@@ -51,9 +55,6 @@ from insta_wizard.mobile.commands.account.username_suggestions import (
 )
 from insta_wizard.mobile.commands.account.validate_signup_sms_code import (
     AccountValidateSignupSmsCode,
-)
-from insta_wizard.mobile.commands.challenge.get_challenge_info_b_api import (
-    ChallengeGetChallengeInfoBApi,
 )
 from insta_wizard.mobile.commands.clips.discover_stream import (
     ClipsDiscoverStream,
@@ -192,9 +193,7 @@ from insta_wizard.mobile.commands.user.web_profile_info import (
     UserWebProfileInfo,
 )
 from insta_wizard.mobile.common.command import CommandBus
-from insta_wizard.mobile.models.challenge import (
-    ChallengeRequiredData,
-)
+from insta_wizard.mobile.flows import BloksLogin
 from insta_wizard.mobile.models.state import MobileClientState
 
 
@@ -253,7 +252,7 @@ class AccountSection(BaseSection):
 
     async def login(self, username: str, password: str) -> None:
         """Log in with username and password"""
-        await self.bus.execute(AccountLogin(username=username, password=password))
+        await self.bus.execute(BloksLogin(username=username, password=password))
 
     async def logout(self) -> None:
         """Logout of account"""
@@ -314,12 +313,6 @@ class AccountSection(BaseSection):
     async def send_confirm_phone_number(self, phone_number: str) -> dict:
         """Set account phone number and send confirmation code"""
         return await self.bus.execute(AccountSendConfirmPhoneNumber(phone_number=phone_number))
-
-
-class ChallengeSection(BaseSection):
-    async def get_challenge_info(self, challenge_data: ChallengeRequiredData):
-        """Get checkpoint info"""
-        return await self.bus.execute(ChallengeGetChallengeInfoBApi(challenge_data=challenge_data))
 
 
 class ClipSection(BaseSection):
@@ -499,29 +492,28 @@ class LiveSection(BaseSection):
 
 
 class MediaSection(BaseSection):
-
     async def like(self, media_id: str):
-        """ Like the media """
+        """Like the media"""
         return await self.bus.execute(MediaLike(media_id=media_id))
 
     async def unlike(self, media_id: str):
-        """ Unlike the media """
+        """Unlike the media"""
         return await self.bus.execute(MediaUnlike(media_id=media_id))
 
     async def delete(self, media_id: str):
-        """ Delete the media """
+        """Delete the media"""
         return await self.bus.execute(MediaDelete(media_id=media_id))
 
     async def edit(self, media_id: str, caption_text: str):
-        """ Edit the media """
+        """Edit the media"""
         return await self.bus.execute(MediaEdit(media_id=media_id, caption_text=caption_text))
 
     async def save(self, media_id: str):
-        """ Save the media """
+        """Save the media"""
         return await self.bus.execute(MediaSave(media_id=media_id))
 
     async def get_likers(self, media_id: str):
-        """ Get media likers """
+        """Get media likers"""
         return await self.bus.execute(MediaLikers(media_id=media_id))
 
     async def get_blocked(self):
@@ -546,7 +538,7 @@ class MediaSection(BaseSection):
         self,
         media_id: str,
         comment_text: str,
-        replied_to_comment_id: int | None = None,
+        replied_to_comment_id: str | None = None,
     ):
         """Post a comment on a media"""
         await self.bus.execute(
@@ -556,10 +548,12 @@ class MediaSection(BaseSection):
                 replied_to_comment_id=replied_to_comment_id,
             )
         )
+
     async def delete_comments(self, media_id: str, comment_ids: list[str]):
         """Delete comments on media"""
-        return await self.bus.execute(MediaCommentBulkDelete(media_id=media_id, comment_ids=comment_ids))
-
+        return await self.bus.execute(
+            MediaCommentBulkDelete(media_id=media_id, comment_ids=comment_ids)
+        )
 
     async def like_comment(self, comment_id: int):
         """Like a comment"""

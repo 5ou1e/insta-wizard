@@ -17,6 +17,8 @@ from insta_wizard.web.common.state_initializer import (
 from insta_wizard.web.exceptions import (
     BadRequestError,
     LoginBadPasswordError,
+    CheckpointRequiredError,
+    LoginCheckpointRequiredError,
 )
 from insta_wizard.web.models.state import WebClientState
 
@@ -76,3 +78,7 @@ class LoginHandler(CommandHandler[Login, LoginResult]):
             if "UserInvalidCredentials" in response.get("error_type", ""):
                 raise LoginBadPasswordError(response_json=response)
             raise e
+        except CheckpointRequiredError as e:
+            raise LoginCheckpointRequiredError(
+                checkpoint_data=e.checkpoint_data, response=e.response
+            ) from e

@@ -20,6 +20,7 @@ from .auth_platform.send_code_again import UseAuthPlatformSendCodeAgainMutation
 from .auth_platform.submit_code import UseAuthPlatformSubmitCodeMutation
 from .challenge.bloks_navigation import BloksNavigationTakeChallenge
 from .challenge.challenge_web import ChallengeWeb
+from .challenge.challenge_web_action import ChallengeWebAction
 from .comments.comments_add import CommentsAdd
 from .comments.comments_like import CommentsLike
 from .comments.comments_unlike import CommentsUnlike
@@ -50,6 +51,7 @@ __all__ = [
     "UseAuthPlatformSubmitCodeMutation",
     "BloksNavigationTakeChallenge",
     "ChallengeWeb",
+    "ChallengeWebAction",
     "CommentsAdd",
     "CommentsLike",
     "CommentsUnlike",

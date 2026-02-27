@@ -23,7 +23,7 @@ class MediaComment(Command[MediaCommentResponse]):
 
     media_id: str
     comment_text: str
-    replied_to_comment_id: int | None = None
+    replied_to_comment_id: str | None = None
 
 
 class MediaCommentHandler(CommandHandler[MediaComment, MediaCommentResponse]):
@@ -43,10 +43,10 @@ class MediaCommentHandler(CommandHandler[MediaComment, MediaCommentResponse]):
             "idempotence_token": generate_uuid_v4_string(),
             "comment_text": command.comment_text,
         }
-        data = build_signed_body(payload)
-
         if command.replied_to_comment_id:
-            data["replied_to_comment_id"] = command.replied_to_comment_id
+            payload["replied_to_comment_id"] = command.replied_to_comment_id
+
+        data = build_signed_body(payload)
 
         resp = await self.api.call_api(
             method="POST",

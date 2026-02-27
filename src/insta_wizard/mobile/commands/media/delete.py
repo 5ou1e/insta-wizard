@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from typing import cast, TypedDict
 
@@ -15,12 +14,15 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
+
 class MediaDeleteResponse(TypedDict):
     pass
 
+
 @dataclass(slots=True)
 class MediaDelete(Command[MediaDeleteResponse]):
-    """ Delete the media """
+    """Delete the media"""
+
     media_id: str
 
 

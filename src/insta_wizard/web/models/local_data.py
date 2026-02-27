@@ -10,6 +10,7 @@ from insta_wizard.web.common.utils import generate_web_session_id
 
 DS_USER_ID_FROM_SESSIONID_RE = re.compile(r"^\s*(\d+)(?::|%3a)", re.IGNORECASE)
 
+
 @dataclass(kw_only=True, slots=True)
 class WebClientLocalData:
     www_claim: str | None = None
@@ -28,7 +29,7 @@ class WebClientLocalData:
         web_session_id: str | None = None,
         cookies: dict | None = None,
     ) -> "WebClientLocalData":
-        """ Creates LocalData, use it instead of _init_ method"""
+        """Creates LocalData, use it instead of _init_ method"""
         if not web_session_id:
             web_session_id = generate_web_session_id()
 

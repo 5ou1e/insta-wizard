@@ -21,6 +21,7 @@ BLOKS_NAVIGATION_TAKE_CHALLENGE_URL = (
     "https://www.instagram.com/api/v1/bloks/apps/com.instagram.challenge.navigation.take_challenge/"
 )
 CHALLENGE_WEB_URL = "https://www.instagram.com/api/v1/challenge/web/"
+CHALLENGE_WEB_ACTION_URL = "https://www.instagram.com/api/v1/challenge/web/action/"
 
 FRIENDSHIPS_FOLLOW_URL = "https://www.instagram.com/web/friendships/{user_id}/follow/"
 FRIENDSHIPS_CREATE_URL = "https://www.instagram.com/api/v1/friendships/create/{user_id}/"

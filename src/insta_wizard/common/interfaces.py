@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Protocol
 
-from insta_wizard.common.models import ProxyInfo
+from insta_wizard.common.models.proxy import ProxyInfo
 
 
 class ProxyProvider(Protocol):

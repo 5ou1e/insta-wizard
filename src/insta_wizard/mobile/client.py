@@ -9,7 +9,7 @@ from insta_wizard.common.transport.base import (
 from insta_wizard.common.transport.models import (
     TransportSettings,
 )
-from insta_wizard.common.models import ProxyInfo
+from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.mobile.commands.account.logout import AccountsLogout
 from insta_wizard.mobile.common.command import (
     Command,
@@ -57,8 +57,9 @@ from insta_wizard.mobile.sections.graphql_query import (
 )
 from insta_wizard.mobile.sections.graphql_www import GraphqlWWW
 
+
 class MobileInstagramClient:
-    """ Client for working with Instagram private API """
+    """Client for working with Instagram private API"""
 
     account: AccountSection
     users: UserSection
@@ -131,7 +132,9 @@ class MobileInstagramClient:
         self.news = NewsSection(state=self.state, bus=self._bus)
         self.live = LiveSection(state=self.state, bus=self._bus)
         self.clips = ClipSection(state=self.state, bus=self._bus)
-        self.challenge = ChallengeSection(state=self.state, bus=self._bus)
+        self.challenge = ChallengeSection(
+            state=self.state, bus=self._bus, graphql_www=self._graphql_www, logger=self._logger
+        )
 
         deps = ClientDeps(
             http=self._transport,
@@ -235,5 +238,3 @@ class MobileInstagramClient:
     async def logout(self) -> None:
         """Logout of account"""
         return await self.account.logout()
-
-

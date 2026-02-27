@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from insta_wizard.common.models import EncryptionInfo
+from insta_wizard.common.models.other import EncryptionInfo
 from insta_wizard.web.exceptions import StateParametersMissingError
 from insta_wizard.web.models.device_info import BrowserDeviceInfo
 from insta_wizard.web.models.local_data import WebClientLocalData

@@ -15,8 +15,10 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
+
 class MediaCommentBulkDeleteResponse(TypedDict):
     pass
+
 
 @dataclass(slots=True)
 class MediaCommentBulkDelete(Command[MediaCommentBulkDeleteResponse]):
@@ -26,7 +28,9 @@ class MediaCommentBulkDelete(Command[MediaCommentBulkDeleteResponse]):
     comment_ids: list[str]
 
 
-class MediaCommentBulkDeleteHandler(CommandHandler[MediaCommentBulkDelete, MediaCommentBulkDeleteResponse]):
+class MediaCommentBulkDeleteHandler(
+    CommandHandler[MediaCommentBulkDelete, MediaCommentBulkDeleteResponse]
+):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state

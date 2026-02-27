@@ -14,9 +14,9 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class ChallengeWeb(Command[ChallengeWebResult]):
-    """Get checkpoint info"""
+    """Get challenge info"""
 
-    pass
+    next: str | None = None  # /api/v1/web/fxcal/ig_sso_users/
 
 
 class ChallengeWebHandler(CommandHandler[ChallengeWeb, ChallengeWebResult]):
@@ -42,11 +42,14 @@ class ChallengeWebHandler(CommandHandler[ChallengeWeb, ChallengeWebResult]):
             "bloksData": {},
             "status": "ok"
         """
-
+        params = {
+            **({"next": command.next} if command.next else {}),
+        }
         return await self.api_requester.execute(
             method="GET",
             url=constants.CHALLENGE_WEB_URL,
             extra_headers={
                 "Referer": "https://www.instagram.com/challenge/",
             },
+            params=params,
         )

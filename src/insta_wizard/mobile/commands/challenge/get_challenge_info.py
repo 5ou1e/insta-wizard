@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.mobile.commands._responses.get_challenge_info_b_api import (
-    ChallengeGetChallengeInfoBApiResponse,
+    ChallengeGetChallengeInfoResponse,
 )
 from insta_wizard.mobile.common.command import (
     Command,
@@ -20,14 +20,15 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class ChallengeGetChallengeInfoBApi(Command[ChallengeGetChallengeInfoBApiResponse]):
-    """Get checkpoint info"""
+class ChallengeGetChallengeInfo(Command[ChallengeGetChallengeInfoResponse]):
+    """Get challenge info"""
 
-    challenge_data: ChallengeRequiredData
+    api_path: str
+    challenge_context: str | None = None
 
 
-class ChallengeGetChallengeInfoBApiHandler(
-    CommandHandler[ChallengeGetChallengeInfoBApi, ChallengeGetChallengeInfoBApiResponse]
+class ChallengeGetChallengeInfoHandler(
+    CommandHandler[ChallengeGetChallengeInfo, ChallengeGetChallengeInfoResponse]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
@@ -35,24 +36,18 @@ class ChallengeGetChallengeInfoBApiHandler(
 
     async def __call__(
         self,
-        command: ChallengeGetChallengeInfoBApi,
-    ) -> ChallengeGetChallengeInfoBApiResponse:
-        challenge_data = command.challenge_data
-        if not challenge_data.api_path:
-            raise ValueError("Отсутствует api_path в challenge_data")
-
-        uri = str(challenge_data.api_path).lstrip("/")
-
+        command: ChallengeGetChallengeInfo,
+    ) -> ChallengeGetChallengeInfoResponse:
         params: dict = {
             "guid": self.state.device.device_id,
             "device_id": self.state.device.android_id,
         }
-        if challenge_data.challenge_context:
-            params["challenge_context"] = challenge_data.challenge_context
+        if command.challenge_context:
+            params["challenge_context"] = command.challenge_context
 
         resp = await self.api.call_b_api(
             method="GET",
-            uri=uri,
+            uri=str(command.api_path).lstrip("/"),
             params=params,
         )
-        return cast(ChallengeGetChallengeInfoBApiResponse, resp)
+        return cast(ChallengeGetChallengeInfoResponse, resp)

@@ -12,12 +12,15 @@ from insta_wizard.web.common.requesters.api_requester import (
 )
 from insta_wizard.web.models.state import WebClientState
 
+
 class AccountsLogoutAjaxResult(TypedDict):
     pass
+
 
 @dataclass(slots=True)
 class AccountsLogoutAjax(Command[AccountsLogoutAjaxResult]):
     """Logout of account"""
+
     jazoest: str
 
 

@@ -23,11 +23,11 @@ from insta_wizard.mobile.models.state import (
 class DirectV2ThreadsBroadcastText(Command[DirectV2ThreadsBroadcastTextResponse]):
     """Send a text message to users"""
 
-    recipient_users: list[str] # list of user-ids
-    text: str # text of message to send for users
+    recipient_users: list[str]  # list of user-ids
+    text: str  # text of message to send for users
     action: str = "send_item"
     send_attribution: str = "message_button"
-    client_context: str = None # 7431661993834281722
+    client_context: str = None  # 7431661993834281722
 
 
 class DirectV2ThreadsBroadcastTextHandler(
@@ -41,19 +41,19 @@ class DirectV2ThreadsBroadcastTextHandler(
         self, command: DirectV2ThreadsBroadcastText
     ) -> DirectV2ThreadsBroadcastTextResponse:
         payload = {
-            'recipient_users': dumps(
+            "recipient_users": dumps(
                 [
                     command.recipient_users,
                 ]
             ),
-            'is_written_with_ai': '0',
+            "is_written_with_ai": "0",
             "action": command.action,
-            'is_x_transport_forward': 'false',
-            'is_shh_mode': '0',
-            'send_silently': 'false',
-            'send_attribution': command.send_attribution,
+            "is_x_transport_forward": "false",
+            "is_shh_mode": "0",
+            "send_silently": "false",
+            "send_attribution": command.send_attribution,
             **({"client_context": command.client_context} if command.client_context else {}),
-            'text': command.text,
+            "text": command.text,
             "device_id": self.state.device.android_id,
             **({"mutation_token": command.client_context} if command.client_context else {}),
             "_uuid": self.state.device.device_id,

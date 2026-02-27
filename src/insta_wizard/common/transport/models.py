@@ -36,6 +36,10 @@ class ResponseInfo:
     json: Any = None
     text: str | None = None
 
+    @property
+    def response_string(self):
+        return str(self.json) if self.json else self.text
+
 
 @dataclass
 class TransportSettings:

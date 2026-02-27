@@ -4,6 +4,7 @@ import base64
 import re
 from datetime import UTC, datetime
 from functools import lru_cache
+from typing import Any, Iterator
 
 import orjson
 from babel import Locale
@@ -65,3 +66,20 @@ def locale_code_to_bcp47(locale_code: str) -> str:
     lang = parts[0].lower()
     region = parts[1].upper()
     return f"{lang}-{region}"
+
+
+def iter_strings(obj: Any) -> Iterator[str]:
+    """Рекурсивно отдаёт все строковые значения из dict/list/tuple."""
+    if isinstance(obj, str):
+        yield obj
+        return
+
+    if isinstance(obj, dict):
+        for v in obj.values():
+            yield from iter_strings(v)
+        return
+
+    if isinstance(obj, (list, tuple)):
+        for v in obj:
+            yield from iter_strings(v)
+        return

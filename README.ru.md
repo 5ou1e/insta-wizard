@@ -15,10 +15,10 @@
 
 Поддержка прокси, пресеты устройств и профилей, гибкое управление состоянием сессий и куков.
 
-Два стиля работы: высокоуровневые **Секции** (рекомендуется) и низкоуровневые типизированные **Команды** для полного контроля над запросами.
+> **Планируется:** регистрация аккаунтов, расширение покрытия API.
 
 > **Статус:** активная разработка (API может меняться между версиями).
-> **Планируется:** автоматическое прохождение чекпоинтов, регистрация аккаунтов, расширение покрытия API.
+
 
 ---
 
@@ -67,12 +67,14 @@ asyncio.run(main())
 - Комментарии: получить, добавить, лайкнуть, анлайкнуть
 - Уведомления и inbox активности
 - Live и Clips discovery
+- Определение и прохождение чекпоинтов (VettedDelta и ScrapingWarning)
 
 **Web-клиент**:
 - Логин
 - Подписка / отписка
 - Лайк / анлайк медиа
 - Добавление / лайк / анлайк комментариев
+- Определение и прохождение чекпоинтов (VettedDelta и ScrapingWarning)
 
 ---
 
@@ -113,9 +115,23 @@ comments = await client.media.get_comments(media_id)
 await client.media.add_comment(media_id, "отличный пост!")
 await client.media.like_comment(comment_id)
 await client.media.unlike_comment(comment_id)
+
+# Чекпоинты (во время активной сессии)
+from insta_wizard.mobile.exceptions import ChallengeRequiredError
+from insta_wizard.common.models.checkpoint import VettedDeltaCheckpoint, ScrapingWarningCheckpoint
+
+try:
+    me = await client.account.get_current_user()
+except ChallengeRequiredError as e:
+    checkpoint = await client.challenge.get_challenge_info(e.challenge_data)
+    match checkpoint:
+        case VettedDeltaCheckpoint():
+            await client.challenge.pass_vetted_delta(choice="0")  # "Это был я"
+        case ScrapingWarningCheckpoint():
+            await client.challenge.pass_scraping_warning()
 ```
 
-**Все секции mobile-клиента:**
+**Mobile client:**
 
 | Секция | Что покрывает                                                                      |
 |---|------------------------------------------------------------------------------------|
@@ -124,10 +140,10 @@ await client.media.unlike_comment(comment_id)
 | `friendships` | подписка, отписка, удалить подписчика, списки фолловеров / фолловинга, статус      |
 | `feed` | лента, stories tray, suggested reels                                               |
 | `direct` | входящие, ожидающие, presence, отправка сообщений и реакций, управление тредами    |
-| `media` | комментарии (получить / добавить / лайкнуть / анлайкнуть)                          |
-| `challenge` | информация о чекпоинте                                                             |
+| `media` | лайк, анлайк, сохранение, редактирование, удаление, комментарии (получить / добавить / лайкнуть / анлайкнуть) |
+| `challenge` | определение и прохождение чекпоинтов               |
 
-**Секции web-клиента:**
+**Web client:**
 
 | Секция | Что покрывает                                |
 |---|----------------------------------------------|
@@ -135,7 +151,7 @@ await client.media.unlike_comment(comment_id)
 | `friendships` | подписка, отписка                            |
 | `comments` | добавить / лайкнуть / анлайкнуть комментарий |
 | `likes` | лайк / анлайк медиа                          |
-| `challenge` | информация о чекпоинте                       |
+| `challenge` | определение и прохождение чекпоинтов |
 
 Секции покрывают большинство практических сценариев. Если нужен полный контроль над параметрами или доступ к командам, ещё не выставленным через секции — используйте прямой вызов команд.
 
@@ -338,17 +354,10 @@ async with WebInstagramClient(device=device) as client:
 ```python
 import asyncio
 from insta_wizard import WebInstagramClient
-from insta_wizard.web.flows.login import Login
-from insta_wizard.web.exceptions import CheckpointRequiredError
 
 async def main():
     async with WebInstagramClient() as client:
-        try:
-            await client.execute(Login(username="...", password="..."))
-        except CheckpointRequiredError:
-            # Автоматическое прохождение чекпоинтов в разработке — см. Roadmap
-            pass
-
+        await client.account.login("...", "...")
         cookies = client.get_cookies()
 
 asyncio.run(main())
@@ -358,7 +367,7 @@ asyncio.run(main())
 
 ```python
 async with WebInstagramClient() as client:
-    await client.execute(Login(username="...", password="..."))
+    await client.account.login("...", "...")
     await client.friendships.follow("1200123809")  # числовой ID пользователя в виде строки
 ```
 
@@ -388,7 +397,10 @@ cookies = client.get_cookies()  # dict
 
 | Исключение | Когда возникает |
 |---|---|
-| `ChallengeRequiredError` | Instagram требует пройти чекпоинт (captcha / 2FA) |
+| `ChallengeRequiredError` | Чекпоинт во время активной сессии |
+| `LoginChallengeRequiredError` | Проверка при логине (базовый класс) |
+| `LoginTwoStepVerificationRequiredError` | Требуется код двухэтапной проверки при логине |
+| `LoginUnknownChallengeRequiredError` | Неизвестная проверка при логине |
 | `LoginError` | Ошибка авторизации |
 | `LoginBadPasswordError` | Неверный пароль |
 | `TooManyRequestsError` | Превышен лимит запросов (HTTP 429) |
@@ -401,7 +413,8 @@ cookies = client.get_cookies()  # dict
 
 | Исключение | Когда возникает |
 |---|---|
-| `CheckpointRequiredError` | Чекпоинт при логине |
+| `CheckpointRequiredError` | Чекпоинт во время активной сессии |
+| `LoginCheckpointRequiredError` | Чекпоинт при логине |
 | `LoginError` | Ошибка авторизации |
 | `LoginBadPasswordError` | Неверный пароль |
 | `TooManyRequestsError` | Превышен лимит запросов (HTTP 429) |
@@ -422,7 +435,7 @@ cookies = client.get_cookies()  # dict
 
 Планируется реализовать и улучшить:
 
-- [ ] Автоматическое прохождение чекпоинтов
+- [ ] Прохождение чекпоинтов авторизации
 - [ ] Регистрация аккаунтов
 - [ ] Доработка функционала (новые методы API Instagram)
 - [ ] Поддержка синхронного взаимодействия (API) клиентов

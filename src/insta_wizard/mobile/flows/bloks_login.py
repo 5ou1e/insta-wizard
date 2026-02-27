@@ -54,9 +54,10 @@ from insta_wizard.mobile.exceptions import (
     BloksLoginAuthenticationConfiramtionRequiredError,
     BloksLoginBadPasswordError,
     BloksLoginBloksCAAAccountRecoveryAuthMethodControllerError,
-    BloksLoginTwoStepVerificationRequiredError,
+    LoginTwoStepVerificationRequiredError,
     BloksLoginUnknownError,
     ChallengeRequiredError,
+    LoginUnknownChallengeRequiredError,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -121,13 +122,13 @@ class BloksLoginHandler(CommandHandler[BloksLogin, BloksLoginResult]):
                 raise BloksLoginAccountNotFoundError(response_json=response)
 
             case ChallengeRequiredLoginResult() as r:
-                raise ChallengeRequiredError(
+                raise LoginUnknownChallengeRequiredError(
                     challenge_data=r.challenge_data,
                     response_json=response,
                 )
 
             case TwoStepVerificationRequiredLoginResult():
-                raise BloksLoginTwoStepVerificationRequiredError(response_json=response)
+                raise LoginTwoStepVerificationRequiredError(response_json=response)
 
             case BadPasswordLoginResult():
                 raise BloksLoginBadPasswordError(response_json=response)
@@ -155,9 +156,11 @@ class BloksLoginHandler(CommandHandler[BloksLogin, BloksLoginResult]):
     async def send_requests_before_login(self, waterfall_id: str) -> None:
         await self.bus.execute(ZrDualTokens())
         await self.bus.execute(AttestationCreateAndroidKeystoreBApi())
-        await self.bus.execute(BloksProcessClientDataAndRedirectBApi(
-            waterfall_id=waterfall_id,
-        ))
+        await self.bus.execute(
+            BloksProcessClientDataAndRedirectBApi(
+                waterfall_id=waterfall_id,
+            )
+        )
         await self.bus.execute(BloksYouthRegulationDeletePregent())
         await self.bus.execute(BloksPhoneNumberPrefillAsync())
 

@@ -30,8 +30,8 @@ from .bloks.phone_number_prefill_async import BloksPhoneNumberPrefillAsync
 from .bloks.process_client_data_and_redirect import BloksProcessClientDataAndRedirectBApi
 from .bloks.send_login_request import BloksSendLoginRequest
 from .bloks.youth_regulation_delete_pregent import BloksYouthRegulationDeletePregent
-from .challenge.get_challenge_info_b_api import ChallengeGetChallengeInfoBApi
-from .challenge.post_challenge_b_api import ChallengePOSTChallengeInfoBApi
+from .challenge.challenge_action import ChallengeAction
+from .challenge.get_challenge_info import ChallengeGetChallengeInfo
 from .clips.discover_stream import ClipsDiscoverStream
 from .clips.user_share_to_fb_config import ClipsUserShareToFbConfig
 from .consent.get_signup_config import ConsentGetSignupConfig
@@ -129,8 +129,8 @@ __all__ = [
     "BloksProcessClientDataAndRedirectBApi",
     "BloksSendLoginRequest",
     "BloksYouthRegulationDeletePregent",
-    "ChallengeGetChallengeInfoBApi",
-    "ChallengePOSTChallengeInfoBApi",
+    "ChallengeAction",
+    "ChallengeGetChallengeInfo",
     "ClipsDiscoverStream",
     "ClipsUserShareToFbConfig",
     "ConsentGetSignupConfig",

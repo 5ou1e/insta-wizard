@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from typing import cast, TypedDict
 
@@ -15,12 +14,15 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
+
 class MediaLikeResponse(TypedDict):
     pass
 
+
 @dataclass(slots=True)
 class MediaLike(Command[MediaLikeResponse]):
-    """ Like the media """
+    """Like the media"""
+
     media_id: str
 
 

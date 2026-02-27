@@ -40,7 +40,9 @@ BLOKS_REG_SEND_CONFIRMATION_ASYNC = (
 )
 BLOKS_REG_CONFIRMATION_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.confirmation.async/"
 BLOKS_APPS_REG_CONFIRMATION = "bloks/apps/com.bloks.www.bloks.caa.reg.confirmation/"
-BLOKS_APPS_REG_CONFIRMATION_MEDIUM_SELECTION_ASYNC_URI = "bloks/async_action/com.bloks.www.bloks.caa.reg.confirmation.medium_selection.async/"
+BLOKS_APPS_REG_CONFIRMATION_MEDIUM_SELECTION_ASYNC_URI = (
+    "bloks/async_action/com.bloks.www.bloks.caa.reg.confirmation.medium_selection.async/"
+)
 BLOKS_REG_PASSWORD_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.password.async/"
 BLOKS_REG_BIRTHDAY_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.birthday.async/"
 BLOKS_REG_NAME_IG_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.name_ig.async/"

@@ -11,7 +11,7 @@ from insta_wizard.common.logger import (
     NoOpInstagramClientLogger,
     StdLoggingInstagramClientLogger,
 )
-from insta_wizard.common.models import ProxyInfo
+from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.common.transport.models import TransportResponse, TransportSettings
 from insta_wizard.mobile import MobileInstagramClient
 from insta_wizard.mobile.models.android_device_info import AndroidDeviceInfo

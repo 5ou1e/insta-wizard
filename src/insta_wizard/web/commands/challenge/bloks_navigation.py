@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
+from insta_wizard.common.generators import generate_jazoest
 from insta_wizard.web.commands._responses.challenge.bloks_navigation import (
     BloksNavigationTakeChallengeResult,
 )
@@ -14,9 +15,9 @@ from insta_wizard.web.models.state import WebClientState
 
 @dataclass(slots=True)
 class BloksNavigationTakeChallenge(Command[BloksNavigationTakeChallengeResult]):
-    day: int
-    month: int
-    year: int
+    challenge_context: str
+    has_follow_up_screens: str = "false"
+    nest_data_manifest: str = "true"
 
 
 class BloksNavigationTakeChallengeHandler(
@@ -29,42 +30,21 @@ class BloksNavigationTakeChallengeHandler(
     async def __call__(
         self, command: BloksNavigationTakeChallenge
     ) -> BloksNavigationTakeChallengeResult:
-        raise NotImplementedError()
-        """
-        Response example:
-            {
-                "layout": {
-                    "bloks_payload": {
-                        "data": [],
-                        "tree": {
-                            "bk.components.internal.Action": {
-                                "handler": "(bk.action.core.TakeLast, (ig.action.navigation.ClearChallenge), (ig.action.navigation.CloseToScreen, (bk.action.i64.Const, 11), (bk.action.bool.Const, true)), (bk.action.i32.Const, 1))"
-                            }
-                        },
-                        "embedded_payloads": [],
-                        "error_attribution": {
-                            "logging_id": "{\"callsite\":\"{\\\"oncall\\\":\\\"igwb_experiences\\\",\\\"feature\\\":\\\"HandlerForAsyncTakeChallenge\\\",\\\"product\\\":\\\"bloks_async_component\\\"}\",\"push_phase\":\"c2\"}",
-                            "source_map_id": "(distillery_unknown)"
-                        }
-                    }
-                },
-                "status": "ok"
-            }
-        """
-        # TODO challenge_context нужно брать из ответа на запрос challenge/web
-        #  из этой строки - "on_click": '(bk.action.bloks.AsyncActionWithDataManifest, "com.instagram.challenge.navigation.take_challenge"
+        self.state.csrftoken_guard()
 
         data = {
-            "challenge_context": "AaVo0eeNs4jxsqTtSPoiGuLWVctQ5nAtwfW3N68aZewja3qmLrS26zZAYc-Km-DMLtt9jIJ41JbLhe5RGaGWOmvIyy43v_xh0FnRdCeFLdNzME-XR-IvhpsHjoR2fI5mmui6nDzMiM9pkQANJ8wQEqMGqn9tW6KAlDHyL1oUZkbW_EVbyYrbJKeiNcddBgaqGz6EZurSdK7RQvLVBRVwO4medsSr_4wtyW7u55ceEc_j8PkpYJUkR3lO0pQkdOAY2b-JMSRbIxrw49gP",
-            "has_follow_up_screens": "false",
-            "nest_data_manifest": "true",
+            "challenge_context": command.challenge_context,
+            "has_follow_up_screens": command.has_follow_up_screens,
+            "nest_data_manifest": command.nest_data_manifest,
+            "jazoest": generate_jazoest(self.state.csrftoken),
         }
 
         return await self.api_requester.execute(
-            method="GET",
+            method="POST",
             url=constants.BLOKS_NAVIGATION_TAKE_CHALLENGE_URL,
             data=data,
             extra_headers={
                 "Referer": "https://www.instagram.com/challenge/",
+                # "X-Bloks-Version-Id": ...
             },
         )

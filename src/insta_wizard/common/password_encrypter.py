@@ -12,7 +12,7 @@ from Cryptodome.Random import get_random_bytes
 # pip install PyNaCl
 from nacl.public import PublicKey, SealedBox
 
-from insta_wizard.common.models import EncryptionInfo
+from insta_wizard.common.models.other import EncryptionInfo
 
 
 class PasswordEncrypter:

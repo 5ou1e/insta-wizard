@@ -41,7 +41,8 @@ from insta_wizard.mobile.exceptions import (
     PayloadReturnedIsNullError,
     TooManyRequestsError,
     UnauthorizedError,
-    UnexpectedResponseContentTypeError, NodeTaoSystemExceptionError,
+    UnexpectedResponseContentTypeError,
+    NodeTaoSystemExceptionError,
 )
 from insta_wizard.mobile.models.challenge import (
     ChallengeRequiredData,

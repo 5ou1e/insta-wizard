@@ -1,5 +1,5 @@
 from typing import TypedDict
 
 
-class ChallengePOSTChallengeInfoBApiResponse(TypedDict):
+class ChallengeActionResponse(TypedDict):
     pass
