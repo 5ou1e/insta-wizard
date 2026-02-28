@@ -100,7 +100,7 @@ from .user.account_details import UserAccountDetails
 from .user.check_username import UsersCheckUsername
 from .user.get_limited_interactions_reminder import UserGetLimitedInteractionsReminder
 from .user.info import UserInfo
-from .user.search import UserSearchUsers
+from .user.search import UserSearch
 from .user.usernameinfo import UserUsernameInfo
 from .user.web_profile_info import UserWebProfileInfo
 from .zr.dual_tokens import ZrDualTokens
@@ -201,7 +201,7 @@ __all__ = [
     "UsersCheckUsername",
     "UserGetLimitedInteractionsReminder",
     "UserInfo",
-    "UserSearchUsers",
+    "UserSearch",
     "UserUsernameInfo",
     "UserWebProfileInfo",
     "ZrDualTokens",

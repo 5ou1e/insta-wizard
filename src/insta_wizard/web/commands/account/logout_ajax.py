@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import cast, TypedDict
-
+from typing import cast
 
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
@@ -11,20 +10,17 @@ from insta_wizard.web.common.requesters.api_requester import (
     WebApiRequester,
 )
 from insta_wizard.web.models.state import WebClientState
-
-
-class AccountsLogoutAjaxResult(TypedDict):
-    pass
+from insta_wizard.web.responses.account.logout_ajax import AccountsLogoutAjaxResponse
 
 
 @dataclass(slots=True)
-class AccountsLogoutAjax(Command[AccountsLogoutAjaxResult]):
+class AccountsLogoutAjax(Command[AccountsLogoutAjaxResponse]):
     """Logout of account"""
 
     jazoest: str
 
 
-class AccountsLogoutAjaxHandler(CommandHandler[AccountsLogoutAjax, AccountsLogoutAjaxResult]):
+class AccountsLogoutAjaxHandler(CommandHandler[AccountsLogoutAjax, AccountsLogoutAjaxResponse]):
     def __init__(
         self,
         api_requester: WebApiRequester,
@@ -33,7 +29,7 @@ class AccountsLogoutAjaxHandler(CommandHandler[AccountsLogoutAjax, AccountsLogou
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: AccountsLogoutAjax) -> AccountsLogoutAjaxResult:
+    async def __call__(self, command: AccountsLogoutAjax) -> AccountsLogoutAjaxResponse:
         user_id = self.state.local_data.get_cookie("ds_user_id")
         data = {
             "one_tap_app_login": "0",
@@ -49,4 +45,4 @@ class AccountsLogoutAjaxHandler(CommandHandler[AccountsLogoutAjax, AccountsLogou
                 "Referer": "https://www.instagram.com",
             },
         )
-        return cast(AccountsLogoutAjaxResult, resp)
+        return cast(AccountsLogoutAjaxResponse, resp)

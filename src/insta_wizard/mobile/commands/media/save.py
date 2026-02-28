@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.media.save import MediaSaveResponse
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -15,6 +14,7 @@ from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.media.save import MediaSaveResponse
 
 
 @dataclass(slots=True)
@@ -33,10 +33,13 @@ class MediaSaveHandler(CommandHandler[MediaSave, MediaSaveResponse]):
     async def __call__(self, command: MediaSave) -> MediaSaveResponse:
         payload = {
             "_uuid": self.state.device.device_id,
+            "radio_type": self.state.radio_type,
+            **({"_uid": self.state.local_data.user_id} if self.state.local_data.user_id else {}),
         }
         if command.added_collection_ids:
             added_collection_ids = dumps(command.added_collection_ids)
             payload.update({"added_collection_ids": added_collection_ids})
+
         data = build_signed_body(payload)
         resp = await self.api.call_api(
             method="POST",

@@ -1,30 +1,30 @@
 from dataclasses import dataclass
 from typing import Any
 
-from insta_wizard.web.commands._responses.challenge.challenge_web import (
-    ChallengeWebResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.challenge.challenge_web import (
+    ChallengeWebResponse,
+)
 
 
 @dataclass(slots=True)
-class ChallengeWeb(Command[ChallengeWebResult]):
+class ChallengeWeb(Command[ChallengeWebResponse]):
     """Get challenge info"""
 
     next: str | None = None  # /api/v1/web/fxcal/ig_sso_users/
 
 
-class ChallengeWebHandler(CommandHandler[ChallengeWeb, ChallengeWebResult]):
+class ChallengeWebHandler(CommandHandler[ChallengeWeb, ChallengeWebResponse]):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: ChallengeWeb) -> ChallengeWebResult:
+    async def __call__(self, command: ChallengeWeb) -> ChallengeWebResponse:
         """
         Response example:
             "challengeType": "ScrapingWarningForm",

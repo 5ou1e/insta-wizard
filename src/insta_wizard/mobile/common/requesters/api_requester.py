@@ -16,8 +16,8 @@ from insta_wizard.common.transport.exceptions import (
 from insta_wizard.common.transport.models import (
     HttpMethod,
     HttpRequest,
-    TransportResponse,
     ResponseInfo,
+    TransportResponse,
 )
 from insta_wizard.common.utils import (
     auth_data_from_authorization_header,
@@ -36,13 +36,13 @@ from insta_wizard.mobile.exceptions import (
     MethodNotAllowedError,
     MobileClientError,
     NetworkError,
+    NodeTaoSystemExceptionError,
     NotFoundError,
     OopsAnErrorOccurred,
     PayloadReturnedIsNullError,
     TooManyRequestsError,
     UnauthorizedError,
     UnexpectedResponseContentTypeError,
-    NodeTaoSystemExceptionError,
 )
 from insta_wizard.mobile.models.challenge import (
     ChallengeRequiredData,
@@ -171,6 +171,26 @@ class ApiRequestExecutor:
                 client_endpoint=client_endpoint,
             )
         )
+
+    async def call_url(
+        self,
+        method: HttpMethod,
+        url: str,
+        data: dict | bytes | None = None,
+        params: dict | None = None,
+        extra_headers: dict | None = None,
+    ) -> dict:
+        headers = self.headers.api_headers()
+        if extra_headers:
+            headers.update(extra_headers)
+        request = HttpRequest(
+            method=method,
+            url=url,
+            data=data,
+            headers=headers,
+            params=params,
+        )
+        return await self._execute_request(request)
 
     async def call_b_api(
         self,

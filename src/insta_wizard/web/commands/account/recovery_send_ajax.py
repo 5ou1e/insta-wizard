@@ -2,9 +2,6 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.account.recovery_send_ajax import (
-    AccountRecoverySendAjaxResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
@@ -14,17 +11,20 @@ from insta_wizard.web.common.requesters.api_requester import (
     WebApiRequester,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.recovery_send_ajax import (
+    AccountRecoverySendAjaxResponse,
+)
 
 
 @dataclass(slots=True)
-class AccountRecoverySendAjax(Command[AccountRecoverySendAjaxResult]):
+class AccountRecoverySendAjax(Command[AccountRecoverySendAjaxResponse]):
     """Send password recovery link to email"""
 
     email_or_username: str
 
 
 class AccountRecoverySendAjaxHandler(
-    CommandHandler[AccountRecoverySendAjax, AccountRecoverySendAjaxResult]
+    CommandHandler[AccountRecoverySendAjax, AccountRecoverySendAjaxResponse]
 ):
     def __init__(self, api_requester: WebApiRequester, state: WebClientState) -> None:
         self.api_requester = api_requester
@@ -33,7 +33,7 @@ class AccountRecoverySendAjaxHandler(
     async def __call__(
         self,
         command: AccountRecoverySendAjax,
-    ) -> AccountRecoverySendAjaxResult:
+    ) -> AccountRecoverySendAjaxResponse:
         # Response example
         # {
         #     "title": "Сообщение отправлено",
@@ -60,4 +60,4 @@ class AccountRecoverySendAjaxHandler(
             },
         )
 
-        return cast(AccountRecoverySendAjaxResult, resp)
+        return cast(AccountRecoverySendAjaxResponse, resp)

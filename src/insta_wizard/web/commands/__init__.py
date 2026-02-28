@@ -8,7 +8,6 @@ Public exports for insta_wizard.web.commands.
 from .account.check_age_eligibility import CheckAgeEligibility
 from .account.edit import AccountsEdit
 from .account.edit_web_form_data import AccountsEditWebFormData
-from .account.get_email_signup_page import GetEmailSignupPage
 from .account.login_ajax import AccountsLoginAjax
 from .account.logout_ajax import AccountsLogoutAjax
 from .account.recovery_send_ajax import AccountRecoverySendAjax
@@ -29,6 +28,7 @@ from .friendships.destroy import FriendshipsDestroy
 from .friendships.follow import FriendshipsFollow
 from .likes.likes_like import LikesLike
 from .likes.likes_unlike import LikesUnlike
+from .navigation.get_email_signup_page import GetEmailSignupPage
 from .navigation.get_home_page import GetInstagramHomePage
 from .navigation.get_shared_data import GetSharedData
 from .navigation.get_web_mid import GetWebMid
@@ -39,7 +39,6 @@ __all__ = [
     "CheckAgeEligibility",
     "AccountsEdit",
     "AccountsEditWebFormData",
-    "GetEmailSignupPage",
     "AccountsLoginAjax",
     "AccountsLogoutAjax",
     "AccountRecoverySendAjax",
@@ -60,6 +59,7 @@ __all__ = [
     "FriendshipsFollow",
     "LikesLike",
     "LikesUnlike",
+    "GetEmailSignupPage",
     "GetInstagramHomePage",
     "GetSharedData",
     "GetWebMid",

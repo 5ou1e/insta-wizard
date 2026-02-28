@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.common.generators import gen_user_breadcrumb, generate_uuid_v4_string
-from insta_wizard.mobile.commands._responses.media.media_comment import MediaCommentResponse
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -15,6 +14,7 @@ from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.media.media_comment import MediaCommentResponse
 
 
 @dataclass(slots=True)
@@ -22,7 +22,7 @@ class MediaComment(Command[MediaCommentResponse]):
     """Post a comment on a media"""
 
     media_id: str
-    comment_text: str
+    text: str
     replied_to_comment_id: str | None = None
 
 
@@ -39,9 +39,9 @@ class MediaCommentHandler(CommandHandler[MediaComment, MediaCommentResponse]):
             "delivery_class": "organic",
             "feed_position": "0",
             "container_module": "self_comments_v2_feed_contextual_self_profile",
-            "user_breadcrumb": gen_user_breadcrumb(len(command.comment_text)),
+            "user_breadcrumb": gen_user_breadcrumb(len(command.text)),
             "idempotence_token": generate_uuid_v4_string(),
-            "comment_text": command.comment_text,
+            "comment_text": command.text,
         }
         if command.replied_to_comment_id:
             payload["replied_to_comment_id"] = command.replied_to_comment_id

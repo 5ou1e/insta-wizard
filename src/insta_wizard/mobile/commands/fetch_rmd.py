@@ -10,9 +10,6 @@ from insta_wizard.common.transport.models import HttpRequest
 from insta_wizard.common.utils import (
     dumps,
 )
-from insta_wizard.mobile.commands._responses.fetch_rmd import (
-    FetchRmdResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -30,6 +27,7 @@ from insta_wizard.mobile.models.state import (
 from insta_wizard.mobile.models.version import (
     InstagramAppVersion,
 )
+from insta_wizard.mobile.responses.fetch_rmd import FetchRmdResponse
 
 
 @dataclass(slots=True)

@@ -1,18 +1,19 @@
+import re
+
 from insta_wizard.common.models.checkpoint import (
     Checkpoint,
-    UfacCheckpoint,
-    UnknownCheckpoint,
-    UfacStep,
-    VettedDeltaCheckpoint,
     ScrapingWarningCheckpoint,
+    UfacCheckpoint,
+    UfacStep,
+    UnknownCheckpoint,
+    VettedDeltaCheckpoint,
 )
 from insta_wizard.common.utils import iter_strings
-from insta_wizard.web.commands import ChallengeWeb, BloksNavigationTakeChallenge
+from insta_wizard.web.commands import BloksNavigationTakeChallenge, ChallengeWeb
 from insta_wizard.web.commands.challenge.challenge_web_action import ChallengeWebAction
 from insta_wizard.web.exceptions import ResponseParsingError
 from insta_wizard.web.models.other import CheckpointRequiredErrorData
 from insta_wizard.web.sections.api import BaseSection
-import re
 
 
 class ChallengeSection(BaseSection):
@@ -95,4 +96,4 @@ def extract_challenge_context_for_scraping(data: dict):
         if challenge_context:
             return challenge_context
 
-    raise ResponseParsingError(msg=f"Не удалось спарсить challenge_context из ответа")
+    raise ResponseParsingError(msg="Не удалось спарсить challenge_context из ответа")

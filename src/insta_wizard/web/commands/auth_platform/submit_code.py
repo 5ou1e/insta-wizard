@@ -8,19 +8,19 @@ from insta_wizard.common.generators import (
 from insta_wizard.common.utils import (
     dumps,
 )
-from insta_wizard.web.commands._responses.auth_platform.submit_code import (
-    UseAuthPlatformSubmitCodeMutationResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.auth_platform.submit_code import (
+    UseAuthPlatformSubmitCodeMutationResponse,
+)
 
 
 @dataclass(slots=True)
-class UseAuthPlatformSubmitCodeMutation(Command[UseAuthPlatformSubmitCodeMutationResult]):
+class UseAuthPlatformSubmitCodeMutation(Command[UseAuthPlatformSubmitCodeMutationResponse]):
     """Submit verification code for AuthPlatform login checkpoint"""
 
     code: str
@@ -30,7 +30,7 @@ class UseAuthPlatformSubmitCodeMutation(Command[UseAuthPlatformSubmitCodeMutatio
 class UseAuthPlatformSubmitCodeMutationHandler(
     CommandHandler[
         UseAuthPlatformSubmitCodeMutation,
-        UseAuthPlatformSubmitCodeMutationResult,
+        UseAuthPlatformSubmitCodeMutationResponse,
     ]
 ):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
@@ -40,7 +40,7 @@ class UseAuthPlatformSubmitCodeMutationHandler(
     async def __call__(
         self,
         command: UseAuthPlatformSubmitCodeMutation,
-    ) -> UseAuthPlatformSubmitCodeMutationResult:
+    ) -> UseAuthPlatformSubmitCodeMutationResponse:
         self.state.csrftoken_guard()
 
         jazoest = generate_jazoest(self.state.csrftoken)
@@ -96,4 +96,4 @@ class UseAuthPlatformSubmitCodeMutationHandler(
                 "X-Fb-Lsd": "AdHdagTBW8A",
             },
         )
-        return cast(UseAuthPlatformSubmitCodeMutationResult, resp)
+        return cast(UseAuthPlatformSubmitCodeMutationResponse, resp)

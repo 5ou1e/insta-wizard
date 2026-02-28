@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.media.comment_bulk_delete import (
-    MediaCommentBulkDeleteResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -16,6 +13,7 @@ from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.media.comment_bulk_delete import MediaCommentBulkDeleteResponse
 
 
 @dataclass(slots=True)

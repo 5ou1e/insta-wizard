@@ -2,19 +2,19 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.account.edit import (
-    AccountsEditResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.edit import (
+    AccountsEditResponse,
+)
 
 
 @dataclass(kw_only=True, slots=True)
-class AccountsEdit(Command[AccountsEditResult]):
+class AccountsEdit(Command[AccountsEditResponse]):
     """Edit account profile"""
 
     biography: str | None = None
@@ -24,7 +24,7 @@ class AccountsEdit(Command[AccountsEditResult]):
     username: str
 
 
-class AccountsEditHandler(CommandHandler[AccountsEdit, AccountsEditResult]):
+class AccountsEditHandler(CommandHandler[AccountsEdit, AccountsEditResponse]):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
@@ -32,7 +32,7 @@ class AccountsEditHandler(CommandHandler[AccountsEdit, AccountsEditResult]):
     async def __call__(
         self,
         command: AccountsEdit,
-    ) -> AccountsEditResult:
+    ) -> AccountsEditResponse:
         self.state.csrftoken_guard()
 
         data = {
@@ -53,4 +53,4 @@ class AccountsEditHandler(CommandHandler[AccountsEdit, AccountsEditResult]):
                 "Referer": "https://www.instagram.com/accounts/edit/",
             },
         )
-        return cast(AccountsEditResult, resp)
+        return cast(AccountsEditResponse, resp)

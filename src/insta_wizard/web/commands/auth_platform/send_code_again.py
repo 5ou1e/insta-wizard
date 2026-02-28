@@ -8,19 +8,19 @@ from insta_wizard.common.generators import (
 from insta_wizard.common.utils import (
     dumps,
 )
-from insta_wizard.web.commands._responses.auth_platform.send_code_again import (
-    UseAuthPlatformSendCodeAgainMutationResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.auth_platform.send_code_again import (
+    UseAuthPlatformSendCodeAgainMutationResponse,
+)
 
 
 @dataclass(slots=True)
-class UseAuthPlatformSendCodeAgainMutation(Command[UseAuthPlatformSendCodeAgainMutationResult]):
+class UseAuthPlatformSendCodeAgainMutation(Command[UseAuthPlatformSendCodeAgainMutationResponse]):
     """Request resending verification code for AuthPlatform login checkpoint"""
 
     encrypted_ap_context: str
@@ -29,7 +29,7 @@ class UseAuthPlatformSendCodeAgainMutation(Command[UseAuthPlatformSendCodeAgainM
 class UseAuthPlatformSendCodeAgainMutationHandler(
     CommandHandler[
         UseAuthPlatformSendCodeAgainMutation,
-        UseAuthPlatformSendCodeAgainMutationResult,
+        UseAuthPlatformSendCodeAgainMutationResponse,
     ]
 ):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
@@ -39,7 +39,7 @@ class UseAuthPlatformSendCodeAgainMutationHandler(
     async def __call__(
         self,
         command: UseAuthPlatformSendCodeAgainMutation,
-    ) -> UseAuthPlatformSendCodeAgainMutationResult:
+    ) -> UseAuthPlatformSendCodeAgainMutationResponse:
         self.state.csrftoken_guard()
 
         jazoest = generate_jazoest(self.state.csrftoken)
@@ -92,4 +92,4 @@ class UseAuthPlatformSendCodeAgainMutationHandler(
                 "X-Fb-Lsd": "AdHdagTBW8A",
             },
         )
-        return cast(UseAuthPlatformSendCodeAgainMutationResult, resp)
+        return cast(UseAuthPlatformSendCodeAgainMutationResponse, resp)

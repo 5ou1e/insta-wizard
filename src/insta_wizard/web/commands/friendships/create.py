@@ -2,25 +2,25 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.friendships.create import (
-    FriendshipsCreateResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.friendships.create import (
+    FriendshipsCreateResponse,
+)
 
 
 @dataclass(slots=True)
-class FriendshipsCreate(Command[FriendshipsCreateResult]):
+class FriendshipsCreate(Command[FriendshipsCreateResponse]):
     """Follow a user"""
 
     user_id: str
 
 
-class FriendshipsCreateHandler(CommandHandler[FriendshipsCreate, FriendshipsCreateResult]):
+class FriendshipsCreateHandler(CommandHandler[FriendshipsCreate, FriendshipsCreateResponse]):
     def __init__(
         self,
         api_requester: Any,
@@ -29,7 +29,7 @@ class FriendshipsCreateHandler(CommandHandler[FriendshipsCreate, FriendshipsCrea
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: FriendshipsCreate) -> FriendshipsCreateResult:
+    async def __call__(self, command: FriendshipsCreate) -> FriendshipsCreateResponse:
         self.state.csrftoken_guard()
 
         jazoest = generate_jazoest(self.state.csrftoken)
@@ -42,7 +42,7 @@ class FriendshipsCreateHandler(CommandHandler[FriendshipsCreate, FriendshipsCrea
         }
 
         return cast(
-            FriendshipsCreateResult,
+            FriendshipsCreateResponse,
             await self.api_requester.execute(
                 method="POST",
                 url=constants.FRIENDSHIPS_CREATE_URL.format(user_id=command.user_id),

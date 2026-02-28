@@ -2,9 +2,6 @@ import random
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.media.media_comment_unlike import (
-    MediaCommentUnlikeResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -17,13 +14,16 @@ from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.media.media_comment_unlike import (
+    MediaCommentUnlikeResponse,
+)
 
 
 @dataclass(slots=True)
 class MediaCommentUnlike(Command[MediaCommentUnlikeResponse]):
     """Unlike a comment"""
 
-    comment_id: int
+    comment_id: str
 
 
 class MediaCommentUnlikeHandler(CommandHandler[MediaCommentUnlike, MediaCommentUnlikeResponse]):

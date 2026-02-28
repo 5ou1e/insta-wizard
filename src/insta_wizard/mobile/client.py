@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from insta_wizard.common.exceptions import InstaWizardError
 from insta_wizard.common.logger import InstagramClientLogger, StdLoggingInstagramClientLogger
+from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.common.transport.aiohttp_transport import AioHttpTransport
 from insta_wizard.common.transport.base import (
     HttpTransport,
 )
 from insta_wizard.common.transport.models import (
+    HttpMethod,
     TransportSettings,
 )
-from insta_wizard.common.models.proxy import ProxyInfo
-from insta_wizard.mobile.commands.account.logout import AccountsLogout
 from insta_wizard.mobile.common.command import (
     Command,
     CommandBus,
@@ -28,7 +28,6 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 from insta_wizard.mobile.common.requesters.requester import (
     RequestExecutor,
 )
-from insta_wizard.mobile.flows import BloksLogin
 from insta_wizard.mobile.models.android_device_info import (
     AndroidDeviceInfo,
     AndroidPreset,
@@ -170,6 +169,23 @@ class MobileInstagramClient:
 
     async def execute(self, command: Command[R]) -> R:
         return await self._bus.execute(command)
+
+    async def custom_request(
+        self,
+        method: HttpMethod,
+        url: str,
+        data: dict | bytes | None = None,
+        params: dict | None = None,
+        extra_headers: dict | None = None,
+    ) -> dict:
+        """Make a raw API request with default mobile headers applied."""
+        return await self._api_request_executor.call_url(
+            method=method,
+            url=url,
+            data=data,
+            params=params,
+            extra_headers=extra_headers,
+        )
 
     async def __aenter__(self) -> MobileInstagramClient:
         return self

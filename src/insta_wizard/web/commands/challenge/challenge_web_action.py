@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, TypedDict
+from typing import Any
 
 from insta_wizard.common.generators import generate_jazoest
 from insta_wizard.web.common import constants
@@ -8,23 +8,11 @@ from insta_wizard.web.common.command import (
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
-
-
-class ChallengeWebActionResult(TypedDict):
-    """
-    Response example:
-        {
-            "location": "https://www.instagram.com/api/v1/web/fxcal/ig_sso_users/",
-            "type": "CHALLENGE_REDIRECTION",
-            "status": "ok"
-        }
-    """
-
-    pass
+from insta_wizard.web.responses.challenge.challenge_web_action import ChallengeWebActionResponse
 
 
 @dataclass(slots=True)
-class ChallengeWebAction(Command[ChallengeWebActionResult]):
+class ChallengeWebAction(Command[ChallengeWebActionResponse]):
     """Get challenge info"""
 
     choice: str  # 0, 1, 2 ...
@@ -33,12 +21,12 @@ class ChallengeWebAction(Command[ChallengeWebActionResult]):
     next: str | None = None  # /api/v1/web/fxcal/ig_sso_users/
 
 
-class ChallengeWebActionHandler(CommandHandler[ChallengeWebAction, ChallengeWebActionResult]):
+class ChallengeWebActionHandler(CommandHandler[ChallengeWebAction, ChallengeWebActionResponse]):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: ChallengeWebAction) -> ChallengeWebActionResult:
+    async def __call__(self, command: ChallengeWebAction) -> ChallengeWebActionResponse:
         self.state.csrftoken_guard()
 
         data = {

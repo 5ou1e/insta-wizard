@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.challenge_info import (
-    ChallengeGetChallengeInfoResponse,
-)
 from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
@@ -11,12 +8,10 @@ from insta_wizard.mobile.common.command import (
 from insta_wizard.mobile.common.requesters.api_requester import (
     ApiRequestExecutor,
 )
-from insta_wizard.mobile.models.challenge import (
-    ChallengeRequiredData,
-)
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.challenge_info import ChallengeGetChallengeInfoResponse
 
 
 @dataclass(slots=True)

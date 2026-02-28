@@ -2,25 +2,25 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.friendships.destroy import (
-    FriendshipsDestroyResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.friendships.destroy import (
+    FriendshipsDestroyResponse,
+)
 
 
 @dataclass(slots=True)
-class FriendshipsDestroy(Command[FriendshipsDestroyResult]):
+class FriendshipsDestroy(Command[FriendshipsDestroyResponse]):
     """Unfollow a user"""
 
     user_id: str
 
 
-class FriendshipsDestroyHandler(CommandHandler[FriendshipsDestroy, FriendshipsDestroyResult]):
+class FriendshipsDestroyHandler(CommandHandler[FriendshipsDestroy, FriendshipsDestroyResponse]):
     def __init__(
         self,
         api_requester: Any,
@@ -29,7 +29,7 @@ class FriendshipsDestroyHandler(CommandHandler[FriendshipsDestroy, FriendshipsDe
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: FriendshipsDestroy) -> FriendshipsDestroyResult:
+    async def __call__(self, command: FriendshipsDestroy) -> FriendshipsDestroyResponse:
         self.state.csrftoken_guard()
 
         data = {
@@ -40,7 +40,7 @@ class FriendshipsDestroyHandler(CommandHandler[FriendshipsDestroy, FriendshipsDe
         }
 
         return cast(
-            FriendshipsDestroyResult,
+            FriendshipsDestroyResponse,
             await self.api_requester.execute(
                 method="POST",
                 url=constants.FRIENDSHIPS_DESTROY_URL.format(user_id=command.user_id),

@@ -9,9 +9,6 @@ from insta_wizard.common.generators import (
     utc_offset_from_timezone,
 )
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.feed.feed_timeline_i_api import (
-    FeedTimelineIApiResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -23,6 +20,7 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.feed.feed_timeline_i_api import FeedTimelineIApiResponse
 
 
 @dataclass(slots=True)

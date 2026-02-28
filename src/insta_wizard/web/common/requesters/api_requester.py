@@ -13,8 +13,8 @@ from insta_wizard.common.transport.exceptions import (
 from insta_wizard.common.transport.models import (
     HttpMethod,
     HttpRequest,
-    TransportResponse,
     ResponseInfo,
+    TransportResponse,
 )
 from insta_wizard.web.common.headers_factory import (
     WebClientHeadersFactory,

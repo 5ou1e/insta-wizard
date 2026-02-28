@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from types import MappingProxyType
 
+from insta_wizard.web.commands import FriendshipsDestroy
 from insta_wizard.web.commands.account.check_age_eligibility import (
     CheckAgeEligibility,
     CheckAgeEligibilityHandler,
@@ -11,10 +12,6 @@ from insta_wizard.web.commands.account.edit import AccountsEdit, AccountsEditHan
 from insta_wizard.web.commands.account.edit_web_form_data import (
     AccountsEditWebFormData,
     AccountsEditWebFormDataHandler,
-)
-from insta_wizard.web.commands.account.get_email_signup_page import (
-    GetEmailSignupPage,
-    GetEmailSignupPageHandler,
 )
 from insta_wizard.web.commands.account.login_ajax import (
     AccountsLoginAjax,
@@ -71,12 +68,17 @@ from insta_wizard.web.commands.friendships.create import (
     FriendshipsCreate,
     FriendshipsCreateHandler,
 )
+from insta_wizard.web.commands.friendships.destroy import FriendshipsDestroyHandler
 from insta_wizard.web.commands.friendships.follow import (
     FriendshipsFollow,
     FriendshipsFollowHandler,
 )
 from insta_wizard.web.commands.likes.likes_like import LikesLike, LikesLikeHandler
 from insta_wizard.web.commands.likes.likes_unlike import LikesUnlike, LikesUnlikeHandler
+from insta_wizard.web.commands.navigation.get_email_signup_page import (
+    GetEmailSignupPage,
+    GetEmailSignupPageHandler,
+)
 from insta_wizard.web.commands.navigation.get_home_page import (
     GetInstagramHomePage,
     GetInstagramHomePageHandler,
@@ -99,7 +101,6 @@ from insta_wizard.web.commands.search.polaris_search_box import (
 )
 from insta_wizard.web.common.command import CommandHandler
 from insta_wizard.web.flows.login import Login, LoginHandler
-
 from insta_wizard.web.models.deps import ClientDeps
 
 COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
@@ -156,6 +157,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     FriendshipsFollow: lambda d: FriendshipsFollowHandler(
+        api_requester=d.api_requester,
+        state=d.state,
+    ),
+    FriendshipsDestroy: lambda d: FriendshipsDestroyHandler(
         api_requester=d.api_requester,
         state=d.state,
     ),

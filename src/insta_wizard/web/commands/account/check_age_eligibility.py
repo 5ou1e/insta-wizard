@@ -2,19 +2,19 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.account.check_age_eligibility import (
-    CheckAgeEligibilityResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.check_age_eligibility import (
+    CheckAgeEligibilityResponse,
+)
 
 
 @dataclass(slots=True)
-class CheckAgeEligibility(Command[CheckAgeEligibilityResult]):
+class CheckAgeEligibility(Command[CheckAgeEligibilityResponse]):
     """Check if registration is allowed with the given birth date"""
 
     day: int
@@ -22,12 +22,12 @@ class CheckAgeEligibility(Command[CheckAgeEligibilityResult]):
     year: int
 
 
-class CheckAgeEligibilityHandler(CommandHandler[CheckAgeEligibility, CheckAgeEligibilityResult]):
+class CheckAgeEligibilityHandler(CommandHandler[CheckAgeEligibility, CheckAgeEligibilityResponse]):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: CheckAgeEligibility) -> CheckAgeEligibilityResult:
+    async def __call__(self, command: CheckAgeEligibility) -> CheckAgeEligibilityResponse:
         """
         Response example:
         {
@@ -58,4 +58,4 @@ class CheckAgeEligibilityHandler(CommandHandler[CheckAgeEligibility, CheckAgeEli
                 "Referer": "https://www.instagram.com/accounts/emailsignup/",
             },
         )
-        return cast(CheckAgeEligibilityResult, resp)
+        return cast(CheckAgeEligibilityResponse, resp)

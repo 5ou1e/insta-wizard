@@ -16,24 +16,24 @@ from insta_wizard.web.common.state_initializer import (
 )
 from insta_wizard.web.exceptions import (
     BadRequestError,
-    LoginBadPasswordError,
     CheckpointRequiredError,
+    LoginBadPasswordError,
     LoginCheckpointRequiredError,
 )
 from insta_wizard.web.models.state import WebClientState
 
-LoginResult: TypeAlias = None
+LoginResponse: TypeAlias = None
 
 
 @dataclass(slots=True)
-class Login(Command[LoginResult]):
+class Login(Command[LoginResponse]):
     """Log in to account using username and password"""
 
     username: str
     password: str
 
 
-class LoginHandler(CommandHandler[Login, LoginResult]):
+class LoginHandler(CommandHandler[Login, LoginResponse]):
     def __init__(
         self, state: WebClientState, initializer: StateInitializer, bus: CommandBus
     ) -> None:
@@ -41,7 +41,7 @@ class LoginHandler(CommandHandler[Login, LoginResult]):
         self.initializer = initializer
         self.bus = bus
 
-    async def __call__(self, command: Login) -> LoginResult:
+    async def __call__(self, command: Login) -> LoginResponse:
         self.state.local_data.clear_cookies(["sessionid", "ds_user_id"])
 
         await self.initializer()

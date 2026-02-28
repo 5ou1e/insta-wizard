@@ -1,11 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.direct.threads_broadcast_text import (
-    DirectV2ThreadsBroadcastTextResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -16,6 +12,9 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
+)
+from insta_wizard.mobile.responses.direct.threads_broadcast_text import (
+    DirectV2ThreadsBroadcastTextResponse,
 )
 
 

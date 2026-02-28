@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import TypeAlias, Union, ClassVar
+from typing import ClassVar, TypeAlias
 
 
 class CheckpointType(StrEnum):
@@ -58,9 +58,6 @@ class UnknownCheckpoint:
     response: dict | None = None
 
 
-Checkpoint: TypeAlias = Union[
-    UnknownCheckpoint,
-    UfacCheckpoint,
-    VettedDeltaCheckpoint,
-    ScrapingWarningCheckpoint,
-]
+Checkpoint: TypeAlias = (
+    UnknownCheckpoint | UfacCheckpoint | VettedDeltaCheckpoint | ScrapingWarningCheckpoint
+)

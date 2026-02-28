@@ -7,26 +7,26 @@ from insta_wizard.common.generators import (
 from insta_wizard.common.utils import (
     dumps,
 )
-from insta_wizard.web.commands._responses.search.polaris_search_box import (
-    PolarisSearchBoxRefetchableQueryResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.search.polaris_search_box import (
+    PolarisSearchBoxRefetchableQueryResponse,
+)
 
 
 @dataclass(slots=True)
-class PolarisSearchBoxRefetchableQuery(Command[PolarisSearchBoxRefetchableQueryResult]):
+class PolarisSearchBoxRefetchableQuery(Command[PolarisSearchBoxRefetchableQueryResponse]):
     """Search users by username (GraphQL API)"""
 
     query: str
 
 
 class PolarisSearchBoxRefetchableQueryHandler(
-    CommandHandler[PolarisSearchBoxRefetchableQuery, PolarisSearchBoxRefetchableQueryResult]
+    CommandHandler[PolarisSearchBoxRefetchableQuery, PolarisSearchBoxRefetchableQueryResponse]
 ):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
@@ -35,7 +35,7 @@ class PolarisSearchBoxRefetchableQueryHandler(
     async def __call__(
         self,
         command: PolarisSearchBoxRefetchableQuery,
-    ) -> PolarisSearchBoxRefetchableQueryResult:
+    ) -> PolarisSearchBoxRefetchableQueryResponse:
         raise NotImplementedError()
         # TODO Метод сломан - отдает в 'xdt_api__v1__fbsearch__topsearch_connection': None - видимо из-за кривых\недостающих параметров в запросе
         query = command.query
@@ -96,4 +96,4 @@ class PolarisSearchBoxRefetchableQueryHandler(
                 "X-Root-Field-Name": "xdt_api__v1__fbsearch__topsearch_connection",
             },
         )
-        return cast(PolarisSearchBoxRefetchableQueryResult, resp)
+        return cast(PolarisSearchBoxRefetchableQueryResponse, resp)

@@ -52,7 +52,7 @@ class InstagramResponseError(WebClientError):
     response: ResponseInfo
 
     def __str__(self) -> str:
-        return f"InstagramResponseError, status_code={self.response.status}, response={self.response.response_string[:100]}..."
+        return f"InstagramResponseError, status_code={self.response.status}, response={self.response.response_string[:200]}..."
 
 
 @dataclass(kw_only=True, slots=True)

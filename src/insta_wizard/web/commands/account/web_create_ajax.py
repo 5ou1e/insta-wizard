@@ -3,19 +3,19 @@ from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
 from insta_wizard.common.password_encrypter import PasswordEncrypter
-from insta_wizard.web.commands._responses.account.web_create_ajax import (
-    WebCreateAjaxResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.web_create_ajax import (
+    WebCreateAjaxResponse,
+)
 
 
 @dataclass(slots=True)
-class WebCreateAjax(Command[WebCreateAjaxResult]):
+class WebCreateAjax(Command[WebCreateAjaxResponse]):
     """Final account registration request"""
 
     username: str
@@ -28,12 +28,12 @@ class WebCreateAjax(Command[WebCreateAjaxResult]):
     sms_code: int | str
 
 
-class WebCreateAjaxHandler(CommandHandler[WebCreateAjax, WebCreateAjaxResult]):
+class WebCreateAjaxHandler(CommandHandler[WebCreateAjax, WebCreateAjaxResponse]):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: WebCreateAjax) -> WebCreateAjaxResult:
+    async def __call__(self, command: WebCreateAjax) -> WebCreateAjaxResponse:
         self.state.csrftoken_guard()
         self.state.machine_id_guard()
         self.state.encryption_info_guard()
@@ -72,4 +72,4 @@ class WebCreateAjaxHandler(CommandHandler[WebCreateAjax, WebCreateAjaxResult]):
                 "Referer": "https://www.instagram.com/accounts/emailsignup/",
             },
         )
-        return cast(WebCreateAjaxResult, resp)
+        return cast(WebCreateAjaxResponse, resp)

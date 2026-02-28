@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import cast, TypedDict
+from typing import TypedDict, cast
 
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (

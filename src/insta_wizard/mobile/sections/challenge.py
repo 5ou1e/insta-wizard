@@ -1,20 +1,18 @@
 import random
 
 from insta_wizard.common.logger import InstagramClientLogger
-from insta_wizard.mobile.commands import ChallengeGetChallengeInfo, ChallengeAction
-from insta_wizard.mobile.commands._responses.challenge_info import (
-    ChallengeGetChallengeInfoResponse,
+from insta_wizard.common.models.checkpoint import (
+    Checkpoint,
+    ScrapingWarningCheckpoint,
+    UfacCheckpoint,
+    UnknownCheckpoint,
+    VettedDeltaCheckpoint,
 )
+from insta_wizard.mobile.commands import ChallengeAction, ChallengeGetChallengeInfo
 from insta_wizard.mobile.common.command import CommandBus
 from insta_wizard.mobile.models.challenge import ChallengeRequiredData
 from insta_wizard.mobile.models.state import MobileClientState
-from insta_wizard.common.models.checkpoint import (
-    Checkpoint,
-    UfacCheckpoint,
-    VettedDeltaCheckpoint,
-    UnknownCheckpoint,
-    ScrapingWarningCheckpoint,
-)
+from insta_wizard.mobile.responses.challenge_info import ChallengeGetChallengeInfoResponse
 from insta_wizard.mobile.sections.api import BaseSection
 from insta_wizard.mobile.sections.graphql_www import GraphqlWWW
 
@@ -31,8 +29,10 @@ class ChallengeSection(BaseSection):
         self.logger = logger
         super().__init__(state=state, bus=bus)
 
-    async def get_challenge_info(self, challenge_data: ChallengeRequiredData) -> Checkpoint:
-        """Get challenge info"""
+    async def get_challenge_info(self, challenge_data: ChallengeRequiredData) -> Checkpoint | None:
+        """Get challenge info
+        Returns Checkpoint info object or None if no challenge
+        """
 
         if not challenge_data.api_path:
             raise ValueError("Отсутствует api_path в challenge_data")
@@ -43,6 +43,10 @@ class ChallengeSection(BaseSection):
                 challenge_context=challenge_data.challenge_context,
             )
         )
+        # {'action': 'close', 'status': 'ok'}
+        if challenge_info.get("action") == "close":
+            return None
+
         self.logger.debug(f"Challenge info: {challenge_info}")
 
         # TODO это можно выполнять аналогично через https://i.instagram.com/api/v1/bloks/async_action/com.bloks.www.ig.challenge.redirect.async/

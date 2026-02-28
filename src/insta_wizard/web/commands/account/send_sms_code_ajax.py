@@ -2,19 +2,19 @@ from dataclasses import dataclass
 from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.account.send_sms_code_ajax import (
-    SendSignupSmsCodeAjaxResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.send_sms_code_ajax import (
+    SendSignupSmsCodeAjaxResponse,
+)
 
 
 @dataclass(slots=True)
-class SendSignupSmsCodeAjax(Command[SendSignupSmsCodeAjaxResult]):
+class SendSignupSmsCodeAjax(Command[SendSignupSmsCodeAjaxResponse]):
     """Send SMS code during registration"""
 
     phone_number: str
@@ -22,13 +22,13 @@ class SendSignupSmsCodeAjax(Command[SendSignupSmsCodeAjaxResult]):
 
 
 class SendSignupSmsCodeAjaxHandler(
-    CommandHandler[SendSignupSmsCodeAjax, SendSignupSmsCodeAjaxResult]
+    CommandHandler[SendSignupSmsCodeAjax, SendSignupSmsCodeAjaxResponse]
 ):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: SendSignupSmsCodeAjax) -> SendSignupSmsCodeAjaxResult:
+    async def __call__(self, command: SendSignupSmsCodeAjax) -> SendSignupSmsCodeAjaxResponse:
         self.state.csrftoken_guard()
         self.state.machine_id_guard()
 
@@ -51,4 +51,4 @@ class SendSignupSmsCodeAjaxHandler(
                 "Referer": "https://www.instagram.com/accounts/emailsignup/",
             },
         )
-        return cast(SendSignupSmsCodeAjaxResult, resp)
+        return cast(SendSignupSmsCodeAjaxResponse, resp)

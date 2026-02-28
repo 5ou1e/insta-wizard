@@ -5,9 +5,6 @@ from insta_wizard.common.generators import (
     generate_uuid_v4_string,
     utc_offset_from_timezone,
 )
-from insta_wizard.mobile.commands._responses.feed.reels_tray import (
-    FeedGetReelsTrayResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -19,11 +16,15 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
+from insta_wizard.mobile.responses.feed.reels_tray import (
+    FeedGetReelsTrayResponse,
+)
 
 
 @dataclass(slots=True)
 class FeedGetReelsTray(Command[FeedGetReelsTrayResponse]):
-    pass
+    reason: str = "cold_start"
+    page_size: str = "50"
 
 
 class FeedGetReelsTrayHandler(CommandHandler[FeedGetReelsTray, FeedGetReelsTrayResponse]):
@@ -33,12 +34,12 @@ class FeedGetReelsTrayHandler(CommandHandler[FeedGetReelsTray, FeedGetReelsTrayR
 
     async def __call__(self, command: FeedGetReelsTray) -> FeedGetReelsTrayResponse:
         payload = {
-            "reason": "cold_start",
+            "reason": command.reason,
             "timezone_offset": str(utc_offset_from_timezone(self.state.device.timezone)),
             "tray_session_id": generate_uuid_v4_string(),
             "request_id": generate_uuid_v4_string(),
             "_uuid": self.state.device.device_id,
-            "page_size": "50",
+            "page_size": command.page_size,
         }
 
         res = await self.api.call_api(

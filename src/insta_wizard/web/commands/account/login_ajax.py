@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.web.commands._responses.account.login_ajax import (
-    AccountsLoginAjaxResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
@@ -13,10 +10,13 @@ from insta_wizard.web.common.requesters.api_requester import (
     WebApiRequester,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.login_ajax import (
+    AccountsLoginAjaxResponse,
+)
 
 
 @dataclass(slots=True)
-class AccountsLoginAjax(Command[AccountsLoginAjaxResult]):
+class AccountsLoginAjax(Command[AccountsLoginAjaxResponse]):
     """Log in with username and password"""
 
     username: str
@@ -24,7 +24,7 @@ class AccountsLoginAjax(Command[AccountsLoginAjaxResult]):
     jazoest: str
 
 
-class AccountsLoginAjaxHandler(CommandHandler[AccountsLoginAjax, AccountsLoginAjaxResult]):
+class AccountsLoginAjaxHandler(CommandHandler[AccountsLoginAjax, AccountsLoginAjaxResponse]):
     def __init__(
         self,
         api_requester: WebApiRequester,
@@ -33,7 +33,7 @@ class AccountsLoginAjaxHandler(CommandHandler[AccountsLoginAjax, AccountsLoginAj
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: AccountsLoginAjax) -> AccountsLoginAjaxResult:
+    async def __call__(self, command: AccountsLoginAjax) -> AccountsLoginAjaxResponse:
 
         data = {
             "enc_password": command.enc_password,
@@ -56,4 +56,4 @@ class AccountsLoginAjaxHandler(CommandHandler[AccountsLoginAjax, AccountsLoginAj
                 "Referer": "https://www.instagram.com",
             },
         )
-        return cast(AccountsLoginAjaxResult, resp)
+        return cast(AccountsLoginAjaxResponse, resp)

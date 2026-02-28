@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from types import MappingProxyType
 
-from insta_wizard.mobile.commands import MediaLike, MediaDelete, MediaLikers, MediaSave
+from insta_wizard.mobile.commands import MediaDelete, MediaLike, MediaLikers, MediaSave
 from insta_wizard.mobile.commands.account.change_profile_picture import (
     AccountChangeProfilePicture,
     AccountChangeProfilePictureHandler,
@@ -101,13 +101,13 @@ from insta_wizard.mobile.commands.bloks.youth_regulation_delete_pregent import (
     BloksYouthRegulationDeletePregent,
     BloksYouthRegulationDeletePregentHandler,
 )
-from insta_wizard.mobile.commands.challenge.get_challenge_info import (
-    ChallengeGetChallengeInfo,
-    ChallengeGetChallengeInfoHandler,
-)
 from insta_wizard.mobile.commands.challenge.challenge_action import (
     ChallengeAction,
     ChallengeActionHandler,
+)
+from insta_wizard.mobile.commands.challenge.get_challenge_info import (
+    ChallengeGetChallengeInfo,
+    ChallengeGetChallengeInfoHandler,
 )
 from insta_wizard.mobile.commands.clips.discover_stream import (
     ClipsDiscoverStream,
@@ -301,12 +301,12 @@ from insta_wizard.mobile.commands.media.comment_unlike import (
 )
 from insta_wizard.mobile.commands.media.comments import MediaComments, MediaCommentsHandler
 from insta_wizard.mobile.commands.media.delete import MediaDeleteHandler
-from insta_wizard.mobile.commands.media.edit import MediaEditHandler, MediaEdit
+from insta_wizard.mobile.commands.media.edit import MediaEdit, MediaEditHandler
 from insta_wizard.mobile.commands.media.like import MediaLikeHandler
 from insta_wizard.mobile.commands.media.likers import MediaLikersHandler
 from insta_wizard.mobile.commands.media.save import MediaSaveHandler
-from insta_wizard.mobile.commands.media.unlike import MediaUnlikeHandler, MediaUnlike
-from insta_wizard.mobile.commands.media.unsave import MediaUnsaveHandler, MediaUnsave
+from insta_wizard.mobile.commands.media.unlike import MediaUnlike, MediaUnlikeHandler
+from insta_wizard.mobile.commands.media.unsave import MediaUnsave, MediaUnsaveHandler
 from insta_wizard.mobile.commands.multiple_accounts.get_account_family import (
     MultipleAcountsGetAccountFamily,
     MultipleAcountsGetAccountFamilyHandler,
@@ -348,13 +348,13 @@ from insta_wizard.mobile.commands.user.info import (
     UserInfo,
     UserInfoHandler,
 )
+from insta_wizard.mobile.commands.user.search import (
+    UserSearch,
+    UserSearchHandler,
+)
 from insta_wizard.mobile.commands.user.usernameinfo import (
     UserUsernameInfo,
     UserUsernameInfoHandler,
-)
-from insta_wizard.mobile.commands.user.search import (
-    UserSearchUsers,
-    UserSearchUsersHandler,
 )
 from insta_wizard.mobile.commands.user.web_profile_info import (
     UserWebProfileInfo,
@@ -369,7 +369,6 @@ from insta_wizard.mobile.flows.bloks_login import (
     BloksLogin,
     BloksLoginHandler,
 )
-
 from insta_wizard.mobile.models.deps import ClientDeps
 
 COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
@@ -394,7 +393,7 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         api=d.api,
         state=d.state,
     ),
-    UserSearchUsers: lambda d: UserSearchUsersHandler(
+    UserSearch: lambda d: UserSearchHandler(
         api=d.api,
         state=d.state,
     ),

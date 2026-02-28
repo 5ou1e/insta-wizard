@@ -3,7 +3,6 @@ from __future__ import annotations
 from collections.abc import Callable, Mapping
 from typing import TYPE_CHECKING, Any, Generic, TypeVar, cast
 
-
 if TYPE_CHECKING:
     from insta_wizard.mobile.models.deps import ClientDeps
 
@@ -39,7 +38,7 @@ class CommandBus:
 
         factory = self._factories.get(cmd_type)
         if factory is None:
-            raise KeyError(f"Не найден обработчик для команды {cmd_type.__name__}")
+            raise KeyError(f"Command handler not found for {cmd_type.__name__}")
 
         handler = factory(self._deps)
         return await cast(Any, handler)(command)

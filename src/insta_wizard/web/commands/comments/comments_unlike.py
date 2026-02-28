@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.web.commands._responses.comments.comments_unlike import (
-    CommentsUnlikeResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
@@ -11,16 +8,19 @@ from insta_wizard.web.common.command import (
 )
 from insta_wizard.web.common.requesters.api_requester import WebApiRequester
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.comments.comments_unlike import (
+    CommentsUnlikeResponse,
+)
 
 
 @dataclass(slots=True)
-class CommentsUnlike(Command[CommentsUnlikeResult]):
+class CommentsUnlike(Command[CommentsUnlikeResponse]):
     """Unlike a comment on a media post"""
 
     comment_id: str  # 17873106636540219
 
 
-class CommentsUnlikeHandler(CommandHandler[CommentsUnlike, CommentsUnlikeResult]):
+class CommentsUnlikeHandler(CommandHandler[CommentsUnlike, CommentsUnlikeResponse]):
     def __init__(
         self,
         api_requester: WebApiRequester,
@@ -29,10 +29,10 @@ class CommentsUnlikeHandler(CommandHandler[CommentsUnlike, CommentsUnlikeResult]
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: CommentsUnlike) -> CommentsUnlikeResult:
+    async def __call__(self, command: CommentsUnlike) -> CommentsUnlikeResponse:
         self.state.csrftoken_guard()
         return cast(
-            CommentsUnlikeResult,
+            CommentsUnlikeResponse,
             await self.api_requester.execute(
                 method="POST",
                 url=constants.COMMENTS_UNLIKE_URL.format(comment_id=command.comment_id),

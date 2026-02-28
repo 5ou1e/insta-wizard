@@ -3,19 +3,19 @@ from typing import Any, cast
 
 from insta_wizard.common.generators import generate_jazoest
 from insta_wizard.common.password_encrypter import PasswordEncrypter
-from insta_wizard.web.commands._responses.account.web_create_ajax_attempt import (
-    WebCreateAjaxAttemptResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.account.web_create_ajax_attempt import (
+    WebCreateAjaxAttemptResponse,
+)
 
 
 @dataclass(slots=True)
-class WebCreateAjaxAttempt(Command[WebCreateAjaxAttemptResult]):
+class WebCreateAjaxAttempt(Command[WebCreateAjaxAttemptResponse]):
     """Send account registration attempt request"""
 
     username: str
@@ -24,12 +24,14 @@ class WebCreateAjaxAttempt(Command[WebCreateAjaxAttemptResult]):
     phone_number: str
 
 
-class WebCreateAjaxAttemptHandler(CommandHandler[WebCreateAjaxAttempt, WebCreateAjaxAttemptResult]):
+class WebCreateAjaxAttemptHandler(
+    CommandHandler[WebCreateAjaxAttempt, WebCreateAjaxAttemptResponse]
+):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
         self.state = state
 
-    async def __call__(self, command: WebCreateAjaxAttempt) -> WebCreateAjaxAttemptResult:
+    async def __call__(self, command: WebCreateAjaxAttempt) -> WebCreateAjaxAttemptResponse:
         self.state.csrftoken_guard()
         self.state.machine_id_guard()
         self.state.encryption_info_guard()
@@ -63,4 +65,4 @@ class WebCreateAjaxAttemptHandler(CommandHandler[WebCreateAjaxAttempt, WebCreate
                 "Referer": "https://www.instagram.com/accounts/emailsignup/",
             },
         )
-        return cast(WebCreateAjaxAttemptResult, resp)
+        return cast(WebCreateAjaxAttemptResponse, resp)

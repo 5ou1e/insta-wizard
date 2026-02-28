@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import base64
 import re
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from functools import lru_cache
-from typing import Any, Iterator
+from typing import Any
 
 import orjson
 from babel import Locale

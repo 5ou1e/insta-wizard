@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.challenge_action import (
-    ChallengeActionResponse,
-)
 from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
@@ -14,6 +11,9 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
     MobileClientState,
+)
+from insta_wizard.mobile.responses.challenge_action import (
+    ChallengeActionResponse,
 )
 
 

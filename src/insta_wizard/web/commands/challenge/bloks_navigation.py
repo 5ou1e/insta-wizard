@@ -2,26 +2,26 @@ from dataclasses import dataclass
 from typing import Any
 
 from insta_wizard.common.generators import generate_jazoest
-from insta_wizard.web.commands._responses.challenge.bloks_navigation import (
-    BloksNavigationTakeChallengeResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.challenge.bloks_navigation import (
+    BloksNavigationTakeChallengeResponse,
+)
 
 
 @dataclass(slots=True)
-class BloksNavigationTakeChallenge(Command[BloksNavigationTakeChallengeResult]):
+class BloksNavigationTakeChallenge(Command[BloksNavigationTakeChallengeResponse]):
     challenge_context: str
     has_follow_up_screens: str = "false"
     nest_data_manifest: str = "true"
 
 
 class BloksNavigationTakeChallengeHandler(
-    CommandHandler[BloksNavigationTakeChallenge, BloksNavigationTakeChallengeResult]
+    CommandHandler[BloksNavigationTakeChallenge, BloksNavigationTakeChallengeResponse]
 ):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
@@ -29,7 +29,7 @@ class BloksNavigationTakeChallengeHandler(
 
     async def __call__(
         self, command: BloksNavigationTakeChallenge
-    ) -> BloksNavigationTakeChallengeResult:
+    ) -> BloksNavigationTakeChallengeResponse:
         self.state.csrftoken_guard()
 
         data = {

@@ -3,13 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TypeAlias
 
+from insta_wizard.common.generators import generate_waterfall_id
 from insta_wizard.common.password_encrypter import (
     PasswordEncrypter,
 )
 from insta_wizard.common.utils import (
     auth_data_from_authorization_header,
 )
-from insta_wizard.common.generators import generate_waterfall_id
 from insta_wizard.mobile.commands.attestation.create_android_keystore_b_api import (
     AttestationCreateAndroidKeystore,
 )
@@ -54,9 +54,8 @@ from insta_wizard.mobile.exceptions import (
     BloksLoginAuthenticationConfiramtionRequiredError,
     BloksLoginBadPasswordError,
     BloksLoginBloksCAAAccountRecoveryAuthMethodControllerError,
-    LoginTwoStepVerificationRequiredError,
     BloksLoginUnknownError,
-    ChallengeRequiredError,
+    LoginTwoStepVerificationRequiredError,
     LoginUnknownChallengeRequiredError,
 )
 from insta_wizard.mobile.models.state import (

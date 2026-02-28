@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.notifications.store_client_push_permissions import (
-    NotificationsStoreClientPushPermissionsResponse,
-)
 from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
@@ -13,6 +10,9 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
+)
+from insta_wizard.mobile.responses.notifications.store_client_push_permissions import (
+    NotificationsStoreClientPushPermissionsResponse,
 )
 
 

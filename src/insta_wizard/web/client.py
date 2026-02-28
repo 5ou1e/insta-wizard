@@ -1,6 +1,7 @@
 from insta_wizard.common.exceptions import InstaWizardError
 from insta_wizard.common.generators import generate_jazoest
 from insta_wizard.common.logger import InstagramClientLogger, StdLoggingInstagramClientLogger
+from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.common.transport.aiohttp_transport import AioHttpTransport
 from insta_wizard.common.transport.base import (
     HttpTransport,
@@ -8,7 +9,6 @@ from insta_wizard.common.transport.base import (
 from insta_wizard.common.transport.models import (
     TransportSettings,
 )
-from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.web.commands.account.logout_ajax import AccountsLogoutAjax
 from insta_wizard.web.common.command import (
     Command,

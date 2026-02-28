@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.user.web_profile_info import (
-    UserWebProfileInfoResponse,
-)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -14,6 +11,9 @@ from insta_wizard.mobile.common.requesters.api_requester import (
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
+)
+from insta_wizard.mobile.responses.user.web_profile_info import (
+    UserWebProfileInfoResponse,
 )
 
 

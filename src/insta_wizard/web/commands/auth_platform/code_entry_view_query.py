@@ -8,24 +8,24 @@ from insta_wizard.common.generators import (
 from insta_wizard.common.utils import (
     dumps,
 )
-from insta_wizard.web.commands._responses.auth_platform.code_entry_view_query import (
-    AuthPlatformCodeEntryViewQueryResult,
-)
 from insta_wizard.web.common import constants
 from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
 from insta_wizard.web.models.state import WebClientState
+from insta_wizard.web.responses.auth_platform.code_entry_view_query import (
+    AuthPlatformCodeEntryViewQueryResponse,
+)
 
 
 @dataclass(slots=True)
-class AuthPlatformCodeEntryViewQuery(Command[AuthPlatformCodeEntryViewQueryResult]):
+class AuthPlatformCodeEntryViewQuery(Command[AuthPlatformCodeEntryViewQueryResponse]):
     apc: str
 
 
 class AuthPlatformCodeEntryViewQueryHandler(
-    CommandHandler[AuthPlatformCodeEntryViewQuery, AuthPlatformCodeEntryViewQueryResult]
+    CommandHandler[AuthPlatformCodeEntryViewQuery, AuthPlatformCodeEntryViewQueryResponse]
 ):
     def __init__(self, api_requester: Any, state: WebClientState) -> None:
         self.api_requester = api_requester
@@ -34,7 +34,7 @@ class AuthPlatformCodeEntryViewQueryHandler(
     async def __call__(
         self,
         command: AuthPlatformCodeEntryViewQuery,
-    ) -> AuthPlatformCodeEntryViewQueryResult:
+    ) -> AuthPlatformCodeEntryViewQueryResponse:
         self.state.csrftoken_guard()
 
         jazoest = generate_jazoest(self.state.csrftoken)
@@ -84,4 +84,4 @@ class AuthPlatformCodeEntryViewQueryHandler(
                 "X-Fb-Lsd": "AdHdagTBW8A",  # ???
             },
         )
-        return cast(AuthPlatformCodeEntryViewQueryResult, resp)
+        return cast(AuthPlatformCodeEntryViewQueryResponse, resp)
