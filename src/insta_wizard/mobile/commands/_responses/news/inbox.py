@@ -1,4 +1,6 @@
 from typing import TypedDict, Any
+
+
 class _Owner(TypedDict):
     type: str
     pk: str
@@ -10,6 +12,7 @@ class _Owner(TypedDict):
     short_name: None
     profile_pic_username: str
     challenge_id: None
+
 
 class _ReelsItem(TypedDict):
     id: str
@@ -37,6 +40,7 @@ class _ReelsItem(TypedDict):
     is_archived: bool
     show_expiration_tray_signal: bool
 
+
 class _StoryMentions(TypedDict):
     mentions_count_string: str
     reels: list[_ReelsItem]
@@ -44,8 +48,10 @@ class _StoryMentions(TypedDict):
     is_pinned_row: bool
     product_stories_count: str
 
+
 class _Counts(TypedDict):
     requests: int
+
 
 class _UserInfo(TypedDict):
     id: int
@@ -53,19 +59,23 @@ class _UserInfo(TypedDict):
     is_private: bool
     profile_pic_url: str
 
+
 class _InlineFollow(TypedDict):
     user_info: _UserInfo
     following: bool
     outgoing_request: bool
     incoming_request: bool
 
+
 class _LoggingContext(TypedDict):
     mentioned_user_ids: list[int]
     mentioned_content_ids: None
     content_id: None
 
+
 class _InlineControlsItem(TypedDict):
     action_type: str
+
 
 class _Args(TypedDict):
     destination: str
@@ -86,14 +96,17 @@ class _Args(TypedDict):
     af_candidate_id: int
     latest_reel_media: int
 
+
 class _NewStoriesItemCounts(TypedDict):
     pass
+
 
 class _GenerationSource(TypedDict):
     is_send_platform: bool
     is_grand_central: bool
     is_nf_grand_central: bool
     is_hub_model: bool
+
 
 class _NewStoriesItem(TypedDict):
     story_type: int
@@ -106,14 +119,17 @@ class _NewStoriesItem(TypedDict):
     trace_id: str
     generation_source: _GenerationSource
 
+
 class _Extra(TypedDict):
     lat: float
     long: float
+
 
 class _OldStoriesItemArgsLoggingContext(TypedDict):
     mentioned_user_ids: None
     mentioned_content_ids: None
     content_id: None
+
 
 class _OldStoriesItemArgs(TypedDict):
     rich_text: str
@@ -133,6 +149,7 @@ class _OldStoriesItemArgs(TypedDict):
     clicked: bool
     af_candidate_id: int
 
+
 class _OldStoriesItem(TypedDict):
     story_type: int
     notif_name: str
@@ -144,38 +161,47 @@ class _OldStoriesItem(TypedDict):
     trace_id: None
     generation_source: _GenerationSource
 
+
 class _PillsItem(TypedDict):
     id: str
     name: str
     empty_state_str: str
 
+
 class _BadgeCountBreakdownItem(TypedDict):
     badge_use_case_id: str
     count: int
+
 
 class _BadgingInfo(TypedDict):
     total_badge_count: int
     badge_count_breakdown: list[_BadgeCountBreakdownItem]
 
+
 class _UiConfig(TypedDict):
     new_timebucket_enabled: bool
+
 
 class _TimeBucket(TypedDict):
     headers: list[str]
     indices: list[int]
 
+
 class _Partition(TypedDict):
     time_bucket: _TimeBucket
+
 
 class _IncludedFiltersItem(TypedDict):
     id: str
     name: str
     value: int
 
+
 class _FiltersItem(TypedDict):
     section_header: str
     selector_type: str
     included_filters: list[_IncludedFiltersItem]
+
 
 class NewsInboxResponse(TypedDict):
     friend_request_stories: list[Any]

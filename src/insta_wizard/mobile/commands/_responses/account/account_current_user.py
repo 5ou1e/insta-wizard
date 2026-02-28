@@ -1,13 +1,16 @@
 from typing import TypedDict, Any
 
+
 class _BiographyWithEntities(TypedDict):
     raw_text: str
     entities: list[Any]
+
 
 class _HdProfilePicUrlInfo(TypedDict):
     height: int
     url: str
     width: int
+
 
 class _FullName(TypedDict):
     confirmation_dialog_text: str
@@ -15,9 +18,11 @@ class _FullName(TypedDict):
     is_pending_review: bool
     should_show_confirmation_dialog: bool
 
+
 class _ProfileEditParams(TypedDict):
     full_name: _FullName
     username: _FullName
+
 
 class _SupervisionInfo(TypedDict):
     auto_approval_enabled: None
@@ -45,6 +50,7 @@ class _SupervisionInfo(TypedDict):
     latest_valid_time_limit_extension_request: None
     quiet_time_intervals: None
     feature_controls: None
+
 
 class _User(TypedDict):
     strong_id__: str
@@ -131,6 +137,7 @@ class _User(TypedDict):
     text_app_cover_photo_url: None
     full_name: str
     is_private: bool
+
 
 class AccountCurrentUserResponse(TypedDict):
     user: _User

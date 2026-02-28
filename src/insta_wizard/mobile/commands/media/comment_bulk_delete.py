@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.media.comment_bulk_delete import MediaCommentBulkDeleteResponse
+from insta_wizard.mobile.commands._responses.media.comment_bulk_delete import (
+    MediaCommentBulkDeleteResponse,
+)
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,

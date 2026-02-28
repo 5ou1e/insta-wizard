@@ -1,5 +1,6 @@
 from typing import TypedDict, Any
 
+
 class _FriendshipStatus(TypedDict):
     following: bool
     is_bestie: bool
@@ -13,6 +14,7 @@ class _FriendshipStatus(TypedDict):
     blocking: bool
     is_eligible_to_subscribe: bool
     subscribed: bool
+
 
 class FriendshipsDestroyResponse(TypedDict):
     friendship_status: _FriendshipStatus

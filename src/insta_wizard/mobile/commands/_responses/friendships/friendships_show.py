@@ -1,5 +1,6 @@
 from typing import TypedDict, Any
 
+
 class FriendshipsShowResponse(TypedDict):
     blocking: bool
     followed_by: bool

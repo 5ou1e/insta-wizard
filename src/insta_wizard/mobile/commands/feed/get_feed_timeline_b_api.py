@@ -29,9 +29,7 @@ class FeedTimelineBApi(Command[FeedTimelineBApiResponse]):
     pass
 
 
-class FeedTimelineBApiHandler(
-    CommandHandler[FeedTimelineBApi, FeedTimelineBApiResponse]
-):
+class FeedTimelineBApiHandler(CommandHandler[FeedTimelineBApi, FeedTimelineBApiResponse]):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state

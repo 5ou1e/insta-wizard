@@ -1,5 +1,6 @@
 from typing import TypedDict, Any
 
+
 class _SupervisionInfo(TypedDict):
     auto_approval_enabled: None
     cannes_setting_badge_type: None
@@ -27,6 +28,7 @@ class _SupervisionInfo(TypedDict):
     quiet_time_intervals: None
     feature_controls: None
 
+
 class _FanClubInfo(TypedDict):
     autosave_to_exclusive_highlight: None
     connected_member_count: None
@@ -42,44 +44,55 @@ class _FanClubInfo(TypedDict):
     should_show_playlists_in_profile_tab: None
     fan_consideration_page_revamp_eligiblity: None
 
+
 class _HdProfilePicUrlInfo(TypedDict):
     height: int
     url: str
     width: int
+
 
 class _MetaVerifiedBenefitsInfo(TypedDict):
     active_meta_verified_benefits: list[Any]
     is_eligible_for_meta_verified_content_protection: bool
     is_eligible_for_ig_meta_verified_label: bool
 
+
 class _BiographyWithEntities(TypedDict):
     raw_text: str
     entities: list[Any]
 
+
 class _RingCreatorMetadata(TypedDict):
     pass
+
 
 class _ActiveStandaloneFundraisers(TypedDict):
     total_count: int
     fundraisers: list[Any]
 
+
 class _AvatarStatus(TypedDict):
     has_avatar: bool
 
+
 class _CreatorShoppingInfo(TypedDict):
     linked_merchant_accounts: list[Any]
+
 
 class _ProfileOverlayInfo(TypedDict):
     overlay_format: str
     bloks_payload: None
 
+
 class _AvailableThemeColorsItem(TypedDict):
     display_label: str
     int_value: int
 
+
 class _ThemeColor(TypedDict):
     available_theme_colors: list[_AvailableThemeColorsItem]
     selected_theme_color: _AvailableThemeColorsItem
+
 
 class _Nametag(TypedDict):
     available_theme_colors: list[int]
@@ -94,17 +107,21 @@ class _Nametag(TypedDict):
     selfie_url: str
     theme_color: _ThemeColor
 
+
 class _NotMetaVerifiedFrictionInfo(TypedDict):
     label_friction_content: str
     is_eligible_for_label_friction: bool
+
 
 class _PinnedChannelsInfo(TypedDict):
     has_public_channels: bool
     pinned_channels_list: list[Any]
 
+
 class _TranslateFromPreferenceItem(TypedDict):
     language: str
     enabled: bool
+
 
 class _User(TypedDict):
     strong_id__: str
@@ -356,6 +373,7 @@ class _User(TypedDict):
     moonshot_joiner_number: None
     qa_freeform_banner: None
     qa_freeform_banner_available_prompts: list[Any]
+
 
 class UserInfoResponse(TypedDict):
     user: _User

@@ -1,5 +1,6 @@
 from typing import TypedDict, Any
 
+
 class AccountGetPresenceDisabledResponse(TypedDict):
     disabled: bool
     thread_presence_disabled: bool

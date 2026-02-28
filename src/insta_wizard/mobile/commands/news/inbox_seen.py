@@ -28,7 +28,7 @@ class NewsInboxSeenHandler(CommandHandler[NewsInboxSeen, NewsInboxSeenResponse])
         self.state = state
 
     async def __call__(self, command: NewsInboxSeen) -> NewsInboxSeenResponse:
-        data = {'_uuid': self.state.device.device_id}
+        data = {"_uuid": self.state.device.device_id}
 
         resp = await self.api.call_api(
             method="POST",

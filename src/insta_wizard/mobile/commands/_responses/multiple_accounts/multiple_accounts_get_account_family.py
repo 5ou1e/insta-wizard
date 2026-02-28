@@ -1,4 +1,6 @@
 from typing import TypedDict, Any
+
+
 class _CurrentAccount(TypedDict):
     strong_id__: str
     pk: int
@@ -13,6 +15,7 @@ class _CurrentAccount(TypedDict):
     profile_pic_url: str
     has_onboarded_to_text_post_app: bool
     has_onboarded_to_basel: bool
+
 
 class MultipleAcountsGetAccountFamilyResponse(TypedDict):
     child_accounts: list[Any]
