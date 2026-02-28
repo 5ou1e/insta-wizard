@@ -33,33 +33,27 @@ async def main() -> None:
         print(f"Removed {TARGET_USER_ID} from followers")
 
         # --- Friendship status -----------------------------------------------
-        status = await client.friendships.get_status_single(TARGET_USER_ID)
+        status = await client.friendships.get_status(TARGET_USER_ID)
         print(f"\nStatus with {TARGET_USER_ID}: {status}")
 
         # Batch status check for multiple users at once
-        statuses = await client.friendships.get_status(["111", "222", TARGET_USER_ID])
-        print(f"\nBatch statuses: {json.dumps(statuses, indent=2)}")
+        statuses = await client.friendships.get_status_many(["111", "222", TARGET_USER_ID])
+        print(
+            f"\nBatch statuses: {json.dumps({uid: s.model_dump() for uid, s in statuses.items()}, indent=2)}"
+        )
 
         # --- Followers list --------------------------------------------------
-        # Use max_id for pagination: pass next_max_id from the previous response.
+        # Pass max_id for pagination (value from a previous page).
         followers = await client.friendships.get_user_followers(TARGET_USER_ID)
-        print(f"\nFollowers ({len(followers['users'])} loaded):")
-        for u in followers["users"]:
-            print(f"  @{u['username']}")
-
-        # Load the next page if available
-        if followers.get("next_max_id"):
-            next_page = await client.friendships.get_user_followers(
-                TARGET_USER_ID,
-                max_id=followers["next_max_id"],
-            )
-            print(f"  ... {len(next_page['users'])} more on next page")
+        print(f"\nFollowers ({len(followers)} loaded):")
+        for u in followers:
+            print(f"  @{u.username}")
 
         # --- Following list --------------------------------------------------
         following = await client.friendships.get_user_following(TARGET_USER_ID)
-        print(f"\nFollowing ({len(following['users'])} loaded):")
-        for u in following["users"]:
-            print(f"  @{u['username']}")
+        print(f"\nFollowing ({len(following)} loaded):")
+        for u in following:
+            print(f"  @{u.username}")
 
 
 if __name__ == "__main__":

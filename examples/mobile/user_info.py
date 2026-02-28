@@ -21,24 +21,24 @@ async def main() -> None:
         # --- Your own profile ------------------------------------------------
         me = await client.account.get_current_user()
         print("=== Current user ===")
-        print(json.dumps(me, indent=2))
+        print(json.dumps(me.model_dump(), indent=2))
 
         # --- Look up by username ---------------------------------------------
         user = await client.users.get_info_by_username("some_username")
-        user_id = str(user["user"]["pk"])
+        user_id = str(user.pk)
         print(f"\n=== @some_username (id={user_id}) ===")
-        print(json.dumps(user, indent=2))
+        print(json.dumps(user.model_dump(), indent=2))
 
         # --- Look up by numeric user_id --------------------------------------
         user_by_id = await client.users.get_info(user_id)
         print("\n=== User by id ===")
-        print(json.dumps(user_by_id, indent=2))
+        print(json.dumps(user_by_id.model_dump(), indent=2))
 
         # --- Search ----------------------------------------------------------
         results = await client.users.search("john")
-        print(f"\n=== Search 'john' — {len(results['users'])} results ===")
-        for u in results["users"]:
-            print(f"  @{u['username']} (id={u['pk']})")
+        print(f"\n=== Search 'john' — {len(results)} results ===")
+        for u in results:
+            print(f"  @{u.username} (id={u.pk})")
 
 
 if __name__ == "__main__":

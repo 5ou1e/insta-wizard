@@ -19,7 +19,7 @@ async def main() -> None:
 
         # The session is now active — you can call any authenticated method.
         me = await client.account.get_current_user()
-        print(f"Logged in as: {me['user']['username']}")
+        print(f"Logged in as: {me.username}")
 
         # Invalidates the session on Instagram's side.
         await client.logout()
