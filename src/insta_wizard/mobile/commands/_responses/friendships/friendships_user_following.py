@@ -1,7 +1,7 @@
 from typing import Any, TypedDict
 
 
-class FriendshipsUserFollowingResponseUsersItem(TypedDict):
+class _User(TypedDict):
     strong_id__: str
     pk: int
     pk_id: str
@@ -21,7 +21,7 @@ class FriendshipsUserFollowingResponseUsersItem(TypedDict):
 
 
 class FriendshipsUserFollowingResponse(TypedDict):
-    users: list[FriendshipsUserFollowingResponseUsersItem]
+    users: list[_User]
     big_list: bool
     page_size: int
     next_max_id: str

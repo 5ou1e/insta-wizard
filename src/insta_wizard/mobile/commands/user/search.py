@@ -4,7 +4,7 @@ from typing import cast
 from insta_wizard.common.generators import (
     utc_offset_from_timezone,
 )
-from insta_wizard.mobile.commands._responses.user.user_search_users import (
+from insta_wizard.mobile.commands._responses.user.search_users import (
     UserSearchUsersResponse,
 )
 from insta_wizard.mobile.common import constants

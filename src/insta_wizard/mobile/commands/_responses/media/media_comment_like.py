@@ -1,7 +1,7 @@
 from typing import Any, TypedDict
 
 
-class MediaCommentLikeResponseComment(TypedDict):
+class _Comment(TypedDict):
     pk: str
     text: str
     user_id: str
@@ -20,6 +20,6 @@ class MediaCommentLikeResponseComment(TypedDict):
 
 
 class MediaCommentLikeResponse(TypedDict):
-    comment: MediaCommentLikeResponseComment
+    comment: _Comment
     status: str
     status_code: str

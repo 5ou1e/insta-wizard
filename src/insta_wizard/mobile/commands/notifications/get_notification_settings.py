@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.notifications.notifications_get_notification_settings import (
+from insta_wizard.mobile.commands._responses.notifications.get_notification_settings import (
     NotificationsGetNotificationSettingsResponse,
 )
 from insta_wizard.mobile.common import constants

@@ -1,7 +1,6 @@
-from typing import TypedDict
+from typing import TypedDict, Any
 
-
-class FriendshipsDestroyResponseFriendshipStatus(TypedDict):
+class _FriendshipStatus(TypedDict):
     following: bool
     is_bestie: bool
     is_feed_favorite: bool
@@ -15,9 +14,8 @@ class FriendshipsDestroyResponseFriendshipStatus(TypedDict):
     is_eligible_to_subscribe: bool
     subscribed: bool
 
-
 class FriendshipsDestroyResponse(TypedDict):
-    friendship_status: FriendshipsDestroyResponseFriendshipStatus
+    friendship_status: _FriendshipStatus
     previous_following: None
     error: None
     status: str

@@ -9,8 +9,8 @@ from insta_wizard.common.generators import (
     utc_offset_from_timezone,
 )
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.feed.get_feed_timeline_i_api import (
-    FeedGetFeedTimelineIApiResponse,
+from insta_wizard.mobile.commands._responses.feed.feed_timeline_i_api import (
+    FeedTimelineIApiResponse,
 )
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
@@ -26,18 +26,18 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class FeedGetFeedTimelineIApi(Command[FeedGetFeedTimelineIApiResponse]):
+class FeedTimelineIApi(Command[FeedTimelineIApiResponse]):
     pass
 
 
-class FeedGetFeedTimelineIApiHandler(
-    CommandHandler[FeedGetFeedTimelineIApi, FeedGetFeedTimelineIApiResponse]
+class FeedTimelineIApiHandler(
+    CommandHandler[FeedTimelineIApi, FeedTimelineIApiResponse]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state
 
-    async def __call__(self, command: FeedGetFeedTimelineIApi) -> FeedGetFeedTimelineIApiResponse:
+    async def __call__(self, command: FeedTimelineIApi) -> FeedTimelineIApiResponse:
         current_timestamp = current_timestamp_ms()
         session_id = generate_uuid_v4_string()
 
@@ -125,4 +125,4 @@ class FeedGetFeedTimelineIApiHandler(
                 "x-ads-opt-out": "0",
             },
         )
-        return cast(FeedGetFeedTimelineIApiResponse, res)
+        return cast(FeedTimelineIApiResponse, res)

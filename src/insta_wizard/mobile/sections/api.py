@@ -14,7 +14,7 @@ from insta_wizard.mobile.commands._responses.friendships.friendships_user_follow
 from insta_wizard.mobile.commands._responses.friendships.friendships_user_following import (
     FriendshipsUserFollowingResponse,
 )
-from insta_wizard.mobile.commands._responses.user.user_info import (
+from insta_wizard.mobile.commands._responses.user.info import (
     UserInfoResponse,
 )
 from insta_wizard.mobile.commands.account.change_profile_picture import (
@@ -132,7 +132,7 @@ from insta_wizard.mobile.commands.direct.threads_update_title import (
     DirectV2ThreadsUpdateTitle,
 )
 from insta_wizard.mobile.commands.feed.get_feed_timeline_i_api import (
-    FeedGetFeedTimelineIApi,
+    FeedTimelineIApi,
 )
 from insta_wizard.mobile.commands.feed.get_reels_tray import (
     FeedGetReelsTray,
@@ -165,7 +165,7 @@ from insta_wizard.mobile.commands.media.comment_bulk_delete import MediaCommentB
 from insta_wizard.mobile.commands.media.comment_like import MediaCommentLike
 from insta_wizard.mobile.commands.media.comment_unlike import MediaCommentUnlike
 from insta_wizard.mobile.commands.media.comments import MediaComments
-from insta_wizard.mobile.commands.news.news_inbox import (
+from insta_wizard.mobile.commands.news.inbox import (
     NewsInbox,
 )
 from insta_wizard.mobile.commands.notifications.badge import (
@@ -180,10 +180,10 @@ from insta_wizard.mobile.commands.user.account_details import (
 from insta_wizard.mobile.commands.user.get_limited_interactions_reminder import (
     UserGetLimitedInteractionsReminder,
 )
-from insta_wizard.mobile.commands.user.get_user_info_by_id import (
+from insta_wizard.mobile.commands.user.info import (
     UserInfo,
 )
-from insta_wizard.mobile.commands.user.get_user_info_by_username import (
+from insta_wizard.mobile.commands.user.usernameinfo import (
     UserUsernameInfo,
 )
 from insta_wizard.mobile.commands.user.search import (
@@ -425,7 +425,7 @@ class DirectSection(BaseSection):
 
 class FeedSection(BaseSection):
     async def get_timeline(self):
-        return await self.bus.execute(FeedGetFeedTimelineIApi())
+        return await self.bus.execute(FeedTimelineIApi())
 
     async def get_stories_tray(self):
         return await self.bus.execute(FeedGetReelsTray())

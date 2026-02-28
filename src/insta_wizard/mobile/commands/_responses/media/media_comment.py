@@ -1,7 +1,7 @@
 from typing import Any, TypedDict
 
 
-class MediaCommentResponseCommentUser(TypedDict):
+class _User(TypedDict):
     pk: str
     pk_id: str
     id: str
@@ -17,7 +17,7 @@ class MediaCommentResponseCommentUser(TypedDict):
     _is__IGCommentDefaultCommenterUserFieldsFragment: str
 
 
-class MediaCommentResponseComment(TypedDict):
+class _Comment(TypedDict):
     pk: str
     text: str
     user_id: str
@@ -36,11 +36,11 @@ class MediaCommentResponseComment(TypedDict):
     is_text_editable: bool
     keywords_data: list[Any]
     strong_id__: str
-    user: MediaCommentResponseCommentUser
+    user: _User
 
 
 class MediaCommentResponse(TypedDict):
-    comment: MediaCommentResponseComment
+    comment: _Comment
     comment_creation_key: str
     _is__TOnXIGCommentCreateMutationSuccessResponse0: str
     status: str

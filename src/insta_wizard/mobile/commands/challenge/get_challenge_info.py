@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.get_challenge_info_b_api import (
+from insta_wizard.mobile.commands._responses.challenge_info import (
     ChallengeGetChallengeInfoResponse,
 )
 from insta_wizard.mobile.common.command import (

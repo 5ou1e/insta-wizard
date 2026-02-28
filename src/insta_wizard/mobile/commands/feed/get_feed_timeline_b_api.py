@@ -8,8 +8,8 @@ from insta_wizard.common.generators import (
     generate_uuid_v4_string,
     utc_offset_from_timezone,
 )
-from insta_wizard.mobile.commands._responses.feed.get_feed_timeline_b_api import (
-    FeedGetFeedTimelineBApiResponse,
+from insta_wizard.mobile.commands._responses.feed.feed_timeline_b_api import (
+    FeedTimelineBApiResponse,
 )
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
@@ -25,18 +25,18 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class FeedGetFeedTimelineBApi(Command[FeedGetFeedTimelineBApiResponse]):
+class FeedTimelineBApi(Command[FeedTimelineBApiResponse]):
     pass
 
 
-class FeedGetFeedTimelineBApiHandler(
-    CommandHandler[FeedGetFeedTimelineBApi, FeedGetFeedTimelineBApiResponse]
+class FeedTimelineBApiHandler(
+    CommandHandler[FeedTimelineBApi, FeedTimelineBApiResponse]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state
 
-    async def __call__(self, command: FeedGetFeedTimelineBApi) -> FeedGetFeedTimelineBApiResponse:
+    async def __call__(self, command: FeedTimelineBApi) -> FeedTimelineBApiResponse:
         data = {
             "has_camera_permission": "0",
             "feed_view_info": "[]",
@@ -75,4 +75,4 @@ class FeedGetFeedTimelineBApiHandler(
                 "x-ads-opt-out": "0",
             },
         )
-        return cast(FeedGetFeedTimelineBApiResponse, res)
+        return cast(FeedTimelineBApiResponse, res)

@@ -1,5 +1,9 @@
-from typing import TypedDict
-
+from typing import TypedDict, Any
+class _Reel(TypedDict):
+    pass
 
 class FeedInjectedReelsMediaResponse(TypedDict):
-    pass
+    reels: _Reel
+    earliest_request_position: int
+    status: str
+

@@ -1,5 +1,6 @@
-from typing import TypedDict
+from typing import TypedDict, Any
 
-
-class AttestationCreateAndroidKeystoreBApiResponse(TypedDict):
-    pass
+class AttestationCreateAndroidKeystoreResponse(TypedDict):
+    challenge_nonce: str
+    key_nonce: str
+    status: str

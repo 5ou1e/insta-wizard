@@ -5,7 +5,7 @@ from insta_wizard.common.generators import (
     generate_uuid_v4_string,
     utc_offset_from_timezone,
 )
-from insta_wizard.mobile.commands._responses.feed.get_reels_tray import (
+from insta_wizard.mobile.commands._responses.feed.reels_tray import (
     FeedGetReelsTrayResponse,
 )
 from insta_wizard.mobile.common import constants

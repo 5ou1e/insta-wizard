@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from typing import cast, TypedDict
+from typing import cast
 
+from insta_wizard.mobile.commands._responses.media.like import MediaLikeResponse
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -13,10 +14,6 @@ from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
-
-
-class MediaLikeResponse(TypedDict):
-    pass
 
 
 @dataclass(slots=True)

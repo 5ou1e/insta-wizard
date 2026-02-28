@@ -21,8 +21,8 @@ from .account.set_biography import AccountSetBiography
 from .account.update_profile_name import AccountUpdateProfileName
 from .account.username_suggestions import AccountUsernameSuggestions
 from .account.validate_signup_sms_code import AccountValidateSignupSmsCode
-from .android_modules.download_b_api import AndroidModulesDownloadBApi
-from .attestation.create_android_keystore_b_api import AttestationCreateAndroidKeystoreBApi
+from .android_modules.download_b_api import AndroidModulesDownload
+from .attestation.create_android_keystore_b_api import AttestationCreateAndroidKeystore
 from .attestation.create_android_playintegrity import AttestationCreateAndroidPlayIntegrity
 from .banyan.banyan import BanyanBanyan
 from .bloks.login_save_credentials import BloksLoginSaveCredentialsBApi
@@ -60,8 +60,8 @@ from .direct.threads_leave import DirectV2ThreadsLeave
 from .direct.threads_mute import DirectV2ThreadsMute
 from .direct.threads_unmute import DirectV2ThreadsUnmute
 from .direct.threads_update_title import DirectV2ThreadsUpdateTitle
-from .feed.get_feed_timeline_b_api import FeedGetFeedTimelineBApi
-from .feed.get_feed_timeline_i_api import FeedGetFeedTimelineIApi
+from .feed.get_feed_timeline_b_api import FeedTimelineBApi
+from .feed.get_feed_timeline_i_api import FeedTimelineIApi
 from .feed.get_reels_tray import FeedGetReelsTray
 from .feed.injected_reels_media import FeedInjectedReelsMedia
 from .fetch_rmd import FetchRmd
@@ -88,8 +88,10 @@ from .media.like import MediaLike
 from .media.likers import MediaLikers
 from .media.save import MediaSave
 from .media.unlike import MediaUnlike
+from .media.unsave import MediaUnsave
 from .multiple_accounts.get_account_family import MultipleAcountsGetAccountFamily
-from .news.news_inbox import NewsInbox
+from .news.inbox import NewsInbox
+from .news.inbox_seen import NewsInboxSeen
 from .notifications.badge import NotificationsBadge
 from .notifications.get_notification_settings import NotificationsGetNotificationSettings
 from .notifications.store_client_push_permissions import NotificationsStoreClientPushPermissions
@@ -97,9 +99,9 @@ from .rupload_igphoto import RuploadIgphoto
 from .user.account_details import UserAccountDetails
 from .user.check_username import UsersCheckUsername
 from .user.get_limited_interactions_reminder import UserGetLimitedInteractionsReminder
-from .user.get_user_info_by_id import UserInfo
-from .user.get_user_info_by_username import UserUsernameInfo
+from .user.info import UserInfo
 from .user.search import UserSearchUsers
+from .user.usernameinfo import UserUsernameInfo
 from .user.web_profile_info import UserWebProfileInfo
 from .zr.dual_tokens import ZrDualTokens
 
@@ -120,8 +122,8 @@ __all__ = [
     "AccountUpdateProfileName",
     "AccountUsernameSuggestions",
     "AccountValidateSignupSmsCode",
-    "AndroidModulesDownloadBApi",
-    "AttestationCreateAndroidKeystoreBApi",
+    "AndroidModulesDownload",
+    "AttestationCreateAndroidKeystore",
     "AttestationCreateAndroidPlayIntegrity",
     "BanyanBanyan",
     "BloksLoginSaveCredentialsBApi",
@@ -159,8 +161,8 @@ __all__ = [
     "DirectV2ThreadsMute",
     "DirectV2ThreadsUnmute",
     "DirectV2ThreadsUpdateTitle",
-    "FeedGetFeedTimelineBApi",
-    "FeedGetFeedTimelineIApi",
+    "FeedTimelineBApi",
+    "FeedTimelineIApi",
     "FeedGetReelsTray",
     "FeedInjectedReelsMedia",
     "FetchRmd",
@@ -187,8 +189,10 @@ __all__ = [
     "MediaLikers",
     "MediaSave",
     "MediaUnlike",
+    "MediaUnsave",
     "MultipleAcountsGetAccountFamily",
     "NewsInbox",
+    "NewsInboxSeen",
     "NotificationsBadge",
     "NotificationsGetNotificationSettings",
     "NotificationsStoreClientPushPermissions",
@@ -197,8 +201,8 @@ __all__ = [
     "UsersCheckUsername",
     "UserGetLimitedInteractionsReminder",
     "UserInfo",
-    "UserUsernameInfo",
     "UserSearchUsers",
+    "UserUsernameInfo",
     "UserWebProfileInfo",
     "ZrDualTokens",
 ]

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.common.utils import dumps
-from insta_wizard.mobile.commands._responses.user.user_share_to_fb_config import (
+from insta_wizard.mobile.commands._responses.clips.share_to_fb_config import (
     ClipsUserShareToFbConfigResponse,
 )
 from insta_wizard.mobile.common import constants

@@ -1,5 +1,5 @@
-from typing import TypedDict
-
+from typing import TypedDict, Any
 
 class MediaBlockedResponse(TypedDict):
-    pass
+    media_ids: list[Any]
+    status: str

@@ -142,6 +142,7 @@ MEDIA_UNLIKE_URI = "media/{media_id}/unlike/"
 MEDIA_DELETE_URI = "media/{media_id}/delete/"
 MEDIA_EDIT_URI = "media/{media_id}/edit_media/"
 MEDIA_SAVE_URI = "media/{media_id}/save/"
+MEDIA_UNSAVE_URI = "media/{media_id}/unsave/"
 MEDIA_LIKERS_URI = "media/{media_id}/likers/"
 
 MEDIA_COMMENTS_URI = "media/{media_id}/comments/"
@@ -153,6 +154,7 @@ MEDIA_COMMENT_UNLIKE_URI = "media/{comment_id}/comment_unlike/"
 MULTIPLE_ACCOUNTS_GET_ACCOUNT_FAMILY_URI = "multiple_accounts/get_account_family/"
 
 NEWS_INBOX_URI = "news/inbox/"
+NEWS_INBOX_SEEN_URI = "news/inbox_seen/"
 
 NOTIFICATIONS_GET_NOTIFICATION_SETTINGS_URI = "notifications/get_notification_settings/"
 NOTIFICATIONS_BADGE_URI = "notifications/badge/"

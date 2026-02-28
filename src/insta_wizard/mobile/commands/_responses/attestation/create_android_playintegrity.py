@@ -1,5 +1,5 @@
 from typing import TypedDict
 
-
 class AttestationCreateAndroidPlayIntegrityResponse(TypedDict):
-    pass
+    challenge_nonce: str
+    status: str

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.media.delete import MediaDeleteResponse
+from insta_wizard.common.utils import dumps
+from insta_wizard.mobile.commands._responses.media.unsave import MediaUnsaveResponse
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
     Command,
@@ -17,27 +18,28 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class MediaDelete(Command[MediaDeleteResponse]):
-    """Delete the media"""
+class MediaUnsave(Command[MediaUnsaveResponse]):
+    """Unsave the media"""
 
     media_id: str
 
 
-class MediaDeleteHandler(CommandHandler[MediaDelete, MediaDeleteResponse]):
+class MediaUnsaveHandler(CommandHandler[MediaUnsave, MediaUnsaveResponse]):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
         self.state = state
 
-    async def __call__(self, command: MediaDelete) -> MediaDeleteResponse:
+    async def __call__(self, command: MediaUnsave) -> MediaUnsaveResponse:
         payload = {
-            "media_id": command.media_id,
             "_uuid": self.state.device.device_id,
+            "radio_type": self.state.radio_type,
+            **({"_uid": self.state.local_data.user_id} if self.state.local_data.user_id else {}),
         }
 
         data = build_signed_body(payload)
         resp = await self.api.call_api(
             method="POST",
-            uri=constants.MEDIA_DELETE_URI.format(media_id=command.media_id),
+            uri=constants.MEDIA_UNSAVE_URI.format(media_id=command.media_id),
             data=data,
         )
-        return cast(MediaDeleteResponse, resp)
+        return cast(MediaUnsaveResponse, resp)

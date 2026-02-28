@@ -1,5 +1,4 @@
-from typing import TypedDict
-
+from typing import TypedDict, Any
 
 class NotificationsStoreClientPushPermissionsResponse(TypedDict):
-    pass
+    status: str

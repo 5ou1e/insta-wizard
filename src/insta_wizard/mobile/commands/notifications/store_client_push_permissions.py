@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.notifications.notifications_store_client_push_permissions import (
+from insta_wizard.mobile.commands._responses.notifications.store_client_push_permissions import (
     NotificationsStoreClientPushPermissionsResponse,
 )
 from insta_wizard.mobile.common.command import (

@@ -162,7 +162,7 @@ except ChallengeRequiredError as e:
 Методы секций — это удобный слой поверх команд. Любую команду можно вызвать напрямую через `client.execute()` — когда нужен полный контроль над параметрами или доступ к командам, ещё не выставленным через секции:
 
 ```python
-from insta_wizard.mobile.commands.user.get_user_info_by_username import UserUsernameInfo
+from insta_wizard.mobile.commands.user.usernameinfo import UserUsernameInfo
 
 user = await client.execute(UserUsernameInfo(username="someuser"))
 ```

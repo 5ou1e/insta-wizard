@@ -161,7 +161,7 @@ Commands are the building blocks of the library. Each command is a typed wrapper
 Section methods are just a convenient layer on top of commands. You can also call any command directly via `client.execute()` — useful when you need full control over request parameters or access to commands not yet exposed through sections:
 
 ```python
-from insta_wizard.mobile.commands.user.get_user_info_by_username import UserUsernameInfo
+from insta_wizard.mobile.commands.user.usernameinfo import UserUsernameInfo
 
 user = await client.execute(UserUsernameInfo(username="someuser"))
 ```

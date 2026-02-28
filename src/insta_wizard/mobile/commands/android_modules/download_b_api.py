@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.mobile.commands._responses.android_modules.download_b_api import (
-    AndroidModulesDownloadBApiResponse,
+    AndroidModulesDownloadResponse,
 )
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
@@ -19,12 +19,12 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class AndroidModulesDownloadBApi(Command[AndroidModulesDownloadBApiResponse]):
+class AndroidModulesDownload(Command[AndroidModulesDownloadResponse]):
     pass
 
 
-class AndroidModulesDownloadBApiHandler(
-    CommandHandler[AndroidModulesDownloadBApi, AndroidModulesDownloadBApiResponse]
+class AndroidModulesDownloadHandler(
+    CommandHandler[AndroidModulesDownload, AndroidModulesDownloadResponse]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
         self.api = api
@@ -32,8 +32,8 @@ class AndroidModulesDownloadBApiHandler(
 
     async def __call__(
         self,
-        command: AndroidModulesDownloadBApi,
-    ) -> AndroidModulesDownloadBApiResponse:
+        command: AndroidModulesDownload,
+    ) -> AndroidModulesDownloadResponse:
         data = {
             "_uid": self.state.local_data.user_id,
             "_uuid": self.state.device.device_id,
@@ -50,4 +50,4 @@ class AndroidModulesDownloadBApiHandler(
             uri=constants.ANDROID_MODULES_DOWNLOAD_URI,
             data=payload,
         )
-        return cast(AndroidModulesDownloadBApiResponse, resp)
+        return cast(AndroidModulesDownloadResponse, resp)

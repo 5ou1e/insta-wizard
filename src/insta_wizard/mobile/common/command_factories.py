@@ -66,12 +66,12 @@ from insta_wizard.mobile.commands.account.validate_signup_sms_code import (
     AccountValidateSignupSmsCodeHandler,
 )
 from insta_wizard.mobile.commands.android_modules.download_b_api import (
-    AndroidModulesDownloadBApi,
-    AndroidModulesDownloadBApiHandler,
+    AndroidModulesDownload,
+    AndroidModulesDownloadHandler,
 )
 from insta_wizard.mobile.commands.attestation.create_android_keystore_b_api import (
-    AttestationCreateAndroidKeystoreBApi,
-    AttestationCreateAndroidKeystoreBApiHandler,
+    AttestationCreateAndroidKeystore,
+    AttestationCreateAndroidKeystoreHandler,
 )
 from insta_wizard.mobile.commands.attestation.create_android_playintegrity import (
     AttestationCreateAndroidPlayIntegrity,
@@ -222,12 +222,12 @@ from insta_wizard.mobile.commands.direct.threads_update_title import (
     DirectV2ThreadsUpdateTitleHandler,
 )
 from insta_wizard.mobile.commands.feed.get_feed_timeline_b_api import (
-    FeedGetFeedTimelineBApi,
-    FeedGetFeedTimelineBApiHandler,
+    FeedTimelineBApi,
+    FeedTimelineBApiHandler,
 )
 from insta_wizard.mobile.commands.feed.get_feed_timeline_i_api import (
-    FeedGetFeedTimelineIApi,
-    FeedGetFeedTimelineIApiHandler,
+    FeedTimelineIApi,
+    FeedTimelineIApiHandler,
 )
 from insta_wizard.mobile.commands.feed.get_reels_tray import (
     FeedGetReelsTray,
@@ -306,14 +306,16 @@ from insta_wizard.mobile.commands.media.like import MediaLikeHandler
 from insta_wizard.mobile.commands.media.likers import MediaLikersHandler
 from insta_wizard.mobile.commands.media.save import MediaSaveHandler
 from insta_wizard.mobile.commands.media.unlike import MediaUnlikeHandler, MediaUnlike
+from insta_wizard.mobile.commands.media.unsave import MediaUnsaveHandler, MediaUnsave
 from insta_wizard.mobile.commands.multiple_accounts.get_account_family import (
     MultipleAcountsGetAccountFamily,
     MultipleAcountsGetAccountFamilyHandler,
 )
-from insta_wizard.mobile.commands.news.news_inbox import (
+from insta_wizard.mobile.commands.news.inbox import (
     NewsInbox,
     NewsInboxHandler,
 )
+from insta_wizard.mobile.commands.news.inbox_seen import NewsInboxSeen, NewsInboxSeenHandler
 from insta_wizard.mobile.commands.notifications.badge import (
     NotificationsBadge,
     NotificationsBadgeHandler,
@@ -342,11 +344,11 @@ from insta_wizard.mobile.commands.user.get_limited_interactions_reminder import 
     UserGetLimitedInteractionsReminder,
     UserGetLimitedInteractionsReminderHandler,
 )
-from insta_wizard.mobile.commands.user.get_user_info_by_id import (
+from insta_wizard.mobile.commands.user.info import (
     UserInfo,
     UserInfoHandler,
 )
-from insta_wizard.mobile.commands.user.get_user_info_by_username import (
+from insta_wizard.mobile.commands.user.usernameinfo import (
     UserUsernameInfo,
     UserUsernameInfoHandler,
 )
@@ -425,6 +427,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         api=d.api,
         state=d.state,
     ),
+    NewsInboxSeen: lambda d: NewsInboxSeenHandler(
+        api=d.api,
+        state=d.state,
+    ),
     # multiple accounts
     MultipleAcountsGetAccountFamily: lambda d: MultipleAcountsGetAccountFamilyHandler(
         api=d.api,
@@ -452,6 +458,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     MediaSave: lambda d: MediaSaveHandler(
+        api=d.api,
+        state=d.state,
+    ),
+    MediaUnsave: lambda d: MediaUnsaveHandler(
         api=d.api,
         state=d.state,
     ),
@@ -641,7 +651,7 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     # attestation
-    AttestationCreateAndroidKeystoreBApi: lambda d: AttestationCreateAndroidKeystoreBApiHandler(
+    AttestationCreateAndroidKeystore: lambda d: AttestationCreateAndroidKeystoreHandler(
         api=d.api,
         state=d.state,
     ),
@@ -650,7 +660,7 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     # android modules
-    AndroidModulesDownloadBApi: lambda d: AndroidModulesDownloadBApiHandler(
+    AndroidModulesDownload: lambda d: AndroidModulesDownloadHandler(
         api=d.api,
         state=d.state,
     ),
@@ -720,11 +730,11 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     # feed
-    FeedGetFeedTimelineIApi: lambda d: FeedGetFeedTimelineIApiHandler(
+    FeedTimelineIApi: lambda d: FeedTimelineIApiHandler(
         api=d.api,
         state=d.state,
     ),
-    FeedGetFeedTimelineBApi: lambda d: FeedGetFeedTimelineBApiHandler(
+    FeedTimelineBApi: lambda d: FeedTimelineBApiHandler(
         api=d.api,
         state=d.state,
     ),

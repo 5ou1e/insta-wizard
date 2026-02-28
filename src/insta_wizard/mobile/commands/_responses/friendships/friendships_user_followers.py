@@ -1,11 +1,11 @@
 from typing import Any, TypedDict
 
 
-class FriendshipsUserFollowersResponseFriendRequests(TypedDict):
+class _FriendRequests(TypedDict):
     pass
 
 
-class FriendshipsUserFollowersResponseUsersItem(TypedDict):
+class _User(TypedDict):
     strong_id__: str
     pk: int
     pk_id: str
@@ -23,7 +23,7 @@ class FriendshipsUserFollowersResponseUsersItem(TypedDict):
     latest_reel_media: int
 
 
-class FriendshipsUserFollowersResponseGroupsItemFacepileItem(TypedDict):
+class _Facepile(TypedDict):
     strong_id__: str
     pk: int
     pk_id: str
@@ -32,11 +32,11 @@ class FriendshipsUserFollowersResponseGroupsItemFacepileItem(TypedDict):
     username: str
 
 
-class FriendshipsUserFollowersResponseGroupsItem(TypedDict):
+class _Group(TypedDict):
     group: str
     title: str
     context: str
-    facepile: list[FriendshipsUserFollowersResponseGroupsItemFacepileItem]
+    facepile: list[_Facepile]
     subtitle: str
     subtitle_button_text: str
     category: str
@@ -45,12 +45,12 @@ class FriendshipsUserFollowersResponseGroupsItem(TypedDict):
 
 
 class FriendshipsUserFollowersResponse(TypedDict):
-    users: list[FriendshipsUserFollowersResponseUsersItem]
+    users: list[_User]
     big_list: bool
     page_size: int
-    groups: list[FriendshipsUserFollowersResponseGroupsItem]
+    groups: list[_Group]
     more_groups_available: bool
-    friend_requests: FriendshipsUserFollowersResponseFriendRequests
+    friend_requests: _FriendRequests
     has_more: bool
     should_limit_list_of_followers: bool
     use_clickable_see_more: bool

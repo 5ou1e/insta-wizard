@@ -2,7 +2,7 @@ from collections.abc import Mapping
 from typing import TypedDict
 
 
-class FriendshipsShowManyResponseFriendshipStatus(TypedDict):
+class _FriendshipStatus(TypedDict):
     following: bool
     incoming_request: bool
     is_bestie: bool
@@ -13,5 +13,5 @@ class FriendshipsShowManyResponseFriendshipStatus(TypedDict):
 
 
 class FriendshipsShowManyResponse(TypedDict):
-    friendship_statuses: Mapping[str, FriendshipsShowManyResponseFriendshipStatus]
+    friendship_statuses: Mapping[str, _FriendshipStatus]
     status: str

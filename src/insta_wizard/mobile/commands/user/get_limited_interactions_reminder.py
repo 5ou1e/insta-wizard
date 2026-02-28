@@ -4,7 +4,7 @@ from typing import cast
 from insta_wizard.common.utils import (
     dumps,
 )
-from insta_wizard.mobile.commands._responses.user.user_get_limited_interactions_reminder import (
+from insta_wizard.mobile.commands._responses.user.get_limited_interactions_reminder import (
     UserGetLimitedInteractionsReminderResponse,
 )
 from insta_wizard.mobile.common import constants

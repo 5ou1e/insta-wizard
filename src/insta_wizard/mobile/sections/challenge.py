@@ -2,7 +2,7 @@ import random
 
 from insta_wizard.common.logger import InstagramClientLogger
 from insta_wizard.mobile.commands import ChallengeGetChallengeInfo, ChallengeAction
-from insta_wizard.mobile.commands._responses.get_challenge_info_b_api import (
+from insta_wizard.mobile.commands._responses.challenge_info import (
     ChallengeGetChallengeInfoResponse,
 )
 from insta_wizard.mobile.common.command import CommandBus

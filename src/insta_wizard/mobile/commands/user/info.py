@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from insta_wizard.mobile.commands._responses.user.user_info import (
+from insta_wizard.mobile.commands._responses.user.info import (
     UserInfoResponse,
 )
 from insta_wizard.mobile.common import constants

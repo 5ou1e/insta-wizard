@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import cast
 
 from insta_wizard.mobile.commands._responses.attestation.create_android_keystore_b_api import (
-    AttestationCreateAndroidKeystoreBApiResponse,
+    AttestationCreateAndroidKeystoreResponse,
 )
 from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.command import (
@@ -18,14 +18,14 @@ from insta_wizard.mobile.models.state import (
 
 
 @dataclass(slots=True)
-class AttestationCreateAndroidKeystoreBApi(Command[AttestationCreateAndroidKeystoreBApiResponse]):
+class AttestationCreateAndroidKeystore(Command[AttestationCreateAndroidKeystoreResponse]):
     key_hash: str | None = None
 
 
-class AttestationCreateAndroidKeystoreBApiHandler(
+class AttestationCreateAndroidKeystoreHandler(
     CommandHandler[
-        AttestationCreateAndroidKeystoreBApi,
-        AttestationCreateAndroidKeystoreBApiResponse,
+        AttestationCreateAndroidKeystore,
+        AttestationCreateAndroidKeystoreResponse,
     ]
 ):
     def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
@@ -34,8 +34,8 @@ class AttestationCreateAndroidKeystoreBApiHandler(
 
     async def __call__(
         self,
-        command: AttestationCreateAndroidKeystoreBApi,
-    ) -> AttestationCreateAndroidKeystoreBApiResponse:
+        command: AttestationCreateAndroidKeystore,
+    ) -> AttestationCreateAndroidKeystoreResponse:
         data = {
             "app_scoped_device_id": self.state.device.device_id,
             "key_hash": command.key_hash or "",
@@ -46,4 +46,4 @@ class AttestationCreateAndroidKeystoreBApiHandler(
             uri=constants.ATTESTATION_CREATE_ANDROID_KEYSTORE_URI,
             data=data,
         )
-        return cast(AttestationCreateAndroidKeystoreBApiResponse, resp)
+        return cast(AttestationCreateAndroidKeystoreResponse, resp)

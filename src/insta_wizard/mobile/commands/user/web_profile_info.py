@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import cast
 
-from insta_wizard.mobile.commands._responses.user.user_web_profile_info import (
+from insta_wizard.mobile.commands._responses.user.web_profile_info import (
     UserWebProfileInfoResponse,
 )
 from insta_wizard.mobile.common import constants

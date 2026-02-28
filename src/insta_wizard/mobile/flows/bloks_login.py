@@ -11,7 +11,7 @@ from insta_wizard.common.utils import (
 )
 from insta_wizard.common.generators import generate_waterfall_id
 from insta_wizard.mobile.commands.attestation.create_android_keystore_b_api import (
-    AttestationCreateAndroidKeystoreBApi,
+    AttestationCreateAndroidKeystore,
 )
 from insta_wizard.mobile.commands.bloks.phone_number_prefill_async import (
     BloksPhoneNumberPrefillAsync,
@@ -155,7 +155,7 @@ class BloksLoginHandler(CommandHandler[BloksLogin, BloksLoginResult]):
 
     async def send_requests_before_login(self, waterfall_id: str) -> None:
         await self.bus.execute(ZrDualTokens())
-        await self.bus.execute(AttestationCreateAndroidKeystoreBApi())
+        await self.bus.execute(AttestationCreateAndroidKeystore())
         await self.bus.execute(
             BloksProcessClientDataAndRedirectBApi(
                 waterfall_id=waterfall_id,

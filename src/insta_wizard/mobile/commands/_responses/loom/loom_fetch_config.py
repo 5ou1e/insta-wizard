@@ -1,5 +1,4 @@
-from typing import TypedDict
-
-
+from typing import TypedDict, Any
 class LoomFetchConfigResponse(TypedDict):
-    pass
+    GATE_APP_VERSION: bool
+    status: str

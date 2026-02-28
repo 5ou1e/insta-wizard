@@ -1,5 +1,5 @@
 from typing import TypedDict
 
 
-class NewsInboxResponse(TypedDict):
+class MediaLikersResponse(TypedDict):
     pass

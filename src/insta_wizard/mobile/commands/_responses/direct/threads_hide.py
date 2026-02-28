@@ -1,5 +1,5 @@
-from typing import TypedDict
-
+from typing import TypedDict, Any
 
 class DirectV2ThreadsHideResponse(TypedDict):
-    pass
+    status: str
+    status_code: str

@@ -1,4 +1,4 @@
 from typing import TypedDict, Any
 
-class LiveGetGoodTimeForLiveResponse(TypedDict):
+class MediaUnsaveResponse(TypedDict):
     status: str
