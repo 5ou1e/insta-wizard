@@ -5,8 +5,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -22,13 +22,13 @@ class UsersCheckUsername(Command[UsersCheckUsernameResponse]):
 
 
 class UsersCheckUsernameHandler(CommandHandler[UsersCheckUsername, UsersCheckUsernameResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: UsersCheckUsername) -> UsersCheckUsernameResponse:
         data = {"username": command.username}
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             data=data,
             uri=constants.USERS_CHECK_USERNAME,

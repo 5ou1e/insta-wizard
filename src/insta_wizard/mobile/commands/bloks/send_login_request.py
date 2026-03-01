@@ -7,8 +7,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -28,8 +28,8 @@ class BloksSendLoginRequest(Command[BloksSendLoginRequestResponse]):
 class BloksSendLoginRequestHandler(
     CommandHandler[BloksSendLoginRequest, BloksSendLoginRequestResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: BloksSendLoginRequest) -> BloksSendLoginRequestResponse:
@@ -119,7 +119,7 @@ class BloksSendLoginRequestHandler(
             "bloks_versioning_id": self.state.version_info.bloks_version_id,
         }
 
-        res = await self.api.call_api(
+        res = await self.requester.call_api(
             method="POST",
             uri=constants.BLOKS_SEND_LOGIN_REQUEST_URI,
             data=data,

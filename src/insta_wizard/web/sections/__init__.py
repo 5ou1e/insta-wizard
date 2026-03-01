@@ -1,4 +1,4 @@
-from insta_wizard.web.sections.api import (
+from insta_wizard.web.sections.sections import (
     AccountSection,
     CommentsSection,
     FriendshipsSection,

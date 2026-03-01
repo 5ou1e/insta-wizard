@@ -9,8 +9,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -26,8 +26,8 @@ class NewsInbox(Command[NewsInboxResponse]):
 
 
 class NewsInboxHandler(CommandHandler[NewsInbox, NewsInboxResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: NewsInbox) -> NewsInboxResponse:
@@ -40,7 +40,7 @@ class NewsInboxHandler(CommandHandler[NewsInbox, NewsInboxResponse]):
             "timezone_name": tz,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.NEWS_INBOX_URI,
             params=params,

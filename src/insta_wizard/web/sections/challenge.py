@@ -13,7 +13,7 @@ from insta_wizard.web.commands import BloksNavigationTakeChallenge, ChallengeWeb
 from insta_wizard.web.commands.challenge.challenge_web_action import ChallengeWebAction
 from insta_wizard.web.exceptions import ResponseParsingError
 from insta_wizard.web.models.other import CheckpointRequiredErrorData
-from insta_wizard.web.sections.api import BaseSection
+from insta_wizard.web.sections.sections import BaseSection
 
 
 class ChallengeSection(BaseSection):

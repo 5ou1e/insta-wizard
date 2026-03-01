@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -26,8 +26,8 @@ class DirectV2GetPresenceActiveNow(Command[DirectV2GetPresenceActiveNowResponse]
 class DirectV2GetPresenceActiveNowHandler(
     CommandHandler[DirectV2GetPresenceActiveNow, DirectV2GetPresenceActiveNowResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -38,7 +38,7 @@ class DirectV2GetPresenceActiveNowHandler(
             "suggested_followers_limit": command.suggested_followers_limit,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.DIRECT_V2_GET_PRESENCE_ACTIVE_NOW_URI,
             params=params,

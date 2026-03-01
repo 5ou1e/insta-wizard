@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -30,15 +30,15 @@ class DirectV2AsyncGetPendingRequestsPreviewHandler(
         DirectV2AsyncGetPendingRequestsPreviewResponse,
     ]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
         self,
         command: DirectV2AsyncGetPendingRequestsPreview,
     ) -> DirectV2AsyncGetPendingRequestsPreviewResponse:
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.DIRECT_V2_ASYNC_GET_PENDING_REQUESTS_PREVIEW_URI,
             params={"pending_inbox_filters": "[]"},

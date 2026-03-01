@@ -19,14 +19,8 @@ from insta_wizard.mobile.common.command import (
 from insta_wizard.mobile.common.command_factories import (
     COMMAND_FACTORIES,
 )
-from insta_wizard.mobile.common.headers_factory import (
-    MobileClientHeadersFactory,
-)
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
-)
-from insta_wizard.mobile.common.requesters.requester import (
-    RequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.android_device_info import (
     AndroidDeviceInfo,
@@ -95,17 +89,10 @@ class MobileInstagramClient:
             local_data=local_data,
             version_info=InstagramAppVersionInfoRegistry.get(version),
         )
-        self._headers = MobileClientHeadersFactory(state=self.state)
-
         transport_settings = transport_settings or TransportSettings()
         self._transport = self._build_transport(settings=transport_settings, proxy=proxy)
 
-        self._request_executor = RequestExecutor(
-            client_state=self.state,
-            transport=self._transport,
-            logger=self._logger,
-        )
-        self._api_request_executor = ApiRequestExecutor(
+        self._requester = MobileRequester(
             client_state=self.state,
             transport=self._transport,
             logger=self._logger,
@@ -113,13 +100,8 @@ class MobileInstagramClient:
 
         self._bus = self._build_bus()
 
-        graph_deps = {
-            "state": self.state,
-            "request_executor": self._request_executor,
-            "headers": self._headers,
-        }
-        self._graphql_www = GraphqlWWW(**graph_deps)
-        self._graphql_query = GraphqlQuery(**graph_deps)
+        self._graphql_www = GraphqlWWW(state=self.state, requester=self._requester)
+        self._graphql_query = GraphqlQuery(state=self.state, requester=self._requester)
 
         self.account = AccountSection(state=self.state, bus=self._bus)
         self.users = UserSection(state=self.state, bus=self._bus)
@@ -137,10 +119,8 @@ class MobileInstagramClient:
 
         deps = ClientDeps(
             http=self._transport,
-            req=self._request_executor,
-            api=self._api_request_executor,
+            requester=self._requester,
             state=self.state,
-            headers=self._headers,
             graphql_www=self._graphql_www,
             graphql_query=self._graphql_query,
             logger=self._logger,
@@ -179,7 +159,7 @@ class MobileInstagramClient:
         extra_headers: dict | None = None,
     ) -> dict:
         """Make a raw API request with default mobile headers applied."""
-        return await self._api_request_executor.call_url(
+        return await self._requester.call_url(
             method=method,
             url=url,
             data=data,

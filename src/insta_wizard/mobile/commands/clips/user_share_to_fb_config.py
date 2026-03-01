@@ -7,8 +7,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -24,8 +24,8 @@ class ClipsUserShareToFbConfig(Command[ClipsUserShareToFbConfigResponse]):
 class ClipsUserShareToFbConfigHandler(
     CommandHandler[ClipsUserShareToFbConfig, ClipsUserShareToFbConfigResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: ClipsUserShareToFbConfig) -> ClipsUserShareToFbConfigResponse:
@@ -44,7 +44,7 @@ class ClipsUserShareToFbConfigHandler(
         }
         params = {"device_status": dumps(device_status)}
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.CLIPS_USER_SHARE_TO_FB_CONFIG_URI,
             params=params,

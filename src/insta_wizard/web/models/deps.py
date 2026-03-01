@@ -8,10 +8,10 @@ from insta_wizard.common.transport.base import HttpTransport
 from insta_wizard.web.common.headers_factory import (
     WebClientHeadersFactory,
 )
-from insta_wizard.web.common.requesters.api_requester import (
-    WebApiRequester,
+from insta_wizard.web.common.requester import (
+    WebRequester,
 )
-from insta_wizard.web.common.requesters.web_navigator import (
+from insta_wizard.web.common.web_navigator import (
     WebNavigator,
 )
 from insta_wizard.web.common.state_initializer import (
@@ -30,7 +30,7 @@ class ClientDeps:
     logger: InstagramClientLogger
     initializer: StateInitializer
     navigator: WebNavigator
-    api_requester: WebApiRequester
+    api_requester: WebRequester
     headers: WebClientHeadersFactory
 
     bus: CommandBus  # type: ignore[name-defined]

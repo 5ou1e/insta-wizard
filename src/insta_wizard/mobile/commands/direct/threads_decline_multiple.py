@@ -7,8 +7,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -26,8 +26,8 @@ class DirectV2ThreadsDeclineMultiple(Command[DirectV2ThreadsDeclineMultipleRespo
 class DirectV2ThreadsDeclineMultipleHandler(
     CommandHandler[DirectV2ThreadsDeclineMultiple, DirectV2ThreadsDeclineMultipleResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -38,7 +38,7 @@ class DirectV2ThreadsDeclineMultipleHandler(
             "thread_ids": dumps(command.thread_ids),
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_GET_THREADS_DECLINE_MULTIPLE_URI,
             data=payload,

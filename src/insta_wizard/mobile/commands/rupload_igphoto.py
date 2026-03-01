@@ -10,11 +10,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.headers_factory import (
-    MobileClientHeadersFactory,
-)
-from insta_wizard.mobile.common.requesters.requester import (
-    RequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -31,13 +28,11 @@ class RuploadIgphoto(Command[str]):
 class RuploadIgphotoHandler(CommandHandler[RuploadIgphoto, str]):
     def __init__(
         self,
-        request_executor: RequestExecutor,
+        requester: MobileRequester,
         state: MobileClientState,
-        headers: MobileClientHeadersFactory,
     ) -> None:
-        self.request_executor = request_executor
+        self.requester = requester
         self.state = state
-        self.headers = headers
 
     async def __call__(self, command: RuploadIgphoto) -> str:
         upload_id = command.upload_id or str(int(time.time() * 1000))
@@ -67,7 +62,7 @@ class RuploadIgphotoHandler(CommandHandler[RuploadIgphoto, str]):
 
         url = constants.RUPLOAD_IGPHOTO_URL.format(name=upload_name)
 
-        headers = self.headers.api_headers()
+        headers = self.requester.api_headers()
         headers.update(
             {
                 "Content-Type": "application/octet-stream",
@@ -84,7 +79,7 @@ class RuploadIgphotoHandler(CommandHandler[RuploadIgphoto, str]):
             }
         )
 
-        await self.request_executor(
+        await self.requester.call(
             HttpRequest(
                 method="POST",
                 url=url,

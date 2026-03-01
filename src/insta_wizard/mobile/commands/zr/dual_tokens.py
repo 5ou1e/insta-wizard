@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -21,8 +21,8 @@ class ZrDualTokens(Command[ZrDualTokensResponse]):
 
 
 class ZrDualTokensHandler(CommandHandler[ZrDualTokens, ZrDualTokensResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: ZrDualTokens) -> ZrDualTokensResponse:
@@ -34,7 +34,7 @@ class ZrDualTokensHandler(CommandHandler[ZrDualTokens, ZrDualTokensResponse]):
             "fetch_reason": command.fetch_reason,
         }
 
-        resp = await self.api.call_b_api(
+        resp = await self.requester.call_b_api(
             method="POST",
             uri=constants.ZR_DUAL_TOKENS_URI,
             data=data,

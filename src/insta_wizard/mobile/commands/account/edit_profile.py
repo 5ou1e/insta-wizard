@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -31,8 +31,8 @@ class AccountEditProfile(Command[AccountEditProfileResponse]):
 
 
 class AccountEditProfileHandler(CommandHandler[AccountEditProfile, AccountEditProfileResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: AccountEditProfile) -> AccountEditProfileResponse:
@@ -49,7 +49,7 @@ class AccountEditProfileHandler(CommandHandler[AccountEditProfile, AccountEditPr
             "email": command.email,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.ACCOUNTS_EDIT_PROFILE_URI,
             data=data,

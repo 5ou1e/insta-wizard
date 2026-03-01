@@ -6,8 +6,8 @@ from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.web.common.requesters.api_requester import (
-    WebApiRequester,
+from insta_wizard.web.common.requester import (
+    WebRequester,
 )
 from insta_wizard.web.models.state import WebClientState
 from insta_wizard.web.responses.account.logout_ajax import AccountsLogoutAjaxResponse
@@ -23,7 +23,7 @@ class AccountsLogoutAjax(Command[AccountsLogoutAjaxResponse]):
 class AccountsLogoutAjaxHandler(CommandHandler[AccountsLogoutAjax, AccountsLogoutAjaxResponse]):
     def __init__(
         self,
-        api_requester: WebApiRequester,
+        api_requester: WebRequester,
         state: WebClientState,
     ) -> None:
         self.api_requester = api_requester

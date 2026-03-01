@@ -9,8 +9,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.exceptions import (
     MobileClientError,
@@ -35,8 +35,8 @@ class FriendshipsUserFollowing(Command[FriendshipsUserFollowingResponse]):
 class FriendshipsUserFollowingHandler(
     CommandHandler[FriendshipsUserFollowing, FriendshipsUserFollowingResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: FriendshipsUserFollowing) -> FriendshipsUserFollowingResponse:
@@ -55,7 +55,7 @@ class FriendshipsUserFollowingHandler(
                 }
             )
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.FRIENDSHIPS_USER_FOLLOWING_URI.format(user_id=command.user_id),
             params=params,

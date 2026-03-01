@@ -15,8 +15,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.requester import (
-    RequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import (
     instagram_android_user_agent_from_android_device_info,
@@ -38,10 +38,10 @@ class FetchRmd(Command[FetchRmdResponse]):
 class FetchRmdHandler(CommandHandler[FetchRmd, FetchRmdResponse]):
     def __init__(
         self,
-        request_executor: RequestExecutor,
+        requester: MobileRequester,
         state: MobileClientState,
     ) -> None:
-        self.request_executor = request_executor
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: FetchRmd) -> FetchRmdResponse:
@@ -85,7 +85,7 @@ class FetchRmdHandler(CommandHandler[FetchRmd, FetchRmdResponse]):
             "reason": command.reason,
         }
 
-        resp = await self.request_executor(
+        resp = await self.requester.call(
             HttpRequest(
                 method="POST",
                 url=URL(constants.BASE_INSTAGRAM_URL) / "rmd/",

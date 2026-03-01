@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.exceptions import (
@@ -32,8 +32,8 @@ class FriendshipsRemoveFollower(Command[FriendshipsRemoveFollowerResponse]):
 class FriendshipsRemoveFollowerHandler(
     CommandHandler[FriendshipsRemoveFollower, FriendshipsRemoveFollowerResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -51,7 +51,7 @@ class FriendshipsRemoveFollowerHandler(
         payload = build_signed_body(data)
 
         try:
-            resp = await self.api.call_api(
+            resp = await self.requester.call_api(
                 method="POST",
                 uri=constants.FRIENDSHIPS_REMOVE_FOLLOWER_URI.format(user_id=command.user_id),
                 data=payload,

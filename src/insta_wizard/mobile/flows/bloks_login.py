@@ -45,8 +45,8 @@ from insta_wizard.mobile.common.command import (
     CommandBus,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.exceptions import (
     BloksLoginAccountNotFoundError,
@@ -77,11 +77,11 @@ class BloksLoginHandler(CommandHandler[BloksLogin, BloksLoginResult]):
     def __init__(
         self,
         state: MobileClientState,
-        api: ApiRequestExecutor,
+        requester: MobileRequester,
         bus: CommandBus,
     ) -> None:
         self.state = state
-        self.api = api
+        self.requester = requester
         self.bus = bus
 
     async def __call__(self, command: BloksLogin) -> BloksLoginResult:

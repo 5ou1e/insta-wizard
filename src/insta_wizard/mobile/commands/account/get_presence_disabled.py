@@ -9,8 +9,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import (
     build_signed_body_value,
@@ -31,8 +31,8 @@ class AccountGetPresenceDisabled(Command[AccountGetPresenceDisabledResponse]):
 class AccountGetPresenceDisabledHandler(
     CommandHandler[AccountGetPresenceDisabled, AccountGetPresenceDisabledResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -40,7 +40,7 @@ class AccountGetPresenceDisabledHandler(
     ) -> AccountGetPresenceDisabledResponse:
         params = {"signed_body": build_signed_body_value(dumps({}))}
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.ACCOUNTS_GET_PRESENCE_DISABLED_URI,
             params=params,

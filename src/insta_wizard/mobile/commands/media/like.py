@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
@@ -24,8 +24,8 @@ class MediaLike(Command[MediaLikeResponse]):
 
 
 class MediaLikeHandler(CommandHandler[MediaLike, MediaLikeResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: MediaLike) -> MediaLikeResponse:
@@ -39,7 +39,7 @@ class MediaLikeHandler(CommandHandler[MediaLike, MediaLikeResponse]):
         }
 
         data = build_signed_body(payload)
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.MEDIA_LIKE_URI.format(media_id=command.media_id),
             data=data,

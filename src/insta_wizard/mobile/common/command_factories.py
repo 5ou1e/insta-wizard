@@ -374,429 +374,428 @@ from insta_wizard.mobile.models.deps import ClientDeps
 COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
     # user
     UserInfo: lambda d: UserInfoHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     UserUsernameInfo: lambda d: UserUsernameInfoHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     UserWebProfileInfo: lambda d: UserWebProfileInfoHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     UsersCheckUsername: lambda d: UsersCheckUsernameHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     UserGetLimitedInteractionsReminder: lambda d: UserGetLimitedInteractionsReminderHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     UserSearch: lambda d: UserSearchHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     UserAccountDetails: lambda d: UserAccountDetailsHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # zr
     ZrDualTokens: lambda d: ZrDualTokensHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # notifications
     NotificationsGetNotificationSettings: lambda d: NotificationsGetNotificationSettingsHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     NotificationsBadge: lambda d: NotificationsBadgeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     NotificationsStoreClientPushPermissions: lambda d: (
         NotificationsStoreClientPushPermissionsHandler(
-            api=d.api,
+            requester=d.requester,
             state=d.state,
         )
     ),
     # news
     NewsInbox: lambda d: NewsInboxHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     NewsInboxSeen: lambda d: NewsInboxSeenHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # multiple accounts
     MultipleAcountsGetAccountFamily: lambda d: MultipleAcountsGetAccountFamilyHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # media
     MediaLike: lambda d: MediaLikeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaUnlike: lambda d: MediaUnlikeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaDelete: lambda d: MediaDeleteHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaEdit: lambda d: MediaEditHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaLikers: lambda d: MediaLikersHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaSave: lambda d: MediaSaveHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaUnsave: lambda d: MediaUnsaveHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaBlocked: lambda d: MediaBlockedHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaComments: lambda d: MediaCommentsHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaComment: lambda d: MediaCommentHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaCommentBulkDelete: lambda d: MediaCommentBulkDeleteHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaCommentLike: lambda d: MediaCommentLikeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     MediaCommentUnlike: lambda d: MediaCommentUnlikeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # loom/live
     LoomFetchConfig: lambda d: LoomFetchConfigHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     LiveGetGoodTimeForLive: lambda d: LiveGetGoodTimeForLiveHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # launcher
     LauncherMobileConfig: lambda d: LauncherMobileConfigHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     LauncherMobileConfigBApi: lambda d: LauncherMobileConfigBApiHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # friendships
     FriendshipsCreate: lambda d: FriendshipsCreateHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FriendshipsDestroy: lambda d: FriendshipsDestroyHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FriendshipsRemoveFollower: lambda d: FriendshipsRemoveFollowerHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FriendshipsUserFollowers: lambda d: FriendshipsUserFollowersHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FriendshipsUserFollowing: lambda d: FriendshipsUserFollowingHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FriendshipsShowMany: lambda d: FriendshipsShowManyHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # direct
     DirectV2RankedRecipients: lambda d: DirectV2RankedRecipientsHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2CreateGroupThread: lambda d: DirectV2CreateGroupThreadHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsApprove: lambda d: DirectV2ThreadsApproveHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsApproveMultiple: lambda d: DirectV2ThreadsApproveMultipleHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsDecline: lambda d: DirectV2ThreadsDeclineHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsDeclineAll: lambda d: DirectV2ThreadsDeclineAllHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsDeclineMultiple: lambda d: DirectV2ThreadsDeclineMultipleHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsItemsDelete: lambda d: DirectV2ThreadsItemsDeleteHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsItemsSeen: lambda d: DirectV2ThreadsItemsSeenHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsHide: lambda d: DirectV2ThreadsHideHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsLeave: lambda d: DirectV2ThreadsLeaveHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsAddUser: lambda d: DirectV2ThreadsAddUserHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsUpdateTitle: lambda d: DirectV2ThreadsUpdateTitleHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsMute: lambda d: DirectV2ThreadsMuteHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsUnmute: lambda d: DirectV2ThreadsUnmuteHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2GetPresence: lambda d: DirectV2GetPresenceHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2GetPendingRequestsPreview: lambda d: DirectV2GetPendingRequestsPreviewHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2Inbox: lambda d: DirectV2InboxHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2GetPresenceActiveNow: lambda d: DirectV2GetPresenceActiveNowHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2HasInteropUpgraded: lambda d: DirectV2HasInteropUpgradedHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2AsyncGetPendingRequestsPreview: lambda d: DirectV2AsyncGetPendingRequestsPreviewHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # creatives
     CreativesWriteSupportedCapabilities: lambda d: CreativesWriteSupportedCapabilitiesHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # consent
     ConsentGetSignupConfig: lambda d: ConsentGetSignupConfigHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # clips
     ClipsDiscoverStream: lambda d: ClipsDiscoverStreamHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     ClipsUserShareToFbConfig: lambda d: ClipsUserShareToFbConfigHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # challenge
     ChallengeGetChallengeInfo: lambda d: ChallengeGetChallengeInfoHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     ChallengeAction: lambda d: ChallengeActionHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # banyan
     BanyanBanyan: lambda d: BanyanBanyanHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # attestation
     AttestationCreateAndroidKeystore: lambda d: AttestationCreateAndroidKeystoreHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AttestationCreateAndroidPlayIntegrity: lambda d: AttestationCreateAndroidPlayIntegrityHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # android modules
     AndroidModulesDownload: lambda d: AndroidModulesDownloadHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # account
     AccountCurrentUser: lambda d: AccountCurrentUserHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountEditProfile: lambda d: AccountEditProfileHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountUpdateProfileName: lambda d: AccountUpdateProfileNameHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountSetBiography: lambda d: AccountSetBiographyHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountChangeProfilePicture: lambda d: AccountChangeProfilePictureHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountGetPresenceDisabled: lambda d: AccountGetPresenceDisabledHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountLogin: lambda d: AccountLoginHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountsLogout: lambda d: AccountsLogoutHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountCheckPhoneNumber: lambda d: AccountCheckPhoneNumberHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountSendSignupSmsCode: lambda d: AccountSendSignupSmsCodeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountValidateSignupSmsCode: lambda d: AccountValidateSignupSmsCodeHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountUsernameSuggestions: lambda d: AccountUsernameSuggestionsHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountCreateValidated: lambda d: AccountCreateValidatedHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountSecurityInfo: lambda d: AccountSecurityInfoHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountSendConfirmEmail: lambda d: AccountSendConfirmEmailHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     AccountSendConfirmPhoneNumber: lambda d: AccountSendConfirmPhoneNumberHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # feed
     FeedTimelineIApi: lambda d: FeedTimelineIApiHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FeedTimelineBApi: lambda d: FeedTimelineBApiHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FeedGetReelsTray: lambda d: FeedGetReelsTrayHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     FeedInjectedReelsMedia: lambda d: FeedInjectedReelsMediaHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # bloks (commands)
     BloksSendLoginRequest: lambda d: BloksSendLoginRequestHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     BloksProcessClientDataAndRedirectBApi: lambda d: BloksProcessClientDataAndRedirectBApiHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     BloksPhoneNumberPrefillAsync: lambda d: BloksPhoneNumberPrefillAsyncHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     BloksLoginSaveCredentialsBApi: lambda d: BloksLoginSaveCredentialsBApiHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     BloksYouthRegulationDeletePregent: lambda d: BloksYouthRegulationDeletePregentHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     # misc
     RuploadIgphoto: lambda d: RuploadIgphotoHandler(
-        request_executor=d.req,
+        requester=d.requester,
         state=d.state,
-        headers=d.headers,
     ),
     FetchRmd: lambda d: FetchRmdHandler(
-        request_executor=d.req,
+        requester=d.requester,
         state=d.state,
     ),
     # flows
     BloksLogin: lambda d: BloksLoginHandler(
         state=d.state,
-        api=d.api,
+        requester=d.requester,
         bus=d.bus,
     ),
     # ----------- NEW ----------
     FriendshipsShow: lambda d: FriendshipsShowHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsDeleteItemsLocally: lambda d: DirectV2ThreadsDeleteItemsLocallyHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsBroadcastReaction: lambda d: DirectV2ThreadsBroadcastReactionHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
     DirectV2ThreadsBroadcastText: lambda d: DirectV2ThreadsBroadcastTextHandler(
-        api=d.api,
+        requester=d.requester,
         state=d.state,
     ),
 }

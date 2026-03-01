@@ -4,7 +4,7 @@ from insta_wizard.web.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.web.common.requesters.web_navigator import (
+from insta_wizard.web.common.web_navigator import (
     WebNavigator,
 )
 from insta_wizard.web.models.state import WebClientState

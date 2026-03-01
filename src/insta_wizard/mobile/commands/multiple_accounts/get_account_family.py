@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -25,14 +25,14 @@ class MultipleAcountsGetAccountFamily(Command[MultipleAcountsGetAccountFamilyRes
 class MultipleAcountsGetAccountFamilyHandler(
     CommandHandler[MultipleAcountsGetAccountFamily, MultipleAcountsGetAccountFamilyResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
         self, command: MultipleAcountsGetAccountFamily
     ) -> MultipleAcountsGetAccountFamilyResponse:
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.MULTIPLE_ACCOUNTS_GET_ACCOUNT_FAMILY_URI,
             params={"request_source": "com.bloks.www.caa.login.login_homepage"},

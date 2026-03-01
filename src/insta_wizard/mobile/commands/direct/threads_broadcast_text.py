@@ -7,8 +7,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -32,8 +32,8 @@ class DirectV2ThreadsBroadcastText(Command[DirectV2ThreadsBroadcastTextResponse]
 class DirectV2ThreadsBroadcastTextHandler(
     CommandHandler[DirectV2ThreadsBroadcastText, DirectV2ThreadsBroadcastTextResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -68,7 +68,7 @@ class DirectV2ThreadsBroadcastTextHandler(
             **({"offline_threading_id": command.client_context} if command.client_context else {}),
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_THREADS_BROADCAST_TEXT_URI,
             data=payload,

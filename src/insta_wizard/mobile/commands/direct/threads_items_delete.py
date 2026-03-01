@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -28,8 +28,8 @@ class DirectV2ThreadsItemsDelete(Command[DirectV2ThreadsItemsDeleteResponse]):
 class DirectV2ThreadsItemsDeleteHandler(
     CommandHandler[DirectV2ThreadsItemsDelete, DirectV2ThreadsItemsDeleteResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -46,7 +46,7 @@ class DirectV2ThreadsItemsDeleteHandler(
             ),
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_THREADS_ITEMS_DELETE_URI.format(
                 thread_id=command.thread_id, item_id=command.item_id

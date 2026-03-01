@@ -10,8 +10,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -28,8 +28,8 @@ class FeedGetReelsTray(Command[FeedGetReelsTrayResponse]):
 
 
 class FeedGetReelsTrayHandler(CommandHandler[FeedGetReelsTray, FeedGetReelsTrayResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: FeedGetReelsTray) -> FeedGetReelsTrayResponse:
@@ -42,7 +42,7 @@ class FeedGetReelsTrayHandler(CommandHandler[FeedGetReelsTray, FeedGetReelsTrayR
             "page_size": command.page_size,
         }
 
-        res = await self.api.call_api(
+        res = await self.requester.call_api(
             method="POST",
             uri=constants.FEED_REELS_TRAY_URI,
             data=payload,

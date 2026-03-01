@@ -33,7 +33,7 @@ from insta_wizard.web.models.other import CheckpointRequiredErrorData
 from insta_wizard.web.models.state import WebClientState
 
 
-class WebApiRequester:
+class WebRequester:
     def __init__(
         self,
         state: WebClientState,

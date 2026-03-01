@@ -9,8 +9,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -27,8 +27,8 @@ class DirectV2Inbox(Command[DirectV2InboxResponse]):
 
 
 class DirectV2InboxHandler(CommandHandler[DirectV2Inbox, DirectV2InboxResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: DirectV2Inbox) -> DirectV2InboxResponse:
@@ -44,7 +44,7 @@ class DirectV2InboxHandler(CommandHandler[DirectV2Inbox, DirectV2InboxResponse])
             "fetch_reason": command.fetch_reason,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="GET",
             uri=constants.DIRECT_V2_INBOX_URI,
             params=params,

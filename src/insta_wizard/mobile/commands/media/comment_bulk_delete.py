@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
@@ -27,8 +27,8 @@ class MediaCommentBulkDelete(Command[MediaCommentBulkDeleteResponse]):
 class MediaCommentBulkDeleteHandler(
     CommandHandler[MediaCommentBulkDelete, MediaCommentBulkDeleteResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: MediaCommentBulkDelete) -> MediaCommentBulkDeleteResponse:
@@ -40,7 +40,7 @@ class MediaCommentBulkDeleteHandler(
         }
         data = build_signed_body(payload)
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.MEDIA_COMMENT_BULK_DELETE_URI.format(media_id=command.media_id),
             data=data,

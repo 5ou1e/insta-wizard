@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
@@ -27,8 +27,8 @@ class DirectV2CreateGroupThread(Command[DirectV2CreateGroupThreadResponse]):
 class DirectV2CreateGroupThreadHandler(
     CommandHandler[DirectV2CreateGroupThread, DirectV2CreateGroupThreadResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -41,7 +41,7 @@ class DirectV2CreateGroupThreadHandler(
             "thread_title": command.thread_title,
         }
         data = build_signed_body(payload)
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_GET_CREATE_GROUP_THREAD_URI,
             data=data,

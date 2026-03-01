@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import build_signed_body
 from insta_wizard.mobile.models.state import (
@@ -28,8 +28,8 @@ class AccountCheckPhoneNumber(Command[AccountCheckPhoneNumberResponse]):
 class AccountCheckPhoneNumberHandler(
     CommandHandler[AccountCheckPhoneNumber, AccountCheckPhoneNumberResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: AccountCheckPhoneNumber) -> AccountCheckPhoneNumberResponse:
@@ -43,7 +43,7 @@ class AccountCheckPhoneNumberHandler(
         }
         payload = build_signed_body(data)
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.ACCOUNTS_CHECK_PHONE_NUMBER_URI,
             data=payload,

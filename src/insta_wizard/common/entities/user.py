@@ -9,14 +9,15 @@ class User(Entity):
     """
 
     pk: int
-    pk_id: str
     id: str
     strong_id__: str
     username: str
-    full_name: str
-    is_private: bool
-    is_verified: bool
     profile_pic_url: str
+
+    pk_id: str | None = None
+    full_name: str | None = None
+    is_private: bool | None = None
+    is_verified: bool | None = None
 
     fbid_v2: int | None = None
     profile_pic_id: str | None = None

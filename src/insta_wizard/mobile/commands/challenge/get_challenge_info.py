@@ -5,8 +5,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -25,8 +25,8 @@ class ChallengeGetChallengeInfo(Command[ChallengeGetChallengeInfoResponse]):
 class ChallengeGetChallengeInfoHandler(
     CommandHandler[ChallengeGetChallengeInfo, ChallengeGetChallengeInfoResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -40,7 +40,7 @@ class ChallengeGetChallengeInfoHandler(
         if command.challenge_context:
             params["challenge_context"] = command.challenge_context
 
-        resp = await self.api.call_b_api(
+        resp = await self.requester.call_b_api(
             method="GET",
             uri=str(command.api_path).lstrip("/"),
             params=params,

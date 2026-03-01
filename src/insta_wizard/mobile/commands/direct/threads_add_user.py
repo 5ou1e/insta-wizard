@@ -7,8 +7,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -27,8 +27,8 @@ class DirectV2ThreadsAddUser(Command[DirectV2ThreadsAddUserResponse]):
 class DirectV2ThreadsAddUserHandler(
     CommandHandler[DirectV2ThreadsAddUser, DirectV2ThreadsAddUserResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: DirectV2ThreadsAddUser) -> DirectV2ThreadsAddUserResponse:
@@ -37,7 +37,7 @@ class DirectV2ThreadsAddUserHandler(
             "user_ids": dumps(command.user_ids),
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_THREADS_ADD_USER_URI.format(thread_id=command.thread_id),
             data=payload,

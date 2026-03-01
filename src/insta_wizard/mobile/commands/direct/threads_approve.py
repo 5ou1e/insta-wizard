@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -23,8 +23,8 @@ class DirectV2ThreadsApprove(Command[DirectV2ThreadsApproveResponse]):
 class DirectV2ThreadsApproveHandler(
     CommandHandler[DirectV2ThreadsApprove, DirectV2ThreadsApproveResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: DirectV2ThreadsApprove) -> DirectV2ThreadsApproveResponse:
@@ -32,7 +32,7 @@ class DirectV2ThreadsApproveHandler(
             "_uuid": self.state.device.device_id,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_GET_THREADS_APPROVE_URI.format(thread_id=command.thread_id),
             data=payload,

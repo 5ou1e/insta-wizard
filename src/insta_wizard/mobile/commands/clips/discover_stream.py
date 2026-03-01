@@ -9,8 +9,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -24,8 +24,8 @@ class ClipsDiscoverStream(Command[ClipsDiscoverStreamResponse]):
 
 
 class ClipsDiscoverStreamHandler(CommandHandler[ClipsDiscoverStream, ClipsDiscoverStreamResponse]):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: ClipsDiscoverStream) -> ClipsDiscoverStreamResponse:
@@ -42,7 +42,7 @@ class ClipsDiscoverStreamHandler(CommandHandler[ClipsDiscoverStream, ClipsDiscov
             "container_module": "clips_viewer_clips_tab",
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.CLIPS_DISCOVER_STREAM_URI,
             data=payload,

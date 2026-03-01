@@ -9,8 +9,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.common.utils import (
     build_signed_body_value,
@@ -34,8 +34,8 @@ class UserGetLimitedInteractionsReminderHandler(
         UserGetLimitedInteractionsReminderResponse,
     ]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self._api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self._state = state
 
     async def __call__(
@@ -44,7 +44,7 @@ class UserGetLimitedInteractionsReminderHandler(
     ) -> UserGetLimitedInteractionsReminderResponse:
         params = {"signed_body": build_signed_body_value(dumps({}))}
 
-        data = await self._api.call_api(
+        data = await self.requester.call_api(
             method="GET",
             uri=constants.USERS_GET_LIMITED_INTERACTIONS_REMINDER_URI,
             params=params,

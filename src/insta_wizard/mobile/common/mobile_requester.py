@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+import gzip
+from collections.abc import Mapping
+from typing import Any
+from urllib.parse import urlencode
 
 import orjson
 from yarl import URL
@@ -26,6 +30,7 @@ from insta_wizard.mobile.common import constants
 from insta_wizard.mobile.common.headers_factory import (
     MobileClientHeadersFactory,
 )
+from insta_wizard.mobile.common.utils import build_graphql_payload
 from insta_wizard.mobile.exceptions import (
     BadRequestError,
     ChallengeRequiredError,
@@ -63,92 +68,27 @@ HEADER_MAPPINGS = {
 }
 
 
-class ApiRequestExecutor:
+class MobileRequester:
     def __init__(
         self,
         client_state: MobileClientState,
         transport: HttpTransport,
         logger: InstagramClientLogger,
     ):
-        self.state = client_state
-        self.transport = transport
-        self.logger = logger
-        self.headers = MobileClientHeadersFactory(
-            state=self.state,
-        )
+        self._state = client_state
+        self._transport = transport
+        self._logger = logger
+        self._headers = MobileClientHeadersFactory(state=client_state)
 
-    def _build_api_request(
-        self,
-        method: HttpMethod,
-        uri: str,
-        data: dict | bytes | None = None,
-        params: dict | None = None,
-        extra_headers: dict | None = None,
-        friendly_name: str | None = None,
-        client_endpoint: str | None = None,
-        b_api: bool = False,
-        web_api: bool = False,
-    ) -> HttpRequest:
-        if b_api:
-            url = URL(constants.INSTAGRAM_API_B_V1_URL) / uri
-        else:
-            url = URL(constants.INSTAGRAM_API_V1_URL) / uri
+    # ── Публичные методы ──────────────────────────────────────────────────────
 
-        if web_api:
-            url = URL("https://www.instagram.com/api/v1") / uri
+    def api_headers(self) -> dict:
+        """Базовые API-заголовки для команд, которые строят HttpRequest вручную."""
+        return self._headers.api_headers()
 
-        headers = self.headers.api_headers()
-
-        if friendly_name is not None:
-            headers.update({"X-Fb-Friendly-Name": friendly_name})
-        else:
-            headers.update({"X-Fb-Friendly-Name": f"IgApi: {uri}"})
-
-        if client_endpoint is not None:
-            headers.update({"X-Ig-Client-Endpoint": client_endpoint})
-        else:
-            headers.update({"X-Ig-Client-Endpoint": "unknown"})
-
-        if method == "POST":
-            headers.update(
-                {
-                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-                }
-            )
-
-        if extra_headers:
-            headers.update(extra_headers)
-
-        return HttpRequest(
-            method=method,
-            url=url,
-            data=data,
-            headers=headers,
-            params=params,
-        )
-
-    async def call_web_api(
-        self,
-        method: HttpMethod,
-        uri: str,
-        data: dict | bytes | None = None,
-        params: dict | None = None,
-        extra_headers: dict | None = None,
-        friendly_name: str | None = None,
-        client_endpoint: str | None = None,
-    ):
-        request = self._build_api_request(
-            method=method,
-            uri=uri,
-            data=data,
-            params=params,
-            extra_headers=extra_headers,
-            friendly_name=friendly_name,
-            client_endpoint=client_endpoint,
-            web_api=True,
-        )
-
-        return await self._execute_request(request=request)
+    async def call(self, request: HttpRequest) -> dict:
+        """Сырой запрос — команда строит HttpRequest полностью сама."""
+        return await self._execute_request(request)
 
     async def call_api(
         self,
@@ -159,7 +99,8 @@ class ApiRequestExecutor:
         extra_headers: dict | None = None,
         friendly_name: str | None = None,
         client_endpoint: str | None = None,
-    ):
+    ) -> dict:
+        """→ i.instagram.com/api/v1/<uri>"""
         return await self._execute_request(
             self._build_api_request(
                 method=method,
@@ -172,26 +113,6 @@ class ApiRequestExecutor:
             )
         )
 
-    async def call_url(
-        self,
-        method: HttpMethod,
-        url: str,
-        data: dict | bytes | None = None,
-        params: dict | None = None,
-        extra_headers: dict | None = None,
-    ) -> dict:
-        headers = self.headers.api_headers()
-        if extra_headers:
-            headers.update(extra_headers)
-        request = HttpRequest(
-            method=method,
-            url=url,
-            data=data,
-            headers=headers,
-            params=params,
-        )
-        return await self._execute_request(request)
-
     async def call_b_api(
         self,
         method: HttpMethod,
@@ -201,7 +122,8 @@ class ApiRequestExecutor:
         extra_headers: dict | None = None,
         friendly_name: str | None = None,
         client_endpoint: str | None = None,
-    ):
+    ) -> dict:
+        """→ b.i.instagram.com/api/v1/<uri>"""
         return await self._execute_request(
             self._build_api_request(
                 method=method,
@@ -215,14 +137,128 @@ class ApiRequestExecutor:
             )
         )
 
+    async def call_web_api(
+        self,
+        method: HttpMethod,
+        uri: str,
+        data: dict | bytes | None = None,
+        params: dict | None = None,
+        extra_headers: dict | None = None,
+        friendly_name: str | None = None,
+        client_endpoint: str | None = None,
+    ) -> dict:
+        """→ www.instagram.com/api/v1/<uri>"""
+        return await self._execute_request(
+            self._build_api_request(
+                method=method,
+                uri=uri,
+                data=data,
+                params=params,
+                extra_headers=extra_headers,
+                friendly_name=friendly_name,
+                client_endpoint=client_endpoint,
+                web_api=True,
+            )
+        )
+
+    async def call_url(
+        self,
+        method: HttpMethod,
+        url: str,
+        data: dict | bytes | None = None,
+        params: dict | None = None,
+        extra_headers: dict | None = None,
+    ) -> dict:
+        """→ произвольный URL + API-заголовки."""
+        headers = self._headers.api_headers()
+        if extra_headers:
+            headers.update(extra_headers)
+        return await self._execute_request(
+            HttpRequest(method=method, url=url, data=data, headers=headers, params=params)
+        )
+
+    async def call_graphql_www(
+        self,
+        *,
+        friendly_name: str,
+        client_doc_id: str,
+        root_field_name: str,
+        variables: Mapping[str, Any] | None = None,
+        extra_headers: Mapping[str, str] | None = None,
+    ) -> dict:
+        """→ GraphQL WWW (www.instagram.com/graphql)."""
+        headers = self._headers.graphql_headers()
+        headers.update(
+            {
+                "X-Client-Doc-Id": client_doc_id,
+                "X-Fb-Friendly-Name": friendly_name,
+                "X-Root-Field-Name": root_field_name,
+                "X-Graphql-Client-Library": "pando",
+            }
+        )
+
+        payload_dict = build_graphql_payload(
+            friendly_name=friendly_name,
+            client_doc_id=client_doc_id,
+            variables=dict(variables or {}),
+        )
+
+        data = payload_dict
+        if variables:
+            headers["content-encoding"] = "gzip"
+            encoded = urlencode(payload_dict).encode("utf-8")
+            data = gzip.compress(encoded)
+
+        if extra_headers:
+            headers.update(dict(extra_headers))
+
+        return await self._execute_request(
+            HttpRequest(method="POST", url=constants.GRAPHQL_WWW_URL, headers=headers, data=data)
+        )
+
+    async def call_graphql_query(
+        self,
+        *,
+        friendly_name: str,
+        client_doc_id: str,
+        root_field_name: str,
+        variables: Mapping[str, Any] | None = None,
+        extra_headers: Mapping[str, str] | None = None,
+    ) -> dict:
+        """→ GraphQL Query (graph.instagram.com/graphql)."""
+        headers = self._headers.graphql_headers()
+        headers.update(
+            {
+                "x-client-doc-id": client_doc_id,
+                "x-fb-friendly-name": friendly_name,
+                "x-root-field-name": root_field_name,
+                "x-graphql-client-library": "pando",
+            }
+        )
+
+        if extra_headers:
+            headers.update(dict(extra_headers))
+
+        payload = build_graphql_payload(
+            friendly_name=friendly_name,
+            client_doc_id=client_doc_id,
+            variables=dict(variables or {}),
+        )
+
+        return await self._execute_request(
+            HttpRequest(method="POST", url=constants.GRAPHQL_QUERY_URL, headers=headers, data=payload)
+        )
+
+    # ── Внутренний pipeline ───────────────────────────────────────────────────
+
     async def _execute_request(self, request: HttpRequest) -> dict:
         response, elapsed_ms = await self._send(request)
         data = self._parse_response_body(response)
 
-        self.logger.response(response, data)
+        self._logger.response(response, data)
 
         self._update_state_from_response_headers(response)
-        self.state.increment_request_stats(
+        self._state.increment_request_stats(
             len(response.content) if response.content else 0,
             elapsed_ms,
         )
@@ -244,13 +280,10 @@ class ApiRequestExecutor:
 
         return data
 
-    async def _send(
-        self,
-        request: HttpRequest,
-    ) -> tuple[TransportResponse, int]:
+    async def _send(self, request: HttpRequest) -> tuple[TransportResponse, int]:
         start = asyncio.get_event_loop().time()
         try:
-            resp = await self.transport.send(request)
+            resp = await self._transport.send(request)
             elapsed_ms = int((asyncio.get_event_loop().time() - start) * 1000)
             return resp, elapsed_ms
 
@@ -271,20 +304,20 @@ class ApiRequestExecutor:
 
             return content.decode("utf-8", errors="replace")
 
-    def _update_state_from_response_headers(self, response: TransportResponse):
+    def _update_state_from_response_headers(self, response: TransportResponse) -> None:
         for header_name, attr_name in HEADER_MAPPINGS.items():
             if header_name not in response.headers:
                 continue
 
             header_value = response.headers.get(header_name)
-            setattr(self.state.local_data, attr_name, header_value)
+            setattr(self._state.local_data, attr_name, header_value)
 
         authorization_header = response.headers.get("ig-set-authorization")
 
         # Когда инстаграм сбрасывает куку, он присылает такую "Bearer IGT:2:"
         if isinstance(authorization_header, str):
             authorization_data = auth_data_from_authorization_header(authorization_header)
-            self.state.local_data.set_authorization_data(authorization_data)
+            self._state.local_data.set_authorization_data(authorization_data)
 
     def parse_error_from_response(
         self,
@@ -362,3 +395,55 @@ class ApiRequestExecutor:
             return InstagramBackend572Error(response=response_info)
 
         return InstagramResponseError(response=response_info)
+
+    # ── Request builders ──────────────────────────────────────────────────────
+
+    def _build_api_request(
+        self,
+        method: HttpMethod,
+        uri: str,
+        data: dict | bytes | None = None,
+        params: dict | None = None,
+        extra_headers: dict | None = None,
+        friendly_name: str | None = None,
+        client_endpoint: str | None = None,
+        b_api: bool = False,
+        web_api: bool = False,
+    ) -> HttpRequest:
+        if b_api:
+            url = URL(constants.INSTAGRAM_API_B_V1_URL) / uri
+        else:
+            url = URL(constants.INSTAGRAM_API_V1_URL) / uri
+
+        if web_api:
+            url = URL("https://www.instagram.com/api/v1") / uri
+
+        headers = self._headers.api_headers()
+
+        if friendly_name is not None:
+            headers.update({"X-Fb-Friendly-Name": friendly_name})
+        else:
+            headers.update({"X-Fb-Friendly-Name": f"IgApi: {uri}"})
+
+        if client_endpoint is not None:
+            headers.update({"X-Ig-Client-Endpoint": client_endpoint})
+        else:
+            headers.update({"X-Ig-Client-Endpoint": "unknown"})
+
+        if method == "POST":
+            headers.update(
+                {
+                    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                }
+            )
+
+        if extra_headers:
+            headers.update(extra_headers)
+
+        return HttpRequest(
+            method=method,
+            url=url,
+            data=data,
+            headers=headers,
+            params=params,
+        )

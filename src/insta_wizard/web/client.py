@@ -21,10 +21,10 @@ from insta_wizard.web.common.command_factories import (
 from insta_wizard.web.common.headers_factory import (
     WebClientHeadersFactory,
 )
-from insta_wizard.web.common.requesters.api_requester import (
-    WebApiRequester,
+from insta_wizard.web.common.requester import (
+    WebRequester,
 )
-from insta_wizard.web.common.requesters.web_navigator import (
+from insta_wizard.web.common.web_navigator import (
     WebNavigator,
 )
 from insta_wizard.web.common.state_initializer import StateInitializer
@@ -82,7 +82,7 @@ class WebInstagramClient:
         self._headers = WebClientHeadersFactory(
             client_state=self.state,
         )
-        self._api_requester = WebApiRequester(
+        self._api_requester = WebRequester(
             state=self.state,
             headers_factory=self._headers,
             transport=self._transport,

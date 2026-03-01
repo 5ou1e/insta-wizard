@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -26,8 +26,8 @@ class DirectV2ThreadsUpdateTitle(Command[DirectV2ThreadsUpdateTitleResponse]):
 class DirectV2ThreadsUpdateTitleHandler(
     CommandHandler[DirectV2ThreadsUpdateTitle, DirectV2ThreadsUpdateTitleResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(
@@ -38,7 +38,7 @@ class DirectV2ThreadsUpdateTitleHandler(
             "title": command.title,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_THREADS_UPDATE_TITLE_URI.format(thread_id=command.thread_id),
             data=payload,

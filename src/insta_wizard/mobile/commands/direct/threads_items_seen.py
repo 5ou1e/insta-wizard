@@ -6,8 +6,8 @@ from insta_wizard.mobile.common.command import (
     Command,
     CommandHandler,
 )
-from insta_wizard.mobile.common.requesters.api_requester import (
-    ApiRequestExecutor,
+from insta_wizard.mobile.common.mobile_requester import (
+    MobileRequester,
 )
 from insta_wizard.mobile.models.state import (
     MobileClientState,
@@ -24,8 +24,8 @@ class DirectV2ThreadsItemsSeen(Command[DirectV2ThreadsItemsSeenResponse]):
 class DirectV2ThreadsItemsSeenHandler(
     CommandHandler[DirectV2ThreadsItemsSeen, DirectV2ThreadsItemsSeenResponse]
 ):
-    def __init__(self, api: ApiRequestExecutor, state: MobileClientState) -> None:
-        self.api = api
+    def __init__(self, requester: MobileRequester, state: MobileClientState) -> None:
+        self.requester = requester
         self.state = state
 
     async def __call__(self, command: DirectV2ThreadsItemsSeen) -> DirectV2ThreadsItemsSeenResponse:
@@ -37,7 +37,7 @@ class DirectV2ThreadsItemsSeenHandler(
             "item_id": command.item_id,
         }
 
-        resp = await self.api.call_api(
+        resp = await self.requester.call_api(
             method="POST",
             uri=constants.DIRECT_V2_THREADS_ITEMS_SEEN_URI.format(
                 thread_id=command.thread_id, item_id=command.item_id
