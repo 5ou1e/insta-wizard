@@ -1,4 +1,4 @@
-# insta-wizard
+# InstaWizard
 <small>🌐 **Языки:** [English](README.md) · Русский</small>
 
 [![PyPI](https://img.shields.io/pypi/v/insta-wizard)](https://pypi.org/project/insta-wizard/)
