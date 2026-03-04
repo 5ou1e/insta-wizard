@@ -19,8 +19,6 @@ Two provider implementations are shown below:
   ManualPhoneSmsCodeProvider  — built-in, asks via input() (for manual testing)
   CustomSmsServiceProvider    — your own implementation of PhoneSmsCodeProvider for interacting SMS-activation service or something else
 
-After successful registration the client state is saved to a JSON file so you
-can continue the session without re-registering.
 """
 
 import asyncio
@@ -39,11 +37,6 @@ STATE_FILE = "new_account_state.json"
 # Option B: custom provider — plug in any SMS-activation API here
 # ---------------------------------------------------------------------------
 class CustomSmsServiceProvider(PhoneSmsCodeProvider):
-    """
-    Skeleton for a real SMS-activation service (e.g. 5sim, sms-activate, etc.).
-    Implement provide_number() and provide_code() to match PhoneSmsCodeProvider.
-    """
-
     async def provide_number(self, new: bool = False) -> str:
         # Call your SMS service API to rent a number and return it.
         # Example: return await my_sms_api.get_number()
