@@ -1,5 +1,8 @@
 
-twine upload --repository testpypi dist/*
+pip install -e ".[dev]"
+python -c "import insta_wizard; print('OK')"
 
 twine check dist/*
+
+twine upload --repository testpypi dist/*
 twine upload dist/*

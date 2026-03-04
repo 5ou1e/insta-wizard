@@ -1,7 +1,7 @@
 # insta-wizard
 <small>🌐 **Languages:** English · [Русский](README.ru.md)</small>
 
-[![PyPI](https://img.shields.io/pypi/v/insta-wizard)](https://pypi.org/project/insta-wizard/)
+[![PyPI](https://img.shields.io/pypi/v/insta-wizard?cacheSeconds=0)](https://pypi.org/project/insta-wizard/)
 [![Python](https://img.shields.io/pypi/pyversions/insta-wizard)](https://pypi.org/project/insta-wizard/)
 [![License](https://img.shields.io/github/license/5ou1e/insta-wizard)](https://github.com/5ou1e/insta-wizard/blob/main/LICENSE)
 
