@@ -60,8 +60,6 @@ class RuploadIgphotoHandler(CommandHandler[RuploadIgphoto, str]):
 
         photo_len = str(len(command.image_bytes))
 
-        url = constants.RUPLOAD_IGPHOTO_URL.format(name=upload_name)
-
         headers = self.requester.api_headers()
         headers.update(
             {
@@ -82,7 +80,7 @@ class RuploadIgphotoHandler(CommandHandler[RuploadIgphoto, str]):
         await self.requester.call(
             HttpRequest(
                 method="POST",
-                url=url,
+                url=constants.RUPLOAD_IGPHOTO_URL.format(name=upload_name),
                 headers=headers,
                 data=command.image_bytes,
             )

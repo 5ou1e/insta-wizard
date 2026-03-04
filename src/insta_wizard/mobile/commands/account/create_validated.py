@@ -25,7 +25,7 @@ from insta_wizard.mobile.responses.account.account_create_validated import (
 )
 
 
-@dataclass(slots=True)
+@dataclass(kw_only=True, slots=True)
 class AccountCreateValidated(Command[AccountCreateValidatedResponse]):
     username: str
     password: str
@@ -36,6 +36,7 @@ class AccountCreateValidated(Command[AccountCreateValidatedResponse]):
     month: int
     year: int
     tos_version: str = "row"
+    waterfall_id: str
 
 
 class AccountCreateValidatedHandler(
@@ -46,7 +47,6 @@ class AccountCreateValidatedHandler(
         self.state = state
 
     async def __call__(self, command: AccountCreateValidated) -> AccountCreateValidatedResponse:
-        enc_password = PasswordEncrypter.encrypt_v0(command.password)
 
         def generate_sn_nonce_1() -> str:
             # API sharp
@@ -57,16 +57,10 @@ class AccountCreateValidatedHandler(
             s = f"{command.phone_number}|{ts}|{b.decode('utf-8', errors='replace')}"
             return base64.b64encode(s.encode("utf-8")).decode("ascii")
 
-        def generate_sn_nonce_2() -> str:
-            # aiograpi
-            timestamp = str(int(time.time()))
-            nonce = f'{command.phone_number}|{timestamp}|\xb9F"\x8c\xa2I\xaaz|\xf6xz\x86\x92\x91Y\xa5\xaa#f*o%\x7f'
-            sn_nonce = base64.encodebytes(nonce.encode()).decode().strip()
-            return sn_nonce
-
         sn_nonce = generate_sn_nonce_1()
 
         enc_password = PasswordEncrypter.encrypt_v0(command.password)
+
         data = {
             "jazoest": generate_jazoest(self.state.device.phone_id),
             "is_secondary_account_creation": "false",
@@ -87,11 +81,10 @@ class AccountCreateValidatedHandler(
             "_uuid": self.state.device.device_id,
             "month": str(command.month),
             "force_sign_up_code": "",
-            "waterfall_id": self.state.local_data.waterfall_id,
+            "waterfall_id": command.waterfall_id,
             "has_sms_consent": "true",
             "one_tap_opt_in": "true",
             "qs_stamp": "",  # not send in aiograpi for sms-reg flow
-            # "_csrftoken": self.token,  # C#
             "sn_nonce": sn_nonce,
             "sn_result": "GOOGLE_PLAY_UNAVAILABLE:SERVICE_INVALID",  # or "sn_result": "MLA" or "API_ERROR:+null" (API sharp) or "API_ERROR: class X.2mY:7: "
         }

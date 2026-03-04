@@ -4,11 +4,9 @@ import aiohttp
 from aiohttp import CookieJar
 
 from insta_wizard.common.logger import InstagramClientLogger
-from insta_wizard.common.transport.models import TransportResponse, TransportSettings
-
 from insta_wizard.common.transport.base import HttpTransport
 from insta_wizard.common.transport.exceptions import TransportNetworkError, TransportTimeoutError
-from insta_wizard.common.transport.models import HttpRequest
+from insta_wizard.common.transport.models import HttpRequest, TransportResponse, TransportSettings
 
 
 class LoggingClientRequest(aiohttp.ClientRequest):

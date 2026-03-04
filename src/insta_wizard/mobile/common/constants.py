@@ -10,6 +10,7 @@ GRAPHQL_QUERY_URL = "https://i.instagram.com/graphql/query"
 GRAPHQL_WWW_URL = "https://i.instagram.com/graphql_www"
 
 RUPLOAD_IGPHOTO_URL = "https://i.instagram.com/rupload_igphoto/{name}"
+RUPLOAD_IGVIDEO_URL = "https://i.instagram.com/rupload_igvideo/{name}"
 
 
 BLOKS_SEND_LOGIN_REQUEST_URI = (
@@ -45,11 +46,17 @@ BLOKS_APPS_REG_CONFIRMATION_MEDIUM_SELECTION_ASYNC_URI = (
 )
 BLOKS_REG_PASSWORD_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.password.async/"
 BLOKS_REG_BIRTHDAY_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.birthday.async/"
+BLOKS_REG_BIRTHDAY_VTWO_ASYNC = (
+    "bloks/async_action/com.bloks.www.bloks.caa.reg.birthday_vtwo.async/"
+)
 BLOKS_REG_NAME_IG_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.name_ig.async/"
+BLOKS_REG_NAME_VTWO_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.name_vtwo.async/"
+
 BLOKS_REG_NAME_IG_AND_SOAP_ASYNC = (
     "bloks/async_action/com.bloks.www.bloks.caa.reg.name_ig_and_soap.async/"
 )
 BLOKS_REG_USERNAME_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.username.async/"
+BLOKS_REG_USERNAME_IG_ASYNC = "bloks/async_action/com.bloks.www.bloks.caa.reg.username_ig.async/"
 BLOKS_REG_CREATE_ACCOUNT_ASYNC = (
     "bloks/async_action/com.bloks.www.bloks.caa.reg.create.account.async/"
 )
@@ -136,7 +143,7 @@ LIVE_GET_GOOD_TIME_FOR_LIVE_URI = "live/get_good_time_for_live/"
 
 LOOM_FETCH_CONFIG_URI = "loom/fetch_config/"
 
-MEDIA_BLOCKED_URI = "media/blocked/"
+MEDIA_INFO_URI = "media/{media_id}/info/"
 MEDIA_LIKE_URI = "media/{media_id}/like/"
 MEDIA_UNLIKE_URI = "media/{media_id}/unlike/"
 MEDIA_DELETE_URI = "media/{media_id}/delete/"
@@ -144,6 +151,14 @@ MEDIA_EDIT_URI = "media/{media_id}/edit_media/"
 MEDIA_SAVE_URI = "media/{media_id}/save/"
 MEDIA_UNSAVE_URI = "media/{media_id}/unsave/"
 MEDIA_LIKERS_URI = "media/{media_id}/likers/"
+MEDIA_BLOCKED_URI = "media/blocked/"
+
+MEDIA_UPLOAD_FINISH_URI = "media/upload_finish/"
+MEDIA_CONFIGURE_URI = "media/configure/"
+MEDIA_CONFIGURE_TO_STORY_URI = "media/configure_to_story/"
+MEDIA_CONFIGURE_SIDECAR_URI = "media/configure_sidecar/"
+MEDIA_CONFIGURE_TO_CLIPS_URI = "media/configure_to_clips/"
+
 
 MEDIA_COMMENTS_URI = "media/{media_id}/comments/"
 MEDIA_COMMENT_URI = "media/{media_id}/comment/"

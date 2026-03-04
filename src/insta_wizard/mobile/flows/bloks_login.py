@@ -67,7 +67,7 @@ BloksLoginResult: TypeAlias = None
 
 @dataclass(slots=True)
 class BloksLogin(Command[BloksLoginResult]):
-    """Авторизоваться в аккаунт с помощью логина и пароля (Bloks версия)"""
+    """Login into account using username and password (Bloks version)"""
 
     username: str
     password: str

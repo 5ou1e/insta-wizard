@@ -1,3 +1,4 @@
+from insta_wizard.common.entities.media import AlbumPhotoItem, AlbumVideoItem
 from insta_wizard.common.interfaces import (
     CaptchaSolver,
     EmailCodeProvider,
@@ -52,4 +53,7 @@ __all__ = [
     "PhoneSmsCodeProvider",
     "ResetPasswordLinkProvider",
     "EmailCodeProvider",
+    # models
+    "AlbumPhotoItem",
+    "AlbumVideoItem",
 ]

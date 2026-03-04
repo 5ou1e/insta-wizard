@@ -23,6 +23,7 @@ class AccountSendSignupSmsCode(Command[AccountSendSignupSmsCodeResponse]):
     """Request SMS code for account registration"""
 
     phone_number: str
+    waterfall_id: str
 
 
 class AccountSendSignupSmsCodeHandler(
@@ -39,7 +40,7 @@ class AccountSendSignupSmsCodeHandler(
             "guid": self.state.device.device_id,
             "device_id": self.state.device.android_id,
             "android_build_type": "release",
-            "waterfall_id": self.state.local_data.waterfall_id,
+            "waterfall_id": command.waterfall_id,
         }
         payload = build_signed_body(data)
 

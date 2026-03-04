@@ -10,6 +10,7 @@ from insta_wizard.common.entities import (
     User,
 )
 from insta_wizard.common.entities.account import AccountSecurity
+from insta_wizard.common.entities.media import AlbumPhotoItem, AlbumVideoItem, Media
 from insta_wizard.mobile.commands import (
     MediaDelete,
     MediaEdit,
@@ -158,6 +159,7 @@ from insta_wizard.mobile.commands.media.comment_bulk_delete import MediaCommentB
 from insta_wizard.mobile.commands.media.comment_like import MediaCommentLike
 from insta_wizard.mobile.commands.media.comment_unlike import MediaCommentUnlike
 from insta_wizard.mobile.commands.media.comments import MediaComments
+from insta_wizard.mobile.commands.media.info import MediaInfo
 from insta_wizard.mobile.commands.news.inbox import (
     NewsInbox,
 )
@@ -186,7 +188,15 @@ from insta_wizard.mobile.commands.user.web_profile_info import (
     UserWebProfileInfo,
 )
 from insta_wizard.mobile.common.command import CommandBus
-from insta_wizard.mobile.flows import BloksLogin
+from insta_wizard.mobile.flows import (
+    BloksLogin,
+    PublishAlbum,
+    PublishPhoto,
+    PublishReel,
+    PublishStoryPhoto,
+    PublishStoryVideo,
+    PublishVideo,
+)
 from insta_wizard.mobile.models.state import MobileClientState
 from insta_wizard.mobile.responses.account.account_check_phone_number import (
     AccountCheckPhoneNumberResponse,
@@ -549,6 +559,124 @@ class LiveSection(BaseSection):
 
 
 class MediaSection(BaseSection):
+    async def publish_photo(self, image: bytes, caption: str = "") -> Media:
+        """Upload a photo and publish it to the timeline feed."""
+        return await self.bus.execute(PublishPhoto(image_bytes=image, caption=caption))
+
+    async def publish_story_photo(self, image: bytes) -> Media:
+        """Upload a photo and publish it to stories."""
+        return await self.bus.execute(PublishStoryPhoto(image_bytes=image))
+
+    async def publish_video(
+        self,
+        video: bytes,
+        caption: str = "",
+        thumbnail: bytes | None = None,
+        transcode: bool = True,
+        fit_mode: Literal["pad", "crop"] = "pad",
+    ) -> Media:
+        """Upload a video and publish it to the timeline feed.
+
+        Args:
+            video: Raw video file bytes (MP4, MOV, or any ffmpeg-supported format).
+            caption: Post caption text.
+            thumbnail: Custom cover image as JPEG bytes. Auto-extracted from mid-frame if not provided.
+            transcode: Re-encode to H.264/yuv420p before uploading. Fixes HEVC, gbrp and other
+                formats Instagram cannot process. Set to False if the video is already H.264 yuv420p.
+            fit_mode: How to handle aspect ratios outside Instagram limits (portrait >9:16, landscape >1.91:1).
+                "pad" — add black bars to fit (default). "crop" — crop to fit.
+        """
+        return await self.bus.execute(
+            PublishVideo(
+                video_bytes=video,
+                caption=caption,
+                thumbnail_bytes=thumbnail,
+                transcode=transcode,
+                fit_mode=fit_mode,
+            )
+        )
+
+    async def publish_story_video(
+        self,
+        video: bytes,
+        thumbnail: bytes | None = None,
+        transcode: bool = True,
+        fit_mode: Literal["pad", "crop"] = "pad",
+    ) -> Media:
+        """Upload a video and publish it to stories.
+
+        Args:
+            video: Raw video file bytes (MP4, MOV, or any ffmpeg-supported format).
+            thumbnail: Custom cover image as JPEG bytes. Auto-extracted from mid-frame if not provided.
+            transcode: Re-encode to H.264/yuv420p before uploading. Fixes HEVC, gbrp and other
+                formats Instagram cannot process. Set to False if the video is already H.264 yuv420p.
+            fit_mode: How to handle aspect ratios outside Instagram limits (portrait >9:16, landscape >1.91:1).
+                "pad" — add black bars to fit (default). "crop" — crop to fit.
+        """
+        return await self.bus.execute(
+            PublishStoryVideo(
+                video_bytes=video,
+                thumbnail_bytes=thumbnail,
+                transcode=transcode,
+                fit_mode=fit_mode,
+            )
+        )
+
+    async def publish_reel(
+        self,
+        video: bytes,
+        caption: str = "",
+        thumbnail: bytes | None = None,
+        share_to_feed: bool = True,
+        audio_muted: bool = False,
+        transcode: bool = True,
+        fit_mode: Literal["pad", "crop"] = "pad",
+    ) -> Media:
+        """Upload a video and publish it as a Reel (Clip).
+
+        Args:
+            video: Raw video file bytes (MP4, MOV, or any ffmpeg-supported format).
+            caption: Reel caption text.
+            thumbnail: Custom cover image as JPEG bytes. Auto-extracted from mid-frame if not provided.
+            share_to_feed: Also show the Reel in the timeline feed. Default True.
+            audio_muted: Publish with muted audio.
+            transcode: Re-encode to H.264/yuv420p before uploading.
+            fit_mode: How to handle aspect ratios outside Instagram limits.
+                "pad" — add black bars (default). "crop" — crop to fit.
+        """
+        return await self.bus.execute(
+            PublishReel(
+                video_bytes=video,
+                caption=caption,
+                thumbnail_bytes=thumbnail,
+                share_to_feed=share_to_feed,
+                audio_muted=audio_muted,
+                transcode=transcode,
+                fit_mode=fit_mode,
+            )
+        )
+
+    async def publish_carousel(
+        self,
+        items: list[AlbumPhotoItem | AlbumVideoItem],
+        caption: str = "",
+    ) -> Media:
+        """Upload multiple media items and publish them as a carousel (album).
+
+        Args:
+            items: List of AlbumPhotoItem and/or AlbumVideoItem. Instagram allows up to 10.
+            caption: Post caption text.
+        """
+        if not 1 <= len(items) < 10:
+            raise ValueError("Invalid number of media items, must be between 1 and 10.")
+        return await self.bus.execute(PublishAlbum(items=items, caption=caption))
+
+    async def get_info(self, media_id: str) -> Media:
+        """Get media info"""
+        raw = await self.bus.execute(MediaInfo(media_id=media_id))
+
+        return Media.model_validate(raw["items"][0])
+
     async def like(self, media_id: str) -> None:
         """Like the media"""
         await self.bus.execute(MediaLike(media_id=media_id))
@@ -577,11 +705,6 @@ class MediaSection(BaseSection):
         """Get media likers"""
         raw = await self.bus.execute(MediaLikers(media_id=media_id))
         return [User.model_validate(u) for u in raw["users"]]
-
-    async def get_blocked(self) -> list[str]:
-        """Get blocked media (list of media ids)"""
-        raw = await self.bus.execute(MediaBlocked())
-        return [media_id for media_id in raw["media_ids"]]
 
     async def get_comments(
         self,
@@ -626,6 +749,11 @@ class MediaSection(BaseSection):
     async def unlike_comment(self, comment_id: str) -> None:
         """Unlike a comment"""
         await self.bus.execute(MediaCommentUnlike(comment_id=comment_id))
+
+    async def get_blocked(self) -> list[str]:
+        """Get blocked media (list of media ids)"""
+        raw = await self.bus.execute(MediaBlocked())
+        return [media_id for media_id in raw["media_ids"]]
 
 
 class NewsSection(BaseSection):

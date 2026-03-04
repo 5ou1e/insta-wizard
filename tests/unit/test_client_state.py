@@ -63,7 +63,7 @@ class TestDumpLoadStateValid:
         other = MobileInstagramClient(device=AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8))
         other.load_state(state)
 
-        ua = other._headers.api_headers()["User-Agent"]
+        ua = other._requester.api_headers()["User-Agent"]
         assert client.state.device.model in ua
         await other.close()
 

@@ -43,7 +43,7 @@ class InstagramResponseError(MobileClientError):
     response: ResponseInfo
 
     def __str__(self) -> str:
-        return f"InstagramResponseError, status_code={self.response.status}, response={self.response.response_string[:100]}..."
+        return f"Response error, status_code={self.response.status}, response={self.response.response_string[:100]}..."
 
 
 @dataclass(kw_only=True, slots=True)
@@ -274,8 +274,31 @@ class AuthPlatformCheckpointWrongOrIncorrectCodeError(MobileClientError):
 
 
 @dataclass(kw_only=True, slots=True)
+class RegistrationError(MobileClientError):
+    msg: str
+
+    def __str__(self) -> str:
+        return self.msg
+
+
+@dataclass(kw_only=True, slots=True)
 class BloksRegistrationError(MobileClientError):
     msg: str
 
     def __str__(self) -> str:
-        return f"Registration error: {self.msg}"
+        return self.msg
+
+
+@dataclass(kw_only=True, slots=True)
+class TranscodeNotFinishedYetError(MobileClientError):
+    """status_code=202, response={'message': 'Transcode not finished yet.', 'status': 'fail'}..."""
+
+    pass
+
+
+@dataclass(kw_only=True, slots=True)
+class MediaNeedsReuploadError(MobileClientError):
+    """Instagram returned media_needs_reupload — video must be re-uploaded."""
+
+    def __str__(self) -> str:
+        return "Instagram returned 'media_needs_reupload' — most likely the codec or resolution is incorrect."

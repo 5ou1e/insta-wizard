@@ -1,3 +1,4 @@
+from insta_wizard.web.sections.challenge import ChallengeSection
 from insta_wizard.web.sections.sections import (
     AccountSection,
     CommentsSection,
@@ -5,7 +6,6 @@ from insta_wizard.web.sections.sections import (
     LikesSection,
     NavigationSection,
 )
-from insta_wizard.web.sections.challenge import ChallengeSection
 
 __all__ = [
     "AccountSection",

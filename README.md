@@ -1,192 +1,148 @@
 # insta-wizard
-<small>[Русский](README.ru.md)</small>
+<small>🌐 **Languages:** English · [Русский](README.ru.md)</small>
 
 [![PyPI](https://img.shields.io/pypi/v/insta-wizard)](https://pypi.org/project/insta-wizard/)
 [![Python](https://img.shields.io/pypi/pyversions/insta-wizard)](https://pypi.org/project/insta-wizard/)
-[![License](https://img.shields.io/github/license/5ou1e/insta-wizard)](LICENSE)
+[![License](https://img.shields.io/github/license/5ou1e/insta-wizard)](https://github.com/5ou1e/insta-wizard/blob/main/LICENSE)
 
-Async Python library for working with Instagram.
+Async Python library for the Instagram private API.
 
-Manage profiles, follow and unfollow users, send Direct messages, like and comment on media, fetch user info — and much more, all through a clean async interface.
+Manage profiles, follow users, send Direct messages, work with media and comments — all through a clean, typed, fully async interface.
 
-It provides two clients:
-- **`MobileInstagramClient`** — imitates the official Android app, works with the **private mobile API (v374)**
-- **`WebInstagramClient`** — works with the **web API** by imitating browser behavior
+Two backend clients are included:
 
-Includes proxy support, device/profile presets, and flexible session/cookie state management.
+- **`MobileInstagramClient`** — mimics the official Android app (private mobile API, v374)
+- **`WebInstagramClient`** — mimics browser behavior (Instagram web API)
 
-> **Planned:** account registration, broader API coverage.
+---
 
-> **Status:** Active development (API may change between versions).
+## Highlights
 
+### Common
 
+- ⚡ **Fully async** — asyncio + aiohttp
+- 💾 **Session persistence** — `dump_state()` / `load_state()`, no re-login on every run
+- 🖥️ **Device / browser fingerprints** — built-in presets and random generation
+- 🔐 **Checkpoint / challenge** detection and handling
+- 🌐 **HTTP proxy support** — static or auto-rotating via a custom provider
+- 📋 **Standard `logging` integration** out of the box
+
+### Mobile client
+
+- Login and session management
+- Profile editing (bio, name, profile picture)
+- User search; get info by user ID or username
+- Follow / unfollow, remove follower; retrieve followers and following lists
+- Direct: inbox, pending requests, send messages and reactions, group thread management
+- Media: like, unlike, save; comments — get, add, like, unlike
+- Media publishing: photos and videos to feed, Stories, carousels (albums), and Reels
+- Checkpoint / challenge detection and passing
+- Account registration via SMS
+
+### Web client
+
+- Login and session persistence
+- Follow / unfollow
+- Like / unlike media
+- Add / like / unlike comments
+- Checkpoint / challenge detection and passing
 
 ---
 
 ## Installation
 
+**Requires Python 3.11+**
+
 ```bash
 pip install insta-wizard
+```
+
+From GitHub (latest):
+
+```bash
+pip install git+https://github.com/5ou1e/insta-wizard.git
 ```
 
 ---
 
 ## Quick start
 
+**Mobile:**
+
 ```python
 import asyncio
 from insta_wizard import MobileInstagramClient
 
-async def main():
+async def main() -> None:
     async with MobileInstagramClient() as client:
-        await client.account.login("username", "password")
-        user = await client.users.get_info("1200123809")  # numeric user ID as string
-        print(user)
+        await client.account.login("USERNAME", "PASSWORD")
+
+        me = await client.account.get_current_user()
+        print("Logged in as:", me.username)
+
+        user = await client.users.get_info_by_username("instagram")
+        await client.friendships.follow(str(user.pk))
+
+asyncio.run(main())
+```
+
+**Web:**
+
+```python
+import asyncio
+from insta_wizard import WebInstagramClient
+
+async def main() -> None:
+    async with WebInstagramClient() as client:
+        await client.login("USERNAME", "PASSWORD")
+
+        await client.likes.like("MEDIA_ID")
+        await client.likes.unlike("MEDIA_ID")
 
 asyncio.run(main())
 ```
 
 ---
 
-## Clients overview
+## Session state
 
-| Client | Description                                                                          |
-|---|--------------------------------------------------------------------------------------|
-| `MobileInstagramClient` | Client for working with the Instagram private API, imitates the official Android app |
-| `WebInstagramClient` | Client for working with the Instagram web API, imitating browser behavior            |
+Persist a session between runs — no need to re-login every time:
 
-The **mobile client** covers most Instagram functionality. The web client offers similar functionality but works with different Instagram API endpoints.
+```python
+import asyncio, json
+from insta_wizard import MobileInstagramClient
 
-## Key features
+async def main() -> None:
+    async with MobileInstagramClient() as client:
+        await client.account.login("USERNAME", "PASSWORD")
 
-**Mobile client**:
-- Login, profile management (edit bio, name, profile picture)
-- Search users, get user info by ID or username
-- Follow / unfollow, manage followers and following lists
-- Browse timeline, stories tray, suggested reels
-- Direct messages: inbox, pending, send text messages and reactions, group thread management (create, approve, decline, hide, mute)
-- Comments: get, add, like, unlike
-- Notifications and activity inbox
-- Live and Clips discovery
-- Checkpoint detection and passing
+        with open("session.json", "w", encoding="utf-8") as f:
+            json.dump(client.dump_state(), f)
 
-**Web client**:
-- Login
-- Follow / unfollow
-- Like / unlike media
-- Add / like / unlike comments
-- Checkpoint detection and passing
+asyncio.run(main())
+```
+
+Restore on the next run:
+
+```python
+import asyncio, json
+from insta_wizard import MobileInstagramClient
+
+async def main() -> None:
+    async with MobileInstagramClient() as client:
+        with open("session.json", encoding="utf-8") as f:
+            client.load_state(json.load(f))
+
+        me = await client.account.get_current_user()  # already authenticated
+
+asyncio.run(main())
+```
+
+State is a plain Python dictionary. Proxy and transport settings are not included — pass those to the constructor as usual.
 
 ---
 
-## Two API styles
-
-### 1. Sections (primary interface)
-
-Sections are attributes on the client. This is the recommended way to interact — they cover the most common use cases:
-
-```python
-# Account
-await client.account.login("username", "password")
-me = await client.account.get_current_user()
-
-# Users
-user = await client.users.get_info_by_username("someuser")
-user = await client.users.get_info(user_id)
-results = await client.users.search("query")
-
-# Friendships
-await client.friendships.follow(user_id)
-await client.friendships.unfollow(user_id)
-await client.friendships.remove_follower(user_id)
-followers = await client.friendships.get_user_followers(user_id)
-following = await client.friendships.get_user_following(user_id)
-
-# Feed
-timeline = await client.feed.get_timeline()
-stories  = await client.feed.get_stories_tray()
-reels    = await client.feed.get_suggested_reels()
-
-# Direct
-inbox   = await client.direct.get_inbox()
-pending = await client.direct.get_pending()
-
-# Media & comments
-comments = await client.media.get_comments(media_id)
-await client.media.add_comment(media_id, "great post!")
-await client.media.like_comment(comment_id)
-await client.media.unlike_comment(comment_id)
-
-# Challenge (session checkpoints)
-from insta_wizard.mobile.exceptions import ChallengeRequiredError
-from insta_wizard.common.models.checkpoint import VettedDeltaCheckpoint, ScrapingWarningCheckpoint
-
-try:
-    me = await client.account.get_current_user()
-except ChallengeRequiredError as e:
-    checkpoint = await client.challenge.get_challenge_info(e.challenge_data)
-    match checkpoint:
-        case VettedDeltaCheckpoint():
-            await client.challenge.pass_vetted_delta(choice="0")  # "It was me"
-        case ScrapingWarningCheckpoint():
-            await client.challenge.pass_scraping_warning()
-```
-
-**Mobile client sections:**
-
-| Section | What it covers                                                             |
-|---|----------------------------------------------------------------------------|
-| `account` | login / logout, get current user, edit profile, set bio, set profile picture |
-| `users` | user info by id / username, web profile, search                            |
-| `friendships` | follow, unfollow, remove follower, followers/following lists, friendship status |
-| `media` | like, unlike, save, edit, delete, comments (get / add / like / unlike)     |
-| `direct` | inbox, pending, presence, send messages and reactions, group thread management |
-| `feed` | timeline, stories tray, suggested reels                                    |
-| `challenge` | checkpoint detection and passing (VettedDelta, ScrapingWarning)            |
-
-**Web client sections:**
-
-| Section | What it covers              |
-|---|-----------------------------|
-| `account` | profile info, edit profile  |
-| `friendships` | follow, unfollow            |
-| `comments` | add / like / unlike comment |
-| `likes` | like / unlike media         |
-| `challenge` | checkpoint detection and passing (VettedDelta, ScrapingWarning) |
-
-### 2. Commands
-
-Commands are the building blocks of the library. Each command is a typed wrapper around a single Instagram API request — in 99% of cases, one command = one API call.
-
-Section methods are just a convenient layer on top of commands. You can also call any command directly via `client.execute()` — useful when you need full control over request parameters or access to commands not yet exposed through sections:
-
-```python
-from insta_wizard.mobile.commands.user.usernameinfo import UserUsernameInfo
-
-user = await client.execute(UserUsernameInfo(username="someuser"))
-```
-
-### Browsing available commands
-
-```python
-from insta_wizard.mobile import print_help
-
-print_help()  # prints a table: command name, module, signature
-```
-
-For web:
-
-```python
-from insta_wizard.web import print_help
-
-print_help()
-```
-
----
-
-## Common features
-
-### Proxy
+## Proxy
 
 ```python
 from insta_wizard import MobileInstagramClient, ProxyInfo
@@ -197,7 +153,7 @@ async with MobileInstagramClient(proxy=proxy) as client:
     ...
 ```
 
-Supported formats for `from_string`:
+`ProxyInfo.from_string` accepts several formats:
 
 ```
 1.2.3.4:8080
@@ -205,19 +161,16 @@ http://1.2.3.4:8080
 user:pass@1.2.3.4:8080
 http://user:pass@1.2.3.4:8080
 1.2.3.4:8080:user:pass
-http://1.2.3.4:8080:user:pass
 ```
 
-Change proxy at runtime:
+Change or remove proxy at runtime:
 
 ```python
 await client.set_proxy(ProxyInfo.from_string("..."))
-await client.set_proxy(None)  # remove proxy
+await client.set_proxy(None)
 ```
 
-### Auto proxy rotation on network errors
-
-Implement `ProxyProvider` and pass it via `TransportSettings`:
+**Automatic rotation** — implement `ProxyProvider` and pass it via `TransportSettings`:
 
 ```python
 from insta_wizard import TransportSettings, ProxyInfo
@@ -237,213 +190,107 @@ settings = TransportSettings(
 async with MobileInstagramClient(transport_settings=settings) as client:
     ...
 ```
-
-When all retry attempts are exhausted, the client calls `proxy_provider.provide_new()` and retries with the new proxy.
-
-### Session state: dump & load
-
-Persist session between runs — no need to re-login every time:
-
-```python
-import json
-from insta_wizard import MobileInstagramClient
-
-# Save after login
-async with MobileInstagramClient() as client:
-    await client.account.login("username", "password")
-
-    state = client.dump_state()
-    with open("session.json", "w") as f:
-        json.dump(state, f)
-
-# Restore on next run
-async with MobileInstagramClient() as client:
-    with open("session.json") as f:
-        client.load_state(json.load(f))
-
-    me = await client.account.get_current_user()  # already authenticated
-```
-
-State is a plain Python dictionary — you can work with it directly:
-
-```python
-state = client.dump_state()  # returns dict
-client.load_state(state)     # accepts dict
-```
-
-> `dump_state` / `load_state` do not include proxy or transport settings — pass those in the constructor as usual.
-
-### TransportSettings
-
-```python
-from insta_wizard import TransportSettings
-
-settings = TransportSettings(
-    max_network_wait_time=30.0,               # request timeout in seconds
-    max_retries_on_network_errors=3,
-    delay_before_retries_on_network_errors=1.0,
-)
-
-async with MobileInstagramClient(transport_settings=settings) as client:
-    ...
-```
+When all retry attempts are exhausted, the client calls proxy_provider.provide_new() and retries with the new proxy.
 
 ---
 
-## Mobile client
+## Device / browser presets
 
-### Device presets
+**Mobile (Android):**
 
 ```python
 from insta_wizard import AndroidDeviceInfo, MobileInstagramClient
 from insta_wizard.mobile.models.android_device_info import AndroidPreset
 
-# from a preset
 device = AndroidDeviceInfo.from_preset(AndroidPreset.SAMSUNG_A16)
-
-# with overrides
-device = AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale="ru_RU", timezone="Europe/Moscow")
-
-# random preset
+device = AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale="en_US", timezone="America/New_York")
 device = AndroidDeviceInfo.random()
 
 async with MobileInstagramClient(device=device) as client:
     ...
 ```
 
-Available presets: `SAMSUNG_A16`, `SAMSUNG_S23`, `SAMSUNG_A54`, `PIXEL_8`, `REDMI_NOTE_13_PRO`.
+Available presets: `SAMSUNG_A16`, `SAMSUNG_S23`, `SAMSUNG_A54`, `PIXEL_8`, `REDMI_NOTE_13_PRO`
 
-### Local data
-
-`MobileClientLocalData` holds cookies, auth tokens, and device IDs generated during login:
-
-```python
-from insta_wizard import MobileInstagramClient, MobileClientLocalData
-
-local_data = MobileClientLocalData.create()  # fresh, empty
-client = MobileInstagramClient(local_data=local_data)
-
-# read it back later
-local_data = client.get_local_data()
-```
-
-
-## Web client
-
-Works with the Instagram web API by imitating browser behavior. Offers similar functionality to the mobile client but uses different API endpoints.
-
-### Device presets
+**Web (browser):**
 
 ```python
 from insta_wizard import BrowserDeviceInfo, WebInstagramClient
 from insta_wizard.web.models.device_info import BrowserPreset
 
 device = BrowserDeviceInfo.from_preset(BrowserPreset.CHROME_143_WIN11)
-device = BrowserDeviceInfo.from_preset(BrowserPreset.CHROME_143_MACOS, locale="ru_RU")
 device = BrowserDeviceInfo.random()
 
 async with WebInstagramClient(device=device) as client:
     ...
 ```
 
-Available presets: `CHROME_143_WIN11`, `CHROME_143_MACOS`.
+Available presets: `CHROME_143_WIN11`, `CHROME_143_MACOS`
 
-### Login
+---
+
+## Logging
+
+Clients log via Python's standard `logging` module by default. To enable output:
 
 ```python
-import asyncio
-from insta_wizard import WebInstagramClient
+import logging
 
-async def main():
-    async with WebInstagramClient() as client:
-        await client.account.login("...", "...")
-        cookies = client.get_cookies()
-
-asyncio.run(main())
+logging.basicConfig(level=logging.INFO)
 ```
 
-### Follow a user
+To use a **custom logger** or disable logging entirely:
 
 ```python
-async with WebInstagramClient() as client:
-    await client.account.login("...", "...")
-    await client.friendships.follow("1200123809")  # numeric user ID as string
+from insta_wizard import MobileInstagramClient, NoOpInstagramClientLogger
+
+async with MobileInstagramClient(logger=NoOpInstagramClientLogger()) as client:
+    ...
 ```
 
-### Cookies
+See [`examples/logging_setup.py`](examples/logging_setup.py) for a custom logger example.
+
+---
+
+## Commands
+
+Sections cover the most common use cases, but every section method is built on top of **commands** — typed wrappers around individual Instagram API calls that return the raw response as-is. You can execute any command directly via `client.execute()`, which is useful when you need access to fields not exposed by sections or to endpoints not yet covered by them:
 
 ```python
-# inject existing cookies (e.g. from a previous session)
-client.set_cookies({"sessionid": "...", "csrftoken": "...", "mid": "..."})
+from insta_wizard.mobile.commands.user.usernameinfo import UserUsernameInfo
 
-# read current cookies
-cookies = client.get_cookies()  # dict
+raw = await client.execute(UserUsernameInfo(username="someuser"))
+```
+
+To browse all available commands:
+
+```python
+from insta_wizard.mobile import print_help  # or insta_wizard.web
+
+print_help()  # prints a table: command name, module, signature
 ```
 
 ---
 
-## Exceptions
+## Examples
 
-Key exceptions to handle:
-
-**Base (`insta_wizard`):**
-
-| Exception | Description |
-|---|---|
-| `InstaWizardError` | Base class for all library errors |
-
-**Mobile (`insta_wizard.mobile.exceptions`):**
-
-| Exception | When |
-|---|---|
-| `ChallengeRequiredError` | Session checkpoint required (raised during normal API usage) |
-| `LoginChallengeRequiredError` | Challenge required during login (base class) |
-| `LoginTwoStepVerificationRequiredError` | Two-step verification code required during login |
-| `LoginUnknownChallengeRequiredError` | Unknown challenge encountered during login |
-| `LoginError` | Authorization failed |
-| `LoginBadPasswordError` | Wrong password |
-| `TooManyRequestsError` | Rate limited (HTTP 429) |
-| `FeedbackRequiredError` | Action blocked by Instagram |
-| `UnauthorizedError` | Session invalid or expired |
-| `NetworkError` | Network connectivity issue |
-| `NotFoundError` | Resource not found |
-
-**Web (`insta_wizard.web.exceptions`):**
-
-| Exception | When |
-|---|---|
-| `CheckpointRequiredError` | Session checkpoint required (raised during normal API usage) |
-| `LoginCheckpointRequiredError` | Checkpoint required during login |
-| `LoginError` | Authorization failed |
-| `LoginBadPasswordError` | Wrong password |
-| `TooManyRequestsError` | Rate limited (HTTP 429) |
-| `NetworkError` | Network connectivity issue |
-| `StateParametersMissingError` | State not initialized (call `initialize_state()` first) |
-
-**Transport (`insta_wizard.common.transport.exceptions`):**
-
-| Exception | When |
-|---|---|
-| `TransportTimeoutError` | Request timed out |
-| `TransportNetworkError` | Low-level network error |
+See the [`examples/`](examples) folder for ready-to-run scripts covering device presets (mobile and web), proxy setup and rotation, session persistence, and common client flows.
 
 ---
-
 
 ## Roadmap
 
-Planned features and improvements:
-
-- [ ] Login checkpoints passing
-- [ ] Account registration
-- [ ] More Instagram API methods
-- [ ] Synchronous client API
+- [ ] Login checkpoint passing
+- [ ] Broader API coverage
+- [ ] Synchronous client wrapper
 
 ---
 
 ## Disclaimer
 
-This project is a developer tool for building personal integrations and exploring the Instagram API. It is **not** designed or intended for automation, mass botting, spamming, or any activity that violates [Instagram's Terms of Service](https://help.instagram.com/581066165581870). We are not affiliated with Meta or Instagram. Use only with accounts and data you have the right to access. Comply with all applicable laws and platform rules.
+This library is a developer tool for building personal integrations and exploring the Instagram API. It is **not** intended for spam, automation at scale, or any activity that violates [Instagram's Terms of Service](https://help.instagram.com/581066165581870). We are not affiliated with Meta or Instagram. Use only with accounts and data you have authorization to access.
+
+---
 
 ## License
 

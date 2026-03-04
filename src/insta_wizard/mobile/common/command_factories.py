@@ -300,13 +300,34 @@ from insta_wizard.mobile.commands.media.comment_unlike import (
     MediaCommentUnlikeHandler,
 )
 from insta_wizard.mobile.commands.media.comments import MediaComments, MediaCommentsHandler
+from insta_wizard.mobile.commands.media.configure_sidecar import (
+    MediaConfigureSidecar,
+    MediaConfigureSidecarHandler,
+)
+from insta_wizard.mobile.commands.media.configure_timeline import (
+    MediaConfigure,
+    MediaConfigureHandler,
+)
+from insta_wizard.mobile.commands.media.configure_to_clips import (
+    MediaConfigureToClips,
+    MediaConfigureToClipsHandler,
+)
+from insta_wizard.mobile.commands.media.configure_to_story import (
+    MediaConfigureToStory,
+    MediaConfigureToStoryHandler,
+)
 from insta_wizard.mobile.commands.media.delete import MediaDeleteHandler
 from insta_wizard.mobile.commands.media.edit import MediaEdit, MediaEditHandler
+from insta_wizard.mobile.commands.media.info import MediaInfo, MediaInfoHandler
 from insta_wizard.mobile.commands.media.like import MediaLikeHandler
 from insta_wizard.mobile.commands.media.likers import MediaLikersHandler
 from insta_wizard.mobile.commands.media.save import MediaSaveHandler
 from insta_wizard.mobile.commands.media.unlike import MediaUnlike, MediaUnlikeHandler
 from insta_wizard.mobile.commands.media.unsave import MediaUnsave, MediaUnsaveHandler
+from insta_wizard.mobile.commands.media.upload_finish import (
+    MediaUploadFinish,
+    MediaUploadFinishHandler,
+)
 from insta_wizard.mobile.commands.multiple_accounts.get_account_family import (
     MultipleAcountsGetAccountFamily,
     MultipleAcountsGetAccountFamilyHandler,
@@ -331,6 +352,10 @@ from insta_wizard.mobile.commands.notifications.store_client_push_permissions im
 from insta_wizard.mobile.commands.rupload_igphoto import (
     RuploadIgphoto,
     RuploadIgphotoHandler,
+)
+from insta_wizard.mobile.commands.rupload_igvideo import (
+    RuploadIgvideo,
+    RuploadIgvideoHandler,
 )
 from insta_wizard.mobile.commands.user.account_details import (
     UserAccountDetails,
@@ -368,6 +393,34 @@ from insta_wizard.mobile.common.command import CommandHandler
 from insta_wizard.mobile.flows.bloks_login import (
     BloksLogin,
     BloksLoginHandler,
+)
+from insta_wizard.mobile.flows.publish_album import (
+    PublishAlbum,
+    PublishAlbumHandler,
+)
+from insta_wizard.mobile.flows.publish_photo import (
+    PublishPhoto,
+    PublishPhotoHandler,
+)
+from insta_wizard.mobile.flows.publish_reel import (
+    PublishReel,
+    PublishReelHandler,
+)
+from insta_wizard.mobile.flows.publish_story_photo import (
+    PublishStoryPhoto,
+    PublishStoryPhotoHandler,
+)
+from insta_wizard.mobile.flows.publish_story_video import (
+    PublishStoryVideo,
+    PublishStoryVideoHandler,
+)
+from insta_wizard.mobile.flows.publish_video import (
+    PublishVideo,
+    PublishVideoHandler,
+)
+from insta_wizard.mobile.flows.register_account_sms import (
+    RegisterAccountSMSFlow,
+    RegisterAccountSMSFlowHandler,
 )
 from insta_wizard.mobile.models.deps import ClientDeps
 
@@ -436,6 +489,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     # media
+    MediaInfo: lambda d: MediaInfoHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
     MediaLike: lambda d: MediaLikeHandler(
         requester=d.requester,
         state=d.state,
@@ -485,6 +542,26 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     MediaCommentUnlike: lambda d: MediaCommentUnlikeHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    MediaUploadFinish: lambda d: MediaUploadFinishHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    MediaConfigure: lambda d: MediaConfigureHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    MediaConfigureToStory: lambda d: MediaConfigureToStoryHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    MediaConfigureToClips: lambda d: MediaConfigureToClipsHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    MediaConfigureSidecar: lambda d: MediaConfigureSidecarHandler(
         requester=d.requester,
         state=d.state,
     ),
@@ -771,6 +848,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         requester=d.requester,
         state=d.state,
     ),
+    RuploadIgvideo: lambda d: RuploadIgvideoHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
     FetchRmd: lambda d: FetchRmdHandler(
         requester=d.requester,
         state=d.state,
@@ -780,6 +861,29 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
         requester=d.requester,
         bus=d.bus,
+    ),
+    PublishPhoto: lambda d: PublishPhotoHandler(
+        bus=d.bus,
+    ),
+    PublishVideo: lambda d: PublishVideoHandler(
+        bus=d.bus,
+    ),
+    PublishStoryPhoto: lambda d: PublishStoryPhotoHandler(
+        bus=d.bus,
+    ),
+    PublishAlbum: lambda d: PublishAlbumHandler(
+        bus=d.bus,
+    ),
+    PublishReel: lambda d: PublishReelHandler(
+        bus=d.bus,
+    ),
+    PublishStoryVideo: lambda d: PublishStoryVideoHandler(
+        bus=d.bus,
+    ),
+    RegisterAccountSMSFlow: lambda d: RegisterAccountSMSFlowHandler(
+        state=d.state,
+        bus=d.bus,
+        logger=d.logger,
     ),
     # ----------- NEW ----------
     FriendshipsShow: lambda d: FriendshipsShowHandler(

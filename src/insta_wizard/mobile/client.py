@@ -8,7 +8,6 @@ from insta_wizard.common.transport.base import (
     HttpTransport,
 )
 from insta_wizard.common.transport.models import (
-    HttpMethod,
     TransportSettings,
 )
 from insta_wizard.mobile.common.command import (
@@ -49,6 +48,7 @@ from insta_wizard.mobile.sections.graphql_query import (
     GraphqlQuery,
 )
 from insta_wizard.mobile.sections.graphql_www import GraphqlWWW
+from insta_wizard.mobile.sections.registration import RegistrationSection
 
 
 class MobileInstagramClient:
@@ -65,6 +65,7 @@ class MobileInstagramClient:
     live: LiveSection
     clips: ClipSection
     challenge: ChallengeSection
+    registration: RegistrationSection
 
     def __init__(
         self,
@@ -116,6 +117,7 @@ class MobileInstagramClient:
         self.challenge = ChallengeSection(
             state=self.state, bus=self._bus, graphql_www=self._graphql_www, logger=self._logger
         )
+        self.registration = RegistrationSection(state=self.state, bus=self._bus)
 
         deps = ClientDeps(
             http=self._transport,
@@ -149,23 +151,6 @@ class MobileInstagramClient:
 
     async def execute(self, command: Command[R]) -> R:
         return await self._bus.execute(command)
-
-    async def custom_request(
-        self,
-        method: HttpMethod,
-        url: str,
-        data: dict | bytes | None = None,
-        params: dict | None = None,
-        extra_headers: dict | None = None,
-    ) -> dict:
-        """Make a raw API request with default mobile headers applied."""
-        return await self._requester.call_url(
-            method=method,
-            url=url,
-            data=data,
-            params=params,
-            extra_headers=extra_headers,
-        )
 
     async def __aenter__(self) -> MobileInstagramClient:
         return self

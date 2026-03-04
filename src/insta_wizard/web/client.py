@@ -24,10 +24,10 @@ from insta_wizard.web.common.headers_factory import (
 from insta_wizard.web.common.requester import (
     WebRequester,
 )
+from insta_wizard.web.common.state_initializer import StateInitializer
 from insta_wizard.web.common.web_navigator import (
     WebNavigator,
 )
-from insta_wizard.web.common.state_initializer import StateInitializer
 from insta_wizard.web.flows import Login
 from insta_wizard.web.models.deps import ClientDeps
 from insta_wizard.web.models.device_info import (

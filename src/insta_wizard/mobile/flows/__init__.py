@@ -6,9 +6,23 @@ Public exports for insta_wizard.mobile.flows.
 """
 
 from .bloks_login import BloksLogin
+from .publish_album import PublishAlbum
+from .publish_photo import PublishPhoto
+from .publish_reel import PublishReel
+from .publish_story_photo import PublishStoryPhoto
+from .publish_story_video import PublishStoryVideo
+from .publish_video import PublishVideo
+from .register_account_sms import RegisterAccountSMSFlow
 from .set_profile_picture import SetProfilePicture
 
 __all__ = [
     "BloksLogin",
+    "PublishAlbum",
+    "PublishPhoto",
+    "PublishReel",
+    "PublishStoryPhoto",
+    "PublishStoryVideo",
+    "PublishVideo",
+    "RegisterAccountSMSFlow",
     "SetProfilePicture",
 ]

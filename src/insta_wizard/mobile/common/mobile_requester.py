@@ -80,14 +80,10 @@ class MobileRequester:
         self._logger = logger
         self._headers = MobileClientHeadersFactory(state=client_state)
 
-    # ── Публичные методы ──────────────────────────────────────────────────────
-
     def api_headers(self) -> dict:
-        """Базовые API-заголовки для команд, которые строят HttpRequest вручную."""
         return self._headers.api_headers()
 
     async def call(self, request: HttpRequest) -> dict:
-        """Сырой запрос — команда строит HttpRequest полностью сама."""
         return await self._execute_request(request)
 
     async def call_api(
@@ -100,7 +96,7 @@ class MobileRequester:
         friendly_name: str | None = None,
         client_endpoint: str | None = None,
     ) -> dict:
-        """→ i.instagram.com/api/v1/<uri>"""
+        """i.instagram.com/api/v1/"""
         return await self._execute_request(
             self._build_api_request(
                 method=method,
@@ -123,7 +119,7 @@ class MobileRequester:
         friendly_name: str | None = None,
         client_endpoint: str | None = None,
     ) -> dict:
-        """→ b.i.instagram.com/api/v1/<uri>"""
+        """b.i.instagram.com/api/v1/"""
         return await self._execute_request(
             self._build_api_request(
                 method=method,
@@ -147,7 +143,7 @@ class MobileRequester:
         friendly_name: str | None = None,
         client_endpoint: str | None = None,
     ) -> dict:
-        """→ www.instagram.com/api/v1/<uri>"""
+        """www.instagram.com/api/v1/"""
         return await self._execute_request(
             self._build_api_request(
                 method=method,
@@ -161,22 +157,6 @@ class MobileRequester:
             )
         )
 
-    async def call_url(
-        self,
-        method: HttpMethod,
-        url: str,
-        data: dict | bytes | None = None,
-        params: dict | None = None,
-        extra_headers: dict | None = None,
-    ) -> dict:
-        """→ произвольный URL + API-заголовки."""
-        headers = self._headers.api_headers()
-        if extra_headers:
-            headers.update(extra_headers)
-        return await self._execute_request(
-            HttpRequest(method=method, url=url, data=data, headers=headers, params=params)
-        )
-
     async def call_graphql_www(
         self,
         *,
@@ -186,7 +166,7 @@ class MobileRequester:
         variables: Mapping[str, Any] | None = None,
         extra_headers: Mapping[str, str] | None = None,
     ) -> dict:
-        """→ GraphQL WWW (www.instagram.com/graphql)."""
+        """i.instagram.com/graphql_www"""
         headers = self._headers.graphql_headers()
         headers.update(
             {
@@ -225,7 +205,7 @@ class MobileRequester:
         variables: Mapping[str, Any] | None = None,
         extra_headers: Mapping[str, str] | None = None,
     ) -> dict:
-        """→ GraphQL Query (graph.instagram.com/graphql)."""
+        """i.instagram.com/graphql/query"""
         headers = self._headers.graphql_headers()
         headers.update(
             {
@@ -246,10 +226,10 @@ class MobileRequester:
         )
 
         return await self._execute_request(
-            HttpRequest(method="POST", url=constants.GRAPHQL_QUERY_URL, headers=headers, data=payload)
+            HttpRequest(
+                method="POST", url=constants.GRAPHQL_QUERY_URL, headers=headers, data=payload
+            )
         )
-
-    # ── Внутренний pipeline ───────────────────────────────────────────────────
 
     async def _execute_request(self, request: HttpRequest) -> dict:
         response, elapsed_ms = await self._send(request)
@@ -263,7 +243,7 @@ class MobileRequester:
             elapsed_ms,
         )
 
-        if response.status != 200:
+        if not 200 <= response.status < 300:
             error = self.parse_error_from_response(request, response, data)
             raise error
 
@@ -395,8 +375,6 @@ class MobileRequester:
             return InstagramBackend572Error(response=response_info)
 
         return InstagramResponseError(response=response_info)
-
-    # ── Request builders ──────────────────────────────────────────────────────
 
     def _build_api_request(
         self,

@@ -7,6 +7,7 @@ from insta_wizard.common.entities.direct_thread import (
     SentDirectMessage,
 )
 from insta_wizard.common.entities.friendship import FriendshipStatus, FriendshipStatusShort
+from insta_wizard.common.entities.media import Media
 from insta_wizard.common.entities.user import User
 
 __all__ = [
@@ -15,8 +16,9 @@ __all__ = [
     "DirectMessage",
     "DirectThread",
     "Entity",
-    "SentDirectMessage",
     "FriendshipStatus",
     "FriendshipStatusShort",
+    "Media",
+    "SentDirectMessage",
     "User",
 ]

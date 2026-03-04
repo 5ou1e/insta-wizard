@@ -56,8 +56,7 @@ class ManualPhoneSmsCodeProvider(PhoneSmsCodeProvider):
         self.number = number
 
     async def provide_number(self, new: bool = False) -> str:
-
         return self.number or input("Enter phone number: ")
 
     async def provide_code(self) -> str:
-        return input("Enter the code from the SMS")
+        return input("Enter the code from the SMS: ")

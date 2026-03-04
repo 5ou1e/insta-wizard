@@ -36,7 +36,7 @@ class AccountCheckPhoneNumberHandler(
         data = {
             "phone_id": self.state.device.phone_id,
             "login_nonce_map": "{}",
-            "phone_number": str(command.phone_number),
+            "phone_number": command.phone_number,
             "guid": self.state.device.device_id,
             "device_id": self.state.device.android_id,
             "prefill_shown": "False",

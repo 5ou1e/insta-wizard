@@ -21,6 +21,7 @@ from insta_wizard.mobile.responses.account.account_username_suggestions import (
 @dataclass(slots=True)
 class AccountUsernameSuggestions(Command[AccountUsernameSuggestionsResponse]):
     username: str
+    waterfall_id: str
 
 
 class AccountUsernameSuggestionsHandler(
@@ -39,7 +40,7 @@ class AccountUsernameSuggestionsHandler(
             "name": command.username,
             "device_id": self.state.device.android_id,
             "email": "",
-            "waterfall_id": self.state.local_data.waterfall_id,
+            "waterfall_id": command.waterfall_id,
         }
         payload = build_signed_body(data)
 

@@ -21,7 +21,7 @@ from insta_wizard.mobile.responses.consent.get_signup_config import (
 class ConsentGetSignupConfig(Command[ConsentGetSignupConfigResponse]):
     """Get SignupConfig with required parameters before account registration"""
 
-    main_account_selected: str = "False"
+    main_account_selected: bool = False
 
 
 class ConsentGetSignupConfigHandler(
@@ -37,7 +37,7 @@ class ConsentGetSignupConfigHandler(
             uri=constants.CONSENT_GET_SIGNUP_CONFIG_URI,
             params={
                 "guid": self.state.device.device_id,
-                "main_account_selected": command.main_account_selected,
+                "main_account_selected": str(command.main_account_selected),
             },
         )
         return cast(ConsentGetSignupConfigResponse, resp)

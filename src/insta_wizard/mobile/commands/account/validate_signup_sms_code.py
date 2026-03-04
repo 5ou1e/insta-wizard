@@ -24,6 +24,7 @@ class AccountValidateSignupSmsCode(Command[AccountValidateSignupSmsCodeResponse]
 
     phone_number: str
     code: int | str
+    waterfall_id: str
 
 
 class AccountValidateSignupSmsCodeHandler(
@@ -42,7 +43,7 @@ class AccountValidateSignupSmsCodeHandler(
             "phone_number": str(command.phone_number),
             "guid": self.state.device.device_id,
             "device_id": self.state.device.android_id,
-            "waterfall_id": self.state.local_data.waterfall_id,
+            "waterfall_id": command.waterfall_id,
         }
         payload = build_signed_body(data)
 

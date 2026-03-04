@@ -82,13 +82,19 @@ from .media.comment_bulk_delete import MediaCommentBulkDelete
 from .media.comment_like import MediaCommentLike
 from .media.comment_unlike import MediaCommentUnlike
 from .media.comments import MediaComments
+from .media.configure_sidecar import MediaConfigureSidecar
+from .media.configure_timeline import MediaConfigure
+from .media.configure_to_clips import MediaConfigureToClips
+from .media.configure_to_story import MediaConfigureToStory
 from .media.delete import MediaDelete
 from .media.edit import MediaEdit
+from .media.info import MediaInfo
 from .media.like import MediaLike
 from .media.likers import MediaLikers
 from .media.save import MediaSave
 from .media.unlike import MediaUnlike
 from .media.unsave import MediaUnsave
+from .media.upload_finish import MediaUploadFinish
 from .multiple_accounts.get_account_family import MultipleAcountsGetAccountFamily
 from .news.inbox import NewsInbox
 from .news.inbox_seen import NewsInboxSeen
@@ -96,6 +102,7 @@ from .notifications.badge import NotificationsBadge
 from .notifications.get_notification_settings import NotificationsGetNotificationSettings
 from .notifications.store_client_push_permissions import NotificationsStoreClientPushPermissions
 from .rupload_igphoto import RuploadIgphoto
+from .rupload_igvideo import RuploadIgvideo
 from .user.account_details import UserAccountDetails
 from .user.check_username import UsersCheckUsername
 from .user.get_limited_interactions_reminder import UserGetLimitedInteractionsReminder
@@ -183,13 +190,19 @@ __all__ = [
     "MediaCommentLike",
     "MediaCommentUnlike",
     "MediaComments",
+    "MediaConfigureSidecar",
+    "MediaConfigure",
+    "MediaConfigureToClips",
+    "MediaConfigureToStory",
     "MediaDelete",
     "MediaEdit",
+    "MediaInfo",
     "MediaLike",
     "MediaLikers",
     "MediaSave",
     "MediaUnlike",
     "MediaUnsave",
+    "MediaUploadFinish",
     "MultipleAcountsGetAccountFamily",
     "NewsInbox",
     "NewsInboxSeen",
@@ -197,6 +210,7 @@ __all__ = [
     "NotificationsGetNotificationSettings",
     "NotificationsStoreClientPushPermissions",
     "RuploadIgphoto",
+    "RuploadIgvideo",
     "UserAccountDetails",
     "UsersCheckUsername",
     "UserGetLimitedInteractionsReminder",
