@@ -37,7 +37,7 @@ Two backend clients are included:
 - Media: like, unlike, save; comments — get, add, like, unlike
 - Media publishing: photos and videos to feed, Stories, carousels (albums), and Reels
 - Checkpoint / challenge detection and passing
-- Account registration via SMS
+- Account registration via SMS / Email
 
 ### Web client
 

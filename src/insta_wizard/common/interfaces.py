@@ -45,6 +45,16 @@ class EmailCodeProvider(Protocol):
         ...
 
 
+class EmailCodeSignupProvider(Protocol):
+    async def provide_email(self) -> str:
+        """Returns email address to register with"""
+        ...
+
+    async def provide_code(self, email: str, from_datetime: datetime) -> str:
+        """Returns verification code from email"""
+        ...
+
+
 class ResetPasswordLinkProvider(Protocol):
     async def provide_link(self, masked_email: str, from_datetime: datetime) -> str:
         """Must returns link from email for account password recovery"""
@@ -52,11 +62,16 @@ class ResetPasswordLinkProvider(Protocol):
 
 
 class ManualPhoneSmsCodeProvider(PhoneSmsCodeProvider):
-    def __init__(self, number: str | None = None):
-        self.number = number
-
     async def provide_number(self, new: bool = False) -> str:
-        return self.number or input("Enter phone number: ")
+        return input("Enter phone number: ")
 
     async def provide_code(self) -> str:
         return input("Enter the code from the SMS: ")
+
+
+class ManualEmailCodeSignupProvider(EmailCodeSignupProvider):
+    async def provide_email(self) -> str:
+        return input("Enter email address: ")
+
+    async def provide_code(self, email: str, from_datetime: datetime) -> str:
+        return input(f"Enter the code sent to {email}: ")

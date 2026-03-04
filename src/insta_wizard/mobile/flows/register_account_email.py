@@ -2,19 +2,16 @@ from dataclasses import dataclass
 from typing import TypeAlias
 
 from insta_wizard.common.generators import generate_waterfall_id
-from insta_wizard.common.interfaces import PhoneSmsCodeProvider
+from insta_wizard.common.interfaces import EmailCodeSignupProvider
 from insta_wizard.common.logger import InstagramClientLogger
-from insta_wizard.mobile.commands.account.create_validated import (
-    AccountCreateValidated,
+from insta_wizard.common.utils import current_datetime
+from insta_wizard.mobile.commands.account.check_confirmation_code import (
+    AccountCheckConfirmationCode,
 )
-from insta_wizard.mobile.commands.account.send_signup_sms_code import (
-    AccountSendSignupSmsCode,
-)
+from insta_wizard.mobile.commands.account.create import AccountCreate
+from insta_wizard.mobile.commands.account.send_verify_email import AccountSendVerifyEmail
 from insta_wizard.mobile.commands.account.username_suggestions import (
     AccountUsernameSuggestions,
-)
-from insta_wizard.mobile.commands.account.validate_signup_sms_code import (
-    AccountValidateSignupSmsCode,
 )
 from insta_wizard.mobile.commands.consent.get_signup_config import (
     ConsentGetSignupConfig,
@@ -33,8 +30,8 @@ CreatedUser: TypeAlias = dict
 
 
 @dataclass(slots=True)
-class RegisterAccountSMSFlow(Command[CreatedUser]):
-    """Register an account via SMS (phone number)"""
+class RegisterAccountEmailFlow(Command[CreatedUser]):
+    """Register an account using the code from the Email"""
 
     username: str
     password: str
@@ -43,10 +40,10 @@ class RegisterAccountSMSFlow(Command[CreatedUser]):
     month: int
     year: int
 
-    phone_code_provider: PhoneSmsCodeProvider
+    email_code_provider: EmailCodeSignupProvider
 
 
-class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, CreatedUser]):
+class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, CreatedUser]):
     def __init__(
         self,
         state: MobileClientState,
@@ -59,7 +56,7 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
 
     async def __call__(
         self,
-        command: RegisterAccountSMSFlow,
+        command: RegisterAccountEmailFlow,
     ) -> CreatedUser:
         username = command.username
         password = command.password
@@ -74,39 +71,47 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
         signup_config = await self.bus.execute(ConsentGetSignupConfig())
         tos_version = signup_config["tos_version"]
 
-        phone_number = await command.phone_code_provider.provide_number()
-
-        self.logger.info("Checking availability of the number...")
+        email = await command.email_code_provider.provide_email()
 
         # Skip this request to avoid TooManyRequestError
+
+        # self.logger.info("Checking availability of the email address...")
         # try:
-        #     number_check = await self.bus.execute(
-        #         AccountCheckPhoneNumber(phone_number=phone_number)
+        #     email_check = await self.bus.execute(
+        #         UsersCheckEmail(email=email, waterfall_id=waterfall_id)
         #     )
-        #     if number_check.get("status") != "ok":
+        #     if email_check.get("status") != "ok":
         #         raise RegistrationError(
-        #             msg=f"Probably phone number is not valid, response={number_check}"
+        #             msg=f"Probably email is not valid, response={email_check}"
         #         )
         # except BadRequestError as e:
         #     if e.response.json.get("error_type") == "missing_parameters":
         #         raise RegistrationError(
-        #             msg=f"Phone number is not valid, response={e.response.json}"
+        #             msg=f"Email is not valid, response={e.response.json}"
         #         )
         #     raise e
 
+        from_datetime = current_datetime()
+
         self.logger.info("Requesting SMS with code...")
         code_send = await self.bus.execute(
-            AccountSendSignupSmsCode(phone_number=phone_number, waterfall_id=waterfall_id)
+            AccountSendVerifyEmail(email=email, waterfall_id=waterfall_id)
         )
         if code_send.get("status") != "ok":
             raise RegistrationError(msg=f"Instagram didn't send the code, response={code_send}")
+        if not code_send.get("email_sent"):
+            raise RegistrationError(msg=f"Instagram didn't send the code, response={code_send}")
 
-        code = await command.phone_code_provider.provide_code()
+        code = await command.email_code_provider.provide_code(
+            email=email, from_datetime=from_datetime
+        )
 
         self.logger.info("Sending the code for verification...")
         code_validation = await self.bus.execute(
-            AccountValidateSignupSmsCode(
-                phone_number=phone_number, code=code, waterfall_id=waterfall_id
+            AccountCheckConfirmationCode(
+                email=email,
+                code=code,
+                waterfall_id=waterfall_id,
             )
         )
         if code_validation.get("status") != "ok":
@@ -115,6 +120,11 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
             raise RegistrationError(
                 msg=f"Unknown error while code submitting, response={code_validation}"
             )
+        signup_code = code_validation.get("signup_code")
+        if signup_code is None:
+            raise RegistrationError(
+                msg=f"Can't parse signup_code from response, response={code_validation}"
+            )
 
         await self.bus.execute(
             AccountUsernameSuggestions(username=username, waterfall_id=waterfall_id)
@@ -122,12 +132,12 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
 
         self.logger.info("Sending a registration request...")
         creation_result = await self.bus.execute(
-            AccountCreateValidated(
+            AccountCreate(
                 username=username,
                 password=password,
                 first_name=first_name,
-                code=code,
-                phone_number=phone_number,
+                signup_code=signup_code,
+                email=email,
                 day=day,
                 month=month,
                 year=year,

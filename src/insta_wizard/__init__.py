@@ -5,7 +5,7 @@ from insta_wizard.common.interfaces import (
     PhoneSmsCodeProvider,
     ProxyProvider,
     ResetPasswordLinkProvider,
-    SelfiePhotoProvider,
+    SelfiePhotoProvider, EmailCodeSignupProvider,
 )
 from insta_wizard.common.logger import (
     InstagramClientLogger,
@@ -48,11 +48,12 @@ __all__ = [
     "ProxyInfo",
     # Providers
     "ProxyProvider",
-    "CaptchaSolver",
-    "SelfiePhotoProvider",
     "PhoneSmsCodeProvider",
     "ResetPasswordLinkProvider",
     "EmailCodeProvider",
+    "EmailCodeSignupProvider",
+    "CaptchaSolver",
+    "SelfiePhotoProvider",
     # models
     "AlbumPhotoItem",
     "AlbumVideoItem",

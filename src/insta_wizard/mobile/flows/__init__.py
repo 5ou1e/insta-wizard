@@ -12,6 +12,7 @@ from .publish_reel import PublishReel
 from .publish_story_photo import PublishStoryPhoto
 from .publish_story_video import PublishStoryVideo
 from .publish_video import PublishVideo
+from .register_account_email import RegisterAccountEmailFlow
 from .register_account_sms import RegisterAccountSMSFlow
 from .set_profile_picture import SetProfilePicture
 
@@ -23,6 +24,7 @@ __all__ = [
     "PublishStoryPhoto",
     "PublishStoryVideo",
     "PublishVideo",
+    "RegisterAccountEmailFlow",
     "RegisterAccountSMSFlow",
     "SetProfilePicture",
 ]

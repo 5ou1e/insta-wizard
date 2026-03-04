@@ -34,13 +34,13 @@ class UserWebProfileInfoHandler(CommandHandler[UserWebProfileInfo, UserWebProfil
 
         data = await self.requester.call_api(
             method="GET",
-            uri=constants.USERS_WEB_PROFILE_INFO,
+            uri=constants.USERS_WEB_PROFILE_INFO_URI,
             params={"username": command.username},
         )
 
         # data = await self.requester.call_web_api(
         #     method="GET",
-        #     uri=constants.USERS_WEB_PROFILE_INFO,
+        #     uri=constants.USERS_WEB_PROFILE_INFO_URI,
         #     params={"username": command.username},
         # )
 

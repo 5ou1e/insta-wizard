@@ -69,6 +69,7 @@ BLOKS_REG_CONFIRMATION_IG_BOTTOMSHEET_ASYNC = (
 
 
 ACCOUNTS_CURRENT_USER_URI = "accounts/current_user/"
+ACCOUNTS_SECURITY_INFO_URI = "accounts/account_security_info/"
 ACCOUNTS_EDIT_PROFILE_URI = "accounts/edit_profile/"
 ACCOUNTS_UPDATE_PROFILE_NAME_URI = "accounts/update_profile_name/"
 ACCOUNTS_SET_BIOGRAPHY_URI = "accounts/set_biography/"
@@ -76,12 +77,18 @@ ACCOUNTS_CHANGE_PROFILE_PICTURE_URI = "accounts/change_profile_picture/"
 ACCOUNTS_GET_PRESENCE_DISABLED_URI = "accounts/get_presence_disabled/"
 ACCOUNTS_LOGIN_URI = "accounts/login/"
 ACCOUNTS_LOGOUT_URI = "accounts/logout/"
+
+ACCOUNTS_SEND_VERIFY_EMAIL_URI = "accounts/send_verify_email/"
+ACCOUNTS_CHECK_CONFIRMATION_CODE_URI = "accounts/check_confirmation_code/"
+ACCOUNTS_CREATE_URI = "accounts/create/"
+
 ACCOUNTS_CHECK_PHONE_NUMBER_URI = "accounts/check_phone_number/"
 ACCOUNTS_SEND_SIGNUP_SMS_CODE_URI = "accounts/send_signup_sms_code/"
 ACCOUNTS_VALIDATE_SIGNUP_SMS_CODE_URI = "accounts/validate_signup_sms_code/"
-ACCOUNTS_USERNAME_SUGGESTIONS_URI = "accounts/username_suggestions/"
 ACCOUNTS_CREATE_VALIDATED_URI = "accounts/create_validated/"
-ACCOUNTS_SECURITY_INFO_URI = "accounts/account_security_info/"
+
+ACCOUNTS_USERNAME_SUGGESTIONS_URI = "accounts/username_suggestions/"
+
 ACCOUNTS_SEND_CONFIRM_EMAIL_URI = "accounts/send_confirm_email/"
 ACCOUNTS_SEND_CONFIRM_PHONE_NUMBER_URI = "accounts/initiate_phone_number_confirmation/"
 
@@ -178,8 +185,9 @@ USERS_USER_INFO_URI = "users/{user_id}/info/"
 USERS_USERNAME_INFO_URI = "users/{username}/usernameinfo/"
 USERS_SEARCH_URI = "users/search/"
 USERS_ACCOUNT_DETAILS_URI = "users/{user_id}/account_details/"
-USERS_WEB_PROFILE_INFO = "users/web_profile_info/"
-USERS_CHECK_USERNAME = "users/check_username/"
+USERS_WEB_PROFILE_INFO_URI = "users/web_profile_info/"
+USERS_CHECK_USERNAME_URI = "users/check_username/"
+USERS_CHECK_EMAIL_URI = "users/check_email/"
 
 USERS_GET_LIMITED_INTERACTIONS_REMINDER_URI = "users/get_limited_interactions_reminder/"
 

@@ -8,10 +8,15 @@ from insta_wizard.mobile.commands.account.change_profile_picture import (
     AccountChangeProfilePicture,
     AccountChangeProfilePictureHandler,
 )
+from insta_wizard.mobile.commands.account.check_confirmation_code import (
+    AccountCheckConfirmationCode,
+    AccountCheckConfirmationCodeHandler,
+)
 from insta_wizard.mobile.commands.account.check_phone_number import (
     AccountCheckPhoneNumber,
     AccountCheckPhoneNumberHandler,
 )
+from insta_wizard.mobile.commands.account.create import AccountCreate, AccountCreateHandler
 from insta_wizard.mobile.commands.account.create_validated import (
     AccountCreateValidated,
     AccountCreateValidatedHandler,
@@ -48,6 +53,10 @@ from insta_wizard.mobile.commands.account.send_confirm_phone_number import (
 from insta_wizard.mobile.commands.account.send_signup_sms_code import (
     AccountSendSignupSmsCode,
     AccountSendSignupSmsCodeHandler,
+)
+from insta_wizard.mobile.commands.account.send_verify_email import (
+    AccountSendVerifyEmail,
+    AccountSendVerifyEmailHandler,
 )
 from insta_wizard.mobile.commands.account.set_biography import (
     AccountSetBiography,
@@ -361,6 +370,7 @@ from insta_wizard.mobile.commands.user.account_details import (
     UserAccountDetails,
     UserAccountDetailsHandler,
 )
+from insta_wizard.mobile.commands.user.check_email import UsersCheckEmail, UsersCheckEmailHandler
 from insta_wizard.mobile.commands.user.check_username import (
     UsersCheckUsername,
     UsersCheckUsernameHandler,
@@ -418,6 +428,10 @@ from insta_wizard.mobile.flows.publish_video import (
     PublishVideo,
     PublishVideoHandler,
 )
+from insta_wizard.mobile.flows.register_account_email import (
+    RegisterAccountEmailFlow,
+    RegisterAccountEmailFlowHandler,
+)
 from insta_wizard.mobile.flows.register_account_sms import (
     RegisterAccountSMSFlow,
     RegisterAccountSMSFlowHandler,
@@ -439,6 +453,10 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         state=d.state,
     ),
     UsersCheckUsername: lambda d: UsersCheckUsernameHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    UsersCheckEmail: lambda d: UsersCheckEmailHandler(
         requester=d.requester,
         state=d.state,
     ),
@@ -781,11 +799,23 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         requester=d.requester,
         state=d.state,
     ),
+    AccountSendVerifyEmail: lambda d: AccountSendVerifyEmailHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    AccountCheckConfirmationCode: lambda d: AccountCheckConfirmationCodeHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
     AccountValidateSignupSmsCode: lambda d: AccountValidateSignupSmsCodeHandler(
         requester=d.requester,
         state=d.state,
     ),
     AccountUsernameSuggestions: lambda d: AccountUsernameSuggestionsHandler(
+        requester=d.requester,
+        state=d.state,
+    ),
+    AccountCreate: lambda d: AccountCreateHandler(
         requester=d.requester,
         state=d.state,
     ),
@@ -881,6 +911,11 @@ COMMAND_FACTORIES: dict[type, Callable[[ClientDeps], CommandHandler]] = {
         bus=d.bus,
     ),
     RegisterAccountSMSFlow: lambda d: RegisterAccountSMSFlowHandler(
+        state=d.state,
+        bus=d.bus,
+        logger=d.logger,
+    ),
+    RegisterAccountEmailFlow: lambda d: RegisterAccountEmailFlowHandler(
         state=d.state,
         bus=d.bus,
         logger=d.logger,

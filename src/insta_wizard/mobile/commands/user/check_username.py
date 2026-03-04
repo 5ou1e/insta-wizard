@@ -31,7 +31,7 @@ class UsersCheckUsernameHandler(CommandHandler[UsersCheckUsername, UsersCheckUse
         resp = await self.requester.call_api(
             method="POST",
             data=data,
-            uri=constants.USERS_CHECK_USERNAME,
+            uri=constants.USERS_CHECK_USERNAME_URI,
             client_endpoint="com.bloks.www.caa.login.login_homepage",
         )
         return resp

@@ -315,7 +315,7 @@ class MobileRequester:
                 text=None,
             )
 
-            message = body.get("message", "").lower()
+            message = str(body.get("message", "")).lower()
 
             if status == 400:
                 if "challenge_required" in message:
@@ -351,7 +351,7 @@ class MobileRequester:
                 return NotFoundError(response=response_info)
 
             if status == 429:
-                return TooManyRequestsError(response=response_info)
+                return TooManyRequestsError(msg=message, response=response_info)
 
             return InstagramResponseError(response=response_info)
 

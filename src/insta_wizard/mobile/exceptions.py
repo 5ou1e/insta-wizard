@@ -91,8 +91,10 @@ class BadRequestError(InstagramResponseError):
 
 @dataclass(kw_only=True, slots=True)
 class TooManyRequestsError(InstagramResponseError):
+    msg: str | None = None
+
     def __str__(self) -> str:
-        return "Too many requests (status_code=429)"
+        return "Message: " + str(self.msg or "")
 
 
 @dataclass(kw_only=True, slots=True)
