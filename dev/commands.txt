@@ -1,4 +1,6 @@
 
+python dev/tools.py test
+python -m build
 pip install -e ".[dev]"
 python -c "import insta_wizard; print('OK')"
 
