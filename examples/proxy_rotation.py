@@ -37,8 +37,6 @@ class MyProxyProvider(ProxyProvider):
         "194.67.201.14:8080:user1:pass1",
         "91.108.4.220:3128:user2:pass2",
         "185.199.229.156:7492:user3:pass3",
-        "45.142.212.10:31281:user4:pass4",
-        "103.149.162.195:8080:user5:pass5",
     ]
     _index = 0
 

@@ -25,7 +25,7 @@ async def main() -> None:
 
         # --- Look up by username ---------------------------------------------
         user = await client.users.get_info_by_username("some_username")
-        user_id = str(user.pk)
+        user_id = user.pk
         print(f"\n=== @some_username (id={user_id}) ===")
         print(json.dumps(user.model_dump(), indent=2))
 

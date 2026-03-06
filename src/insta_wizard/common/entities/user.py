@@ -8,7 +8,7 @@ class User(Entity):
     Core user identity, present in every API response that includes a user.
     """
 
-    pk: int
+    pk: str
     id: str
     strong_id__: str
     username: str

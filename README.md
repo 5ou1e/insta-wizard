@@ -81,7 +81,7 @@ async def main() -> None:
         print("Logged in as:", me.username)
 
         user = await client.users.get_info_by_username("instagram")
-        await client.friendships.follow(str(user.pk))
+        await client.friendships.follow(user.pk)
 
 asyncio.run(main())
 ```
@@ -101,6 +101,94 @@ async def main() -> None:
 
 asyncio.run(main())
 ```
+
+---
+
+## Proxy
+
+The client supports routing traffic through a proxy. Currently only HTTP/HTTPS proxies are supported, with or without authentication.
+
+```python
+from insta_wizard import MobileInstagramClient, ProxyInfo
+
+# Supported formats: "1.2.3.4:8080", "user:pass@1.2.3.4:8080", "1.2.3.4:8080:user:pass"
+proxy = ProxyInfo.from_string("user:pass@1.2.3.4:8080")
+
+async with MobileInstagramClient(proxy=proxy) as client:
+    ...
+    await client.set_proxy(ProxyInfo.from_string("..."))  # change at runtime
+    await client.set_proxy(None)                          # or remove it
+```
+
+On network errors, the client can automatically retry the request and rotate to a new proxy if needed — configure this via `TransportSettings`:
+
+**Automatic rotation** — implement `ProxyProvider` and pass it via `TransportSettings`:
+
+```python
+import random
+
+from insta_wizard import TransportSettings, ProxyInfo
+from insta_wizard.common.interfaces import ProxyProvider
+
+class MyProxyPool(ProxyProvider):
+    _proxies = [
+        "194.67.201.14:8080:user1:pass1",
+        "91.108.4.220:3128:user2:pass2",
+        "185.199.229.156:7492:user3:pass3",
+    ]
+
+    async def provide_new(self) -> ProxyInfo | None:
+        return ProxyInfo.from_string(random.choice(self._proxies))
+
+settings = TransportSettings(
+    network_error_retry_limit=3,   # retry each proxy 3 times before switching
+    network_error_retry_delay=1.0, # wait 1 s between retries
+    change_proxies=True,           # switch proxy after all retries are exhausted
+    proxy_change_limit=5,          # switch at most 5 times, then raise NetworkError
+    proxy_provider=MyProxyPool(),
+)
+
+async with MobileInstagramClient(transport_settings=settings) as client:
+    ...
+```
+When all retry attempts are exhausted, the client calls proxy_provider.provide_new() and retries with the new proxy.
+
+---
+
+## Device / browser presets
+
+You can configure device settings for the client (user-agent, fingerprint, etc.). If not set explicitly, a default preset will be selected automatically.
+
+**Mobile (Android):**
+
+```python
+from insta_wizard import AndroidDeviceInfo, MobileInstagramClient
+from insta_wizard.mobile.models.android_device_info import AndroidPreset
+
+device = AndroidDeviceInfo.from_preset(AndroidPreset.SAMSUNG_A16)
+device = AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale="en_US", timezone="America/New_York")
+device = AndroidDeviceInfo.random()  # picks a random preset from real Android devices
+
+async with MobileInstagramClient(device=device) as client:
+    ...
+```
+
+Available presets: `SAMSUNG_A16`, `SAMSUNG_S23`, `SAMSUNG_A54`, `PIXEL_8`, `REDMI_NOTE_13_PRO`
+
+**Web (browser):**
+
+```python
+from insta_wizard import BrowserDeviceInfo, WebInstagramClient
+from insta_wizard.web.models.device_info import BrowserPreset
+
+device = BrowserDeviceInfo.from_preset(BrowserPreset.CHROME_143_WIN11)
+device = BrowserDeviceInfo.random()  # picks a random preset from real browser configurations
+
+async with WebInstagramClient(device=device) as client:
+    ...
+```
+
+Available presets: `CHROME_143_WIN11`, `CHROME_143_MACOS`
 
 ---
 
@@ -142,103 +230,6 @@ State is a plain Python dictionary. Proxy and transport settings are not include
 
 ---
 
-## Proxy
-
-```python
-from insta_wizard import MobileInstagramClient, ProxyInfo
-
-proxy = ProxyInfo.from_string("user:pass@1.2.3.4:8080")
-
-async with MobileInstagramClient(proxy=proxy) as client:
-    ...
-```
-
-`ProxyInfo.from_string` accepts several formats:
-
-```
-1.2.3.4:8080
-http://1.2.3.4:8080
-user:pass@1.2.3.4:8080
-http://user:pass@1.2.3.4:8080
-1.2.3.4:8080:user:pass
-```
-
-Change or remove proxy at runtime:
-
-```python
-await client.set_proxy(ProxyInfo.from_string("..."))
-await client.set_proxy(None)
-```
-
-**Automatic rotation** — implement `ProxyProvider` and pass it via `TransportSettings`:
-
-```python
-import random
-
-from insta_wizard import TransportSettings, ProxyInfo
-from insta_wizard.common.interfaces import ProxyProvider
-
-class MyProxyPool(ProxyProvider):
-    _proxies = [
-        "194.67.201.14:8080:user1:pass1",
-        "91.108.4.220:3128:user2:pass2",
-        "185.199.229.156:7492:user3:pass3",
-        "45.142.212.10:31281:user4:pass4",
-        "103.149.162.195:8080:user5:pass5",
-    ]
-
-    async def provide_new(self) -> ProxyInfo | None:
-        return ProxyInfo.from_string(random.choice(self._proxies))
-
-settings = TransportSettings(
-    network_error_retry_limit=3,
-    network_error_retry_delay=1.0,
-    change_proxies=True,
-    proxy_provider=MyProxyPool(),
-)
-
-async with MobileInstagramClient(transport_settings=settings) as client:
-    ...
-```
-When all retry attempts are exhausted, the client calls proxy_provider.provide_new() and retries with the new proxy.
-
----
-
-## Device / browser presets
-
-**Mobile (Android):**
-
-```python
-from insta_wizard import AndroidDeviceInfo, MobileInstagramClient
-from insta_wizard.mobile.models.android_device_info import AndroidPreset
-
-device = AndroidDeviceInfo.from_preset(AndroidPreset.SAMSUNG_A16)
-device = AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale="en_US", timezone="America/New_York")
-device = AndroidDeviceInfo.random()
-
-async with MobileInstagramClient(device=device) as client:
-    ...
-```
-
-Available presets: `SAMSUNG_A16`, `SAMSUNG_S23`, `SAMSUNG_A54`, `PIXEL_8`, `REDMI_NOTE_13_PRO`
-
-**Web (browser):**
-
-```python
-from insta_wizard import BrowserDeviceInfo, WebInstagramClient
-from insta_wizard.web.models.device_info import BrowserPreset
-
-device = BrowserDeviceInfo.from_preset(BrowserPreset.CHROME_143_WIN11)
-device = BrowserDeviceInfo.random()
-
-async with WebInstagramClient(device=device) as client:
-    ...
-```
-
-Available presets: `CHROME_143_WIN11`, `CHROME_143_MACOS`
-
----
-
 ## Logging
 
 Clients log via Python's standard `logging` module by default. To enable output:
@@ -264,7 +255,7 @@ See [`examples/logging_setup.py`](examples/logging_setup.py) for a custom logger
 
 ## Commands
 
-Sections cover the most common use cases, but every section method is built on top of **commands** — typed wrappers around individual Instagram API calls that return the raw response as-is. You can execute any command directly via `client.execute()`, which is useful when you need access to fields not exposed by sections or to endpoints not yet covered by them:
+Commands are typed wrappers around individual Instagram API calls that return the raw response as-is. In some cases it may be useful to call them directly via `client.execute()`:
 
 ```python
 from insta_wizard.mobile.commands.user.usernameinfo import UserUsernameInfo
