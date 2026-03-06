@@ -47,24 +47,25 @@ class TransportSettings:
     engine: Literal["aiohttp"] = "aiohttp"
     http_version: Literal["1", "2"] = "1"
 
-    max_network_wait_time: float = 30.0
-    max_retries_on_network_errors: int = 0
-    delay_before_retries_on_network_errors: float = 0.0
-    change_proxy_after_all_failed_attempts: bool = False
-    max_proxy_changes: int | None = None
+    network_timeout: float = 30.0
+    network_error_retry_limit: int = 0
+    network_error_retry_delay: float = 0.0
+    change_proxies: bool = False
+    proxy_change_limit: int | None = None
     proxy_provider: ProxyProvider | None = None
 
     def __post_init__(self) -> None:
-        if self.max_network_wait_time < 0:
-            raise ValueError("max_network_wait_time must be >= 0")
+        if self.network_timeout < 0:
+            raise ValueError("network_timeout must be >= 0")
 
-        if self.max_retries_on_network_errors < 0:
-            raise ValueError("max_retries_on_network_errors must be >= 0")
+        if self.network_error_retry_limit < 0:
+            raise ValueError("network_error_retry_limit must be >= 0")
 
-        if self.delay_before_retries_on_network_errors < 0:
-            raise ValueError("delay_before_retries_on_network_errors must be >= 0")
+        if self.network_error_retry_delay < 0:
+            raise ValueError("network_error_retry_delay must be >= 0")
 
-        if self.change_proxy_after_all_failed_attempts and self.proxy_provider is None:
-            raise ValueError("change_proxy_after_all_failed_attempts=True requires proxy_provider")
+        if self.change_proxies and self.proxy_provider is None:
+            raise ValueError("change_proxies=True requires proxy_provider")
+
         if self.http_version not in ["1", "2"]:
             raise ValueError("Unknown http_version provided")

@@ -4,6 +4,9 @@ from typing import Protocol
 from insta_wizard.common.models.proxy import ProxyInfo
 
 
+class Number(Protocol):
+    number: str
+
 class ProxyProvider(Protocol):
     async def provide_new(self) -> ProxyInfo | None:
         """Must returns ProxyInfo | None"""
@@ -11,7 +14,7 @@ class ProxyProvider(Protocol):
 
 
 class PhoneSmsCodeProvider(Protocol):
-    async def provide_number(self, new: bool = False) -> str:
+    async def provide_number(self, new: bool = False) -> str | Number:
         """Must returns phone number string starts with +"""
         ...
 

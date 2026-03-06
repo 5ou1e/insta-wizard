@@ -173,17 +173,27 @@ await client.set_proxy(None)
 **Автоматическая ротация** — реализуйте `ProxyProvider` и передайте его через `TransportSettings`:
 
 ```python
+import random
+
 from insta_wizard import TransportSettings, ProxyInfo
 from insta_wizard.common.interfaces import ProxyProvider
 
 class MyProxyPool(ProxyProvider):
+    _proxies = [
+        "194.67.201.14:8080:user1:pass1",
+        "91.108.4.220:3128:user2:pass2",
+        "185.199.229.156:7492:user3:pass3",
+        "45.142.212.10:31281:user4:pass4",
+        "103.149.162.195:8080:user5:pass5",
+    ]
+
     async def provide_new(self) -> ProxyInfo | None:
-        return ProxyInfo.from_string(fetch_next_from_pool())
+        return ProxyInfo.from_string(random.choice(self._proxies))
 
 settings = TransportSettings(
-    max_retries_on_network_errors=3,
-    delay_before_retries_on_network_errors=1.0,
-    change_proxy_after_all_failed_attempts=True,
+    network_error_retry_limit=3,
+    network_error_retry_delay=1.0,
+    change_proxies=True,
     proxy_provider=MyProxyPool(),
 )
 

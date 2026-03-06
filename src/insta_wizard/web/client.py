@@ -43,6 +43,7 @@ from insta_wizard.web.sections import (
     FriendshipsSection,
     LikesSection,
     NavigationSection,
+    UserSection,
 )
 
 
@@ -55,6 +56,7 @@ class WebInstagramClient:
     friendships: FriendshipsSection
     likes: LikesSection
     navigation: NavigationSection
+    user: UserSection
 
     def __init__(
         self,
@@ -120,6 +122,7 @@ class WebInstagramClient:
         self.friendships = FriendshipsSection(bus=self._bus, logger=self._logger)
         self.likes = LikesSection(bus=self._bus, logger=self._logger)
         self.navigation = NavigationSection(bus=self._bus, logger=self._logger)
+        self.user = UserSection(requester=self._api_requester, logger=self._logger)
 
         self.state.local_data.set_cookies(
             {
@@ -141,7 +144,7 @@ class WebInstagramClient:
             settings=settings,
             logger=self._logger,
             proxy_url=proxy.url if proxy else None,
-            timeout=settings.max_network_wait_time,
+            timeout=settings.network_timeout,
             cookie_jar=self.state.local_data.cookie_jar,
         )
 

@@ -49,7 +49,7 @@ class HttpTransport:
     ) -> TransportResponse:
         s = self._settings
 
-        if s.max_retries_on_network_errors <= 0 and not s.change_proxy_after_all_failed_attempts:
+        if s.network_error_retry_limit <= 0 and not s.change_proxies:
             return await send_once(request, follow_redirects=follow_redirects)
 
         async with self._send_lock:
@@ -57,7 +57,7 @@ class HttpTransport:
             last_exc: TransportError | None = None
 
             while True:
-                max_attempts = 1 + max(0, s.max_retries_on_network_errors)
+                max_attempts = 1 + max(0, s.network_error_retry_limit)
 
                 for attempt_idx in range(max_attempts):
                     try:
@@ -69,18 +69,18 @@ class HttpTransport:
 
                         is_last_attempt = attempt_idx == max_attempts - 1
                         if not is_last_attempt:
-                            if s.delay_before_retries_on_network_errors > 0:
-                                await asyncio.sleep(s.delay_before_retries_on_network_errors)
+                            if s.network_error_retry_delay > 0:
+                                await asyncio.sleep(s.network_error_retry_delay)
                             continue
 
                         break
 
                 assert last_exc is not None
 
-                if not s.change_proxy_after_all_failed_attempts:
+                if not s.change_proxies:
                     raise last_exc
 
-                if s.max_proxy_changes is not None and proxy_changes_done >= s.max_proxy_changes:
+                if s.proxy_change_limit is not None and proxy_changes_done >= s.proxy_change_limit:
                     raise last_exc
 
                 provider = s.proxy_provider
@@ -90,5 +90,5 @@ class HttpTransport:
 
                 proxy_changes_done += 1
 
-                if s.delay_before_retries_on_network_errors > 0:
-                    await asyncio.sleep(s.delay_before_retries_on_network_errors)
+                if s.network_error_retry_delay > 0:
+                    await asyncio.sleep(s.network_error_retry_delay)

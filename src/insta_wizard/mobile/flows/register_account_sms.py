@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import TypeAlias
 
 from insta_wizard.common.generators import generate_waterfall_id
-from insta_wizard.common.interfaces import PhoneSmsCodeProvider
+from insta_wizard.common.interfaces import PhoneSmsCodeProvider, Number
 from insta_wizard.common.logger import InstagramClientLogger
 from insta_wizard.mobile.commands.account.create_validated import (
     AccountCreateValidated,
@@ -29,11 +29,14 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
-CreatedUser: TypeAlias = dict
-
 
 @dataclass(slots=True)
-class RegisterAccountSMSFlow(Command[CreatedUser]):
+class RegisterAccountSMSFlowResult:
+    created_user: dict
+    number: str | Number
+
+@dataclass(slots=True)
+class RegisterAccountSMSFlow(Command[RegisterAccountSMSFlowResult]):
     """Register an account via SMS (phone number)"""
 
     username: str
@@ -46,7 +49,7 @@ class RegisterAccountSMSFlow(Command[CreatedUser]):
     phone_code_provider: PhoneSmsCodeProvider
 
 
-class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, CreatedUser]):
+class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, RegisterAccountSMSFlowResult]):
     def __init__(
         self,
         state: MobileClientState,
@@ -60,7 +63,7 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
     async def __call__(
         self,
         command: RegisterAccountSMSFlow,
-    ) -> CreatedUser:
+    ) -> RegisterAccountSMSFlowResult:
         username = command.username
         password = command.password
         first_name = command.first_name
@@ -74,7 +77,11 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
         signup_config = await self.bus.execute(ConsentGetSignupConfig())
         tos_version = signup_config["tos_version"]
 
-        phone_number = await command.phone_code_provider.provide_number()
+        source_number = await command.phone_code_provider.provide_number()
+        if isinstance(source_number, str):
+            phone_number = source_number
+        else:
+            phone_number = source_number.number
 
         self.logger.info("Checking availability of the number...")
 
@@ -135,10 +142,13 @@ class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, Creat
                 waterfall_id=waterfall_id,
             )
         )
-        created_user = creation_result.get("created_user")
+        created_user = creation_result.get("created_user", {})
         if created_user:
             self.logger.info(f"Registration success! created_user={created_user}")
-            return created_user
+            return RegisterAccountSMSFlowResult(
+                created_user=created_user,
+                number=source_number,
+            )
 
         raise RegistrationError(
             msg=f"Unknown response for creation request, response={creation_result}"

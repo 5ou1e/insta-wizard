@@ -5,6 +5,7 @@ from insta_wizard.web.sections.sections import (
     FriendshipsSection,
     LikesSection,
     NavigationSection,
+    UserSection,
 )
 
 __all__ = [
@@ -14,4 +15,5 @@ __all__ = [
     "FriendshipsSection",
     "LikesSection",
     "NavigationSection",
+    "UserSection",
 ]

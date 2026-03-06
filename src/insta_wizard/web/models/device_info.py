@@ -56,9 +56,9 @@ class BrowserDeviceInfo(DataClassDictMixin):
         return BrowserPreset.create(preset, **overrides)
 
     @classmethod
-    def random(cls, **kwargs) -> BrowserDeviceInfo:
+    def random(cls, **overrides) -> BrowserDeviceInfo:
         """Random device from all available presets."""
-        return BrowserPreset.random(**kwargs)
+        return BrowserPreset.random(**overrides)
 
     @property
     def user_agent(self) -> str:
@@ -158,7 +158,8 @@ class BrowserPreset(StrEnum):
         **overrides,
     ) -> BrowserDeviceInfo:
         preset = secrets.choice(list(_PRESETS))
-        return cls.create(preset, locale=locale, **overrides)
+        kwargs = {"locale": locale, **overrides}
+        return cls.create(preset, **kwargs)
 
 
 @cache

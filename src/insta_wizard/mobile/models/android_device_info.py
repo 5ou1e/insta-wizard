@@ -118,9 +118,9 @@ class AndroidDeviceInfo(DataClassDictMixin):
         return AndroidPreset.create(preset, **overrides)
 
     @classmethod
-    def random(cls, **kwargs) -> "AndroidDeviceInfo":
+    def random(cls, **overrides) -> "AndroidDeviceInfo":
         """Random device from all available presets."""
-        return AndroidPreset.random(**kwargs)
+        return AndroidPreset.random(**overrides)
 
 
 @dataclass(frozen=True, slots=True)
@@ -179,7 +179,8 @@ class AndroidPreset(StrEnum):
         **overrides,
     ) -> AndroidDeviceInfo:
         preset = secrets.choice(list(_HARDWARE_PROFILES))
-        return cls.create(preset, locale=locale, timezone=timezone, **overrides)
+        kwargs = {"locale": locale, "timezone": timezone, **overrides}
+        return cls.create(preset, **kwargs)
 
 
 _HARDWARE_PROFILES: dict[AndroidPreset, _AndroidHardwareProfile] = {

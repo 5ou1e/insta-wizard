@@ -31,25 +31,24 @@ import string
 from insta_wizard import MobileInstagramClient
 from insta_wizard.common.interfaces import EmailCodeSignupProvider, ManualEmailCodeSignupProvider
 
-STATE_FILE = "new_account_state.json"
 
 
 # ---------------------------------------------------------------------------
-# Option B: custom provider — plug in any email / temp-mail API here
+# Custom provider — plug in any email / temp-mail API here
 # ---------------------------------------------------------------------------
 class CustomEmailServiceProvider(EmailCodeSignupProvider):
     async def provide_email(self) -> str:
         # Create / obtain a temporary email address and return it.
         # Example: return await my_mail_api.create_inbox()
-        raise NotImplementedError("Implement email service integration here")
+        raise NotImplementedError()
 
     async def provide_code(self, email: str, from_datetime) -> str:
         # Poll your email service until the verification email arrives, then return the code.
         # Example: return await my_mail_api.wait_for_code(email, since=from_datetime)
-        raise NotImplementedError("Implement email service integration here")
+        raise NotImplementedError()
 
 
-# Helper — generate random account credentials
+# Generate random account credentials
 def generate_registration_info() -> dict:
     username = "".join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(24))
     password = secrets.token_urlsafe(12) + "!"
@@ -71,28 +70,25 @@ async def main() -> None:
     creds = generate_registration_info()
     print(f"Registration attempt with: username={creds['username']}, password={creds['password']}")
 
-    # Option A: interactive — asks for email address and code via input()
-    provider = ManualEmailCodeSignupProvider()
-
-    # Option B: automated email service (uncomment and implement CustomEmailServiceProvider)
-    # provider = CustomEmailServiceProvider()
+    provider = ManualEmailCodeSignupProvider() # or CustomEmailServiceProvider()
 
     async with MobileInstagramClient() as client:
-        created_user = await client.registration.register_account_email(
+        result = await client.registration.register_account_email(
             email_code_provider=provider,
             **creds,
         )
 
         print(
             f"Account created!"
-            f"\ncreated_user={created_user}"
+            f"\ncreated_user={result.created_user}"
+            f"\nemail={result.email}"
         )
 
         # Save the full client state so the session can be resumed later.
         state = client.dump_state()
-        with open(STATE_FILE, "w") as f:
+        username = creds['username']
+        with open(f"{username}.json", "w") as f:
             json.dump(state, f, indent=2)
-        print(f"Session state saved to {STATE_FILE!r}")
 
 
 if __name__ == "__main__":

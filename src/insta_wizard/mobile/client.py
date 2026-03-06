@@ -143,7 +143,7 @@ class MobileInstagramClient:
             settings=settings,
             logger=self._logger,
             proxy_url=proxy.url if proxy else None,
-            timeout=settings.max_network_wait_time,
+            timeout=settings.network_timeout,
         )
 
     def _build_bus(self) -> CommandBus:

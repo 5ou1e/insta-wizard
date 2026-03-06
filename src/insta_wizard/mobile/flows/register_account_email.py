@@ -26,11 +26,14 @@ from insta_wizard.mobile.models.state import (
     MobileClientState,
 )
 
-CreatedUser: TypeAlias = dict
-
 
 @dataclass(slots=True)
-class RegisterAccountEmailFlow(Command[CreatedUser]):
+class RegisterAccountEmailFlowResult:
+    created_user: dict
+    email: str
+
+@dataclass(slots=True)
+class RegisterAccountEmailFlow(Command[RegisterAccountEmailFlowResult]):
     """Register an account using the code from the Email"""
 
     username: str
@@ -43,7 +46,7 @@ class RegisterAccountEmailFlow(Command[CreatedUser]):
     email_code_provider: EmailCodeSignupProvider
 
 
-class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, CreatedUser]):
+class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, RegisterAccountEmailFlowResult]):
     def __init__(
         self,
         state: MobileClientState,
@@ -57,7 +60,7 @@ class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, C
     async def __call__(
         self,
         command: RegisterAccountEmailFlow,
-    ) -> CreatedUser:
+    ) -> RegisterAccountEmailFlowResult:
         username = command.username
         password = command.password
         first_name = command.first_name
@@ -136,7 +139,7 @@ class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, C
                 username=username,
                 password=password,
                 first_name=first_name,
-                signup_code=signup_code,
+                signup_code=signup_code, # noqa
                 email=email,
                 day=day,
                 month=month,
@@ -145,10 +148,13 @@ class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, C
                 waterfall_id=waterfall_id,
             )
         )
-        created_user = creation_result.get("created_user")
+        created_user = creation_result.get("created_user", {})
         if created_user:
             self.logger.info(f"Registration success! created_user={created_user}")
-            return created_user
+            return RegisterAccountEmailFlowResult(
+                created_user=created_user,
+                email=email,
+            )
 
         raise RegistrationError(
             msg=f"Unknown response for creation request, response={creation_result}"
