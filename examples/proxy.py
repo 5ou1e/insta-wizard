@@ -1,5 +1,5 @@
 """
-Proxy usage — works with both MobileInstagramClient and WebInstagramClient.
+Proxy usage — works with both MobileClient and WebClient.
 
 Pass a ProxyInfo via the `proxy` constructor parameter and every request
 will go through that proxy. You can also switch the proxy at runtime with
@@ -10,7 +10,7 @@ For automatic proxy rotation on network errors see proxy_rotation.py.
 
 import asyncio
 
-from insta_wizard import MobileInstagramClient, ProxyInfo
+from insta_wizard import MobileClient, ProxyInfo
 from insta_wizard.mobile.exceptions import NetworkError, TooManyRequestsError
 
 
@@ -35,7 +35,7 @@ proxy = ProxyInfo.from_string("http://user:pass@1.2.3.4:8080")
 
 
 async def main() -> None:
-    async with MobileInstagramClient(proxy=proxy) as client:
+    async with MobileClient(proxy=proxy) as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         user_id = "123456789"

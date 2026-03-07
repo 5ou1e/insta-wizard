@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import TypeAlias
 
 from insta_wizard.common.generators import generate_waterfall_id
 from insta_wizard.common.interfaces import EmailCodeSignupProvider
@@ -32,6 +31,7 @@ class RegisterAccountEmailFlowResult:
     created_user: dict
     email: str
 
+
 @dataclass(slots=True)
 class RegisterAccountEmailFlow(Command[RegisterAccountEmailFlowResult]):
     """Register an account using the code from the Email"""
@@ -46,7 +46,9 @@ class RegisterAccountEmailFlow(Command[RegisterAccountEmailFlowResult]):
     email_code_provider: EmailCodeSignupProvider
 
 
-class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, RegisterAccountEmailFlowResult]):
+class RegisterAccountEmailFlowHandler(
+    CommandHandler[RegisterAccountEmailFlow, RegisterAccountEmailFlowResult]
+):
     def __init__(
         self,
         state: MobileClientState,
@@ -139,7 +141,7 @@ class RegisterAccountEmailFlowHandler(CommandHandler[RegisterAccountEmailFlow, R
                 username=username,
                 password=password,
                 first_name=first_name,
-                signup_code=signup_code, # noqa
+                signup_code=signup_code,  # noqa
                 email=email,
                 day=day,
                 month=month,

@@ -8,11 +8,11 @@ which returns the full profile of the currently authenticated user.
 import asyncio
 import json
 
-from insta_wizard import WebInstagramClient
+from insta_wizard import WebClient
 
 
 async def main() -> None:
-    async with WebInstagramClient() as client:
+    async with WebClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         # Returns profile data for the authenticated user:

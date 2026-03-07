@@ -18,13 +18,13 @@ import asyncio
 import json
 import os
 
-from insta_wizard import WebInstagramClient
+from insta_wizard import WebClient
 
 STATE_FILE = "web_session_state.json"
 
 
 async def first_run() -> None:
-    async with WebInstagramClient() as client:
+    async with WebClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         state = client.dump_state()
@@ -36,7 +36,7 @@ async def subsequent_run() -> None:
     with open(STATE_FILE) as f:
         state = json.load(f)
 
-    async with WebInstagramClient() as client:
+    async with WebClient() as client:
         client.load_state(state)
 
         # The session is immediately active — no login needed.

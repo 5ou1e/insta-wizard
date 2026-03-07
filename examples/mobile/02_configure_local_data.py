@@ -17,7 +17,7 @@ Two typical starting points:
 
 import asyncio
 
-from insta_wizard import MobileClientLocalData, MobileInstagramClient
+from insta_wizard import MobileClientLocalData, MobileClient
 
 
 # ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ restored_local_data = MobileClientLocalData.create(
 
 async def main() -> None:
     # Using a restored session — no login call needed.
-    async with MobileInstagramClient(local_data=restored_local_data) as client:
+    async with MobileClient(local_data=restored_local_data) as client:
         me = await client.account.get_current_user()
         print(f"Resumed session for: {me['user']['username']}")
 

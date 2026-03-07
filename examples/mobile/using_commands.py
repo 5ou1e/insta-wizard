@@ -14,13 +14,13 @@ insta_wizard.mobile.flows for multi-step flows like BloksLogin).
 import asyncio
 import json
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 from insta_wizard.mobile.commands import UserInfo
 from insta_wizard.mobile.flows import BloksLogin
 
 
 async def main() -> None:
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
 
         # Login via BloksLogin flow
         # This is equivalent to client.login() but executed explicitly as a

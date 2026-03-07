@@ -4,13 +4,13 @@ Web client — follow and unfollow.
 
 import asyncio
 
-from insta_wizard import WebInstagramClient
+from insta_wizard import WebClient
 
 
 async def main() -> None:
     user_id = "123456789" # replace with a real numeric user_id
 
-    async with WebInstagramClient() as client:
+    async with WebClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         # Follow user
         await client.friendships.follow(user_id=user_id)

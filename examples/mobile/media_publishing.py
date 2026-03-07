@@ -15,7 +15,7 @@ Replace the file paths, credentials, and caption strings before running.
 import asyncio
 from pathlib import Path
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 from insta_wizard.common.entities.media import AlbumPhotoItem, AlbumVideoItem
 
 IMAGE_PATH = Path(r"C:\path\to\photo.jpg")
@@ -26,7 +26,7 @@ async def main() -> None:
     image = IMAGE_PATH.read_bytes()
     video = VIDEO_PATH.read_bytes()
 
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         # --- Photo (timeline) ------------------------------------------------

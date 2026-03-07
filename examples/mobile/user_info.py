@@ -11,11 +11,11 @@ Demonstrates:
 import asyncio
 import json
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 
 
 async def main() -> None:
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         # --- Your own profile ------------------------------------------------

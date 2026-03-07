@@ -16,7 +16,7 @@ For production use: generate once with option 1 or 2, persist the result
 import asyncio
 import uuid
 
-from insta_wizard import AndroidDeviceInfo, MobileInstagramClient
+from insta_wizard import AndroidDeviceInfo, MobileClient
 from insta_wizard.mobile.models.android_device_info import AndroidPreset
 
 
@@ -74,7 +74,7 @@ device_custom = AndroidDeviceInfo.create(
 
 async def main() -> None:
     # Pass whichever device you need via the `device` parameter.
-    async with MobileInstagramClient(device=device_preset) as client:
+    async with MobileClient(device=device_preset) as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         me = await client.account.get_current_user()
         print(f"Using device: {client.state.device.model}")

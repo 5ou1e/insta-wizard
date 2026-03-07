@@ -2,10 +2,11 @@ from insta_wizard.common.entities.media import AlbumPhotoItem, AlbumVideoItem
 from insta_wizard.common.interfaces import (
     CaptchaSolver,
     EmailCodeProvider,
+    EmailCodeSignupProvider,
     PhoneSmsCodeProvider,
     ProxyProvider,
     ResetPasswordLinkProvider,
-    SelfiePhotoProvider, EmailCodeSignupProvider,
+    SelfiePhotoProvider,
 )
 from insta_wizard.common.logger import (
     InstagramClientLogger,
@@ -14,7 +15,7 @@ from insta_wizard.common.logger import (
 )
 from insta_wizard.common.models.proxy import ProxyInfo
 from insta_wizard.common.transport.models import TransportResponse, TransportSettings
-from insta_wizard.mobile import MobileInstagramClient
+from insta_wizard.mobile import MobileClient, SyncMobileClient
 from insta_wizard.mobile.models.android_device_info import AndroidDeviceInfo
 from insta_wizard.mobile.models.local_data import MobileClientLocalData
 from insta_wizard.mobile.models.version import (
@@ -22,20 +23,22 @@ from insta_wizard.mobile.models.version import (
     InstagramAppVersionInfo,
     InstagramAppVersionInfoRegistry,
 )
-from insta_wizard.web import WebInstagramClient
+from insta_wizard.web import SyncWebClient, WebClient
 from insta_wizard.web.models.device_info import BrowserDeviceInfo
 from insta_wizard.web.models.local_data import WebClientLocalData
 
 __all__ = [
     # Mobile client
-    "MobileInstagramClient",
+    "MobileClient",
+    "SyncMobileClient",
     "AndroidDeviceInfo",
     "MobileClientLocalData",
     "InstagramAppVersion",
     "InstagramAppVersionInfo",
     "InstagramAppVersionInfoRegistry",
     # Web client
-    "WebInstagramClient",
+    "WebClient",
+    "SyncWebClient",
     "BrowserDeviceInfo",
     "WebClientLocalData",
     # Loggers

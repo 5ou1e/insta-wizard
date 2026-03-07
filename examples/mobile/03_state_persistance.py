@@ -21,14 +21,14 @@ import asyncio
 import json
 import os
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 
 STATE_FILE = "session_state.json"
 
 
 async def first_run() -> None:
     """Login, do some work, then save the state for future runs."""
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         me = await client.account.get_current_user()
@@ -46,7 +46,7 @@ async def subsequent_run() -> None:
     with open(STATE_FILE) as f:
         state = json.load(f)
 
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         client.load_state(state)
 
         # The session is immediately active — no login needed.

@@ -51,7 +51,7 @@ from insta_wizard.mobile.sections.graphql_www import GraphqlWWW
 from insta_wizard.mobile.sections.registration import RegistrationSection
 
 
-class MobileInstagramClient:
+class MobileClient:
     """Client for working with Instagram private API"""
 
     account: AccountSection
@@ -152,7 +152,7 @@ class MobileInstagramClient:
     async def execute(self, command: Command[R]) -> R:
         return await self._bus.execute(command)
 
-    async def __aenter__(self) -> MobileInstagramClient:
+    async def __aenter__(self) -> MobileClient:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):

@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from typing import TypeAlias
 
 from insta_wizard.common.generators import generate_waterfall_id
-from insta_wizard.common.interfaces import PhoneSmsCodeProvider, Number
+from insta_wizard.common.interfaces import Number, PhoneSmsCodeProvider
 from insta_wizard.common.logger import InstagramClientLogger
 from insta_wizard.mobile.commands.account.create_validated import (
     AccountCreateValidated,
@@ -35,6 +34,7 @@ class RegisterAccountSMSFlowResult:
     created_user: dict
     number: str | Number
 
+
 @dataclass(slots=True)
 class RegisterAccountSMSFlow(Command[RegisterAccountSMSFlowResult]):
     """Register an account via SMS (phone number)"""
@@ -49,7 +49,9 @@ class RegisterAccountSMSFlow(Command[RegisterAccountSMSFlowResult]):
     phone_code_provider: PhoneSmsCodeProvider
 
 
-class RegisterAccountSMSFlowHandler(CommandHandler[RegisterAccountSMSFlow, RegisterAccountSMSFlowResult]):
+class RegisterAccountSMSFlowHandler(
+    CommandHandler[RegisterAccountSMSFlow, RegisterAccountSMSFlowResult]
+):
     def __init__(
         self,
         state: MobileClientState,

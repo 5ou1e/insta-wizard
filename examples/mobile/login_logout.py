@@ -10,11 +10,11 @@ Use client.logout() to invalidate the session on Instagram's side.
 
 import asyncio
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 
 
 async def main() -> None:
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
 
         # The session is now active — you can call any authenticated method.

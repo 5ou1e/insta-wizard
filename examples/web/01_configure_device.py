@@ -1,7 +1,7 @@
 """
 Web client — configuring the browser device fingerprint.
 
-WebInstagramClient imitates a real browser. The BrowserDeviceInfo object
+WebClient imitates a real browser. The BrowserDeviceInfo object
 describes which browser, OS and viewport, locale and timezone the client presents to Instagram.
 
 If no device is passed, the client picks one automatically.
@@ -14,7 +14,7 @@ Three ways to configure it explicitly:
 
 import asyncio
 
-from insta_wizard import BrowserDeviceInfo, WebInstagramClient
+from insta_wizard import BrowserDeviceInfo, WebClient
 from insta_wizard.web.models.device_info import BrowserPreset
 
 
@@ -35,7 +35,7 @@ device_custom = BrowserDeviceInfo.from_preset(
 
 
 async def main() -> None:
-    async with WebInstagramClient(device=device_custom) as client:
+    async with WebClient(device=device_custom) as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         await client.account.get_edit_form_data()
 

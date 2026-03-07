@@ -16,7 +16,7 @@ Two typical starting points:
 
 import asyncio
 
-from insta_wizard import WebClientLocalData, WebInstagramClient
+from insta_wizard import WebClientLocalData, WebClient
 
 
 # Option 1 — fresh, empty session
@@ -34,7 +34,7 @@ restored_local_data = WebClientLocalData.create(
 
 async def main() -> None:
     # Using a restored session — no login call needed.
-    async with WebInstagramClient(local_data=restored_local_data) as client:
+    async with WebClient(local_data=restored_local_data) as client:
         await client.account.get_edit_form_data()
 
         # Inspect current cookies at any point.

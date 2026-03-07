@@ -4,11 +4,11 @@ Web client — login and logout.
 
 import asyncio
 
-from insta_wizard import WebInstagramClient
+from insta_wizard import WebClient
 
 
 async def main() -> None:
-    async with WebInstagramClient() as client:
+    async with WebClient() as client:
         # After login the session cookies are stored inside the client
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         # The session is now active — you can call any authenticated method.

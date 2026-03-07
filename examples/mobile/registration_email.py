@@ -28,7 +28,7 @@ import random
 import secrets
 import string
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 from insta_wizard.common.interfaces import EmailCodeSignupProvider, ManualEmailCodeSignupProvider
 
 
@@ -72,7 +72,7 @@ async def main() -> None:
 
     provider = ManualEmailCodeSignupProvider() # or CustomEmailServiceProvider()
 
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         result = await client.registration.register_account_email(
             email_code_provider=provider,
             **creds,

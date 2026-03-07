@@ -47,7 +47,7 @@ from insta_wizard.web.sections import (
 )
 
 
-class WebInstagramClient:
+class WebClient:
     """Client for working with Instagram web API"""
 
     account: AccountSection
@@ -148,7 +148,10 @@ class WebInstagramClient:
             cookie_jar=self.state.local_data.cookie_jar,
         )
 
-    async def __aenter__(self) -> "WebInstagramClient":
+    def _build_bus(self) -> CommandBus:
+        return CommandBus(factories=COMMAND_FACTORIES)
+
+    async def __aenter__(self) -> "WebClient":
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
@@ -156,9 +159,6 @@ class WebInstagramClient:
 
     async def close(self):
         await self._transport.close()
-
-    def _build_bus(self) -> CommandBus:
-        return CommandBus(factories=COMMAND_FACTORIES)
 
     async def execute(self, command: Command[R]) -> R:
         return await self._bus.execute(command)

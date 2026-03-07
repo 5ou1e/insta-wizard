@@ -14,44 +14,44 @@ class TestTransportSettingsDefaults:
     def test_default_construction_succeeds(self):
         s = TransportSettings()
         assert s.engine == "aiohttp"
-        assert s.max_network_wait_time == 30.0
-        assert s.max_retries_on_network_errors == 0
+        assert s.network_timeout == 30.0
+        assert s.network_error_retry_limit == 0
         assert s.proxy_provider is None
 
 
 class TestTransportSettingsValidation:
     def test_negative_wait_time_raises(self):
-        with pytest.raises(ValueError, match="max_network_wait_time"):
-            TransportSettings(max_network_wait_time=-1)
+        with pytest.raises(ValueError, match="network_timeout"):
+            TransportSettings(network_timeout=-1)
 
     def test_zero_wait_time_is_allowed(self):
-        s = TransportSettings(max_network_wait_time=0)
-        assert s.max_network_wait_time == 0
+        s = TransportSettings(network_timeout=0)
+        assert s.network_timeout == 0
 
     def test_negative_retries_raises(self):
-        with pytest.raises(ValueError, match="max_retries_on_network_errors"):
-            TransportSettings(max_retries_on_network_errors=-1)
+        with pytest.raises(ValueError, match="network_error_retry_limit"):
+            TransportSettings(network_error_retry_limit=-1)
 
     def test_zero_retries_is_allowed(self):
-        s = TransportSettings(max_retries_on_network_errors=0)
-        assert s.max_retries_on_network_errors == 0
+        s = TransportSettings(network_error_retry_limit=0)
+        assert s.network_error_retry_limit == 0
 
     def test_negative_delay_raises(self):
-        with pytest.raises(ValueError, match="delay_before_retries_on_network_errors"):
-            TransportSettings(delay_before_retries_on_network_errors=-0.1)
+        with pytest.raises(ValueError, match="network_error_retry_delay"):
+            TransportSettings(network_error_retry_delay=-0.1)
 
     def test_zero_delay_is_allowed(self):
-        s = TransportSettings(delay_before_retries_on_network_errors=0.0)
-        assert s.delay_before_retries_on_network_errors == 0.0
+        s = TransportSettings(network_error_retry_delay=0.0)
+        assert s.network_error_retry_delay == 0.0
 
     def test_change_proxy_without_provider_raises(self):
         with pytest.raises(ValueError, match="proxy_provider"):
-            TransportSettings(change_proxy_after_all_failed_attempts=True)
+            TransportSettings(change_proxies=True)
 
     def test_change_proxy_with_provider_is_valid(self):
         provider = AsyncMock()
         s = TransportSettings(
-            change_proxy_after_all_failed_attempts=True,
+            change_proxies=True,
             proxy_provider=provider,
         )
         assert s.proxy_provider is provider

@@ -261,10 +261,11 @@ class MobileRequester:
         return data
 
     async def _send(self, request: HttpRequest) -> tuple[TransportResponse, int]:
-        start = asyncio.get_event_loop().time()
+        loop = asyncio.get_running_loop()
+        start = loop.time()
         try:
             resp = await self._transport.send(request)
-            elapsed_ms = int((asyncio.get_event_loop().time() - start) * 1000)
+            elapsed_ms = int((loop.time() - start) * 1000)
             return resp, elapsed_ms
 
         except (TransportTimeoutError, TransportNetworkError) as e:

@@ -27,7 +27,7 @@ import random
 import secrets
 import string
 
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 from insta_wizard.common.interfaces import ManualPhoneSmsCodeProvider, PhoneSmsCodeProvider
 
 
@@ -71,7 +71,7 @@ async def main() -> None:
 
     print(f"Registration attempt with: username={creds['username']}, password={creds['password']}")
 
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         result = await client.registration.register_account_sms(
             phone_code_provider=provider,
             **creds,

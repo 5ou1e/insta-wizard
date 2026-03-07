@@ -1,6 +1,9 @@
 from insta_wizard.common.interfaces import EmailCodeSignupProvider, PhoneSmsCodeProvider
 from insta_wizard.mobile.flows import RegisterAccountSMSFlow
-from insta_wizard.mobile.flows.register_account_email import RegisterAccountEmailFlow, RegisterAccountEmailFlowResult
+from insta_wizard.mobile.flows.register_account_email import (
+    RegisterAccountEmailFlow,
+    RegisterAccountEmailFlowResult,
+)
 from insta_wizard.mobile.flows.register_account_sms import RegisterAccountSMSFlowResult
 from insta_wizard.mobile.sections.api import BaseSection
 

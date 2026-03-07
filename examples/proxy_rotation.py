@@ -1,5 +1,5 @@
 """
-Automatic proxy rotation — works with both MobileInstagramClient and WebInstagramClient.
+Automatic proxy rotation — works with both MobileClient and WebClient.
 
 When the transport encounters a network error (timeout / connection failure)
 during request execution, it works through the following sequence:
@@ -26,7 +26,7 @@ from the very first failure.
 
 import asyncio
 
-from insta_wizard import MobileInstagramClient, ProxyInfo, TransportSettings, WebInstagramClient
+from insta_wizard import MobileClient, ProxyInfo, TransportSettings, WebClient
 from insta_wizard.common.interfaces import ProxyProvider
 
 
@@ -60,7 +60,7 @@ def make_transport() -> TransportSettings:
 
 
 async def mobile_example() -> None:
-    async with MobileInstagramClient(
+    async with MobileClient(
         transport_settings=make_transport(),
         proxy=ProxyInfo.from_string("62.33.207.196:3128:user0:pass0"),  # optional starting proxy
     ) as client:
@@ -69,7 +69,7 @@ async def mobile_example() -> None:
 
 
 async def web_example() -> None:
-    async with WebInstagramClient(
+    async with WebClient(
         transport_settings=make_transport(),
         proxy=ProxyInfo.from_string("62.33.207.196:3128:user0:pass0"),  # optional starting proxy
     ) as client:

@@ -1,9 +1,6 @@
 import json
 
-import orjson
-
 from insta_wizard.common.logger import InstagramClientLogger
-from insta_wizard.common.utils import dumps
 from insta_wizard.web.commands.account.check_age_eligibility import (
     CheckAgeEligibility,
 )
@@ -247,13 +244,13 @@ class UserSection:
 
     async def user_short_gql(self, user_id: str) -> dict:
         """Get short user info via web GraphQL endpoint (query_hash)"""
-        variables = {'user_id': str(user_id)}
+        variables = {"user_id": str(user_id)}
         data = await self._requester.execute(
             "GET",
             self._GRAPHQL_URL,
             params={
                 "doc_id": "18113378221181848",
-                "variables": json.dumps(variables, separators=(',', ':')),
+                "variables": json.dumps(variables, separators=(",", ":")),
             },
         )
         return data["data"]
@@ -263,13 +260,9 @@ class UserSection:
             "GET",
             url="https://www.instagram.com/api/v1/users/web_profile_info/",
             params={"username": username},
-            # extra_headers={
-            #     "referer": "https://www.instagram.com/hakuna_matate/",
-            #     "x-ig-www-claim": "hmac.AR06ue_X_T4AgP3XRCrQgfCdItT6t76CC8HhXKzUYvwo6NQW",
-            #     "x-ig-app-id": "936619743392459"
-            # }
         )
         return data["data"]
+
 
 class NavigationSection(BaseSection):
     async def navigate(self, url: str) -> str:

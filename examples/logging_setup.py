@@ -1,5 +1,5 @@
 """
-Logging configuration — works with both MobileInstagramClient and WebInstagramClient.
+Logging configuration — works with both MobileClient and WebClient.
 
 Both clients use StdLoggingInstagramClientLogger by default, which routes
 all output through Python's standard `logging` module under the logger name
@@ -21,9 +21,9 @@ import logging
 
 from insta_wizard import (
     InstagramClientLogger,
-    MobileInstagramClient,
+    MobileClient,
     NoOpInstagramClientLogger,
-    WebInstagramClient,
+    WebClient,
 )
 from insta_wizard.common.transport.models import TransportResponse
 
@@ -41,7 +41,7 @@ logging.getLogger("insta_wizard.client").setLevel(logging.DEBUG)
 
 async def option_1_default_logger() -> None:
     # No logger= passed — StdLoggingInstagramClientLogger is used automatically.
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         await client.account.get_current_user()
 
@@ -76,12 +76,12 @@ class MyLogger(InstagramClientLogger):
 async def option_2_custom_logger() -> None:
     logger = MyLogger()
 
-    async with MobileInstagramClient(logger=logger) as client:
+    async with MobileClient(logger=logger) as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         await client.account.get_current_user()
 
-    # The same logger instance works with WebInstagramClient too.
-    async with WebInstagramClient(logger=logger) as client:
+    # The same logger instance works with WebClient too.
+    async with WebClient(logger=logger) as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         await client.account.get_edit_form_data()
 
@@ -93,7 +93,7 @@ async def option_2_custom_logger() -> None:
 # =============================================================================
 
 async def option_3_no_logging() -> None:
-    async with MobileInstagramClient(logger=NoOpInstagramClientLogger()) as client:
+    async with MobileClient(logger=NoOpInstagramClientLogger()) as client:
         await client.login("YOUR_USERNAME", "YOUR_PASSWORD")
         await client.account.get_current_user()
 

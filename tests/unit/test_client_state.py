@@ -1,18 +1,18 @@
 """
-Тесты для MobileInstagramClient.dump_state() / load_state().
+Тесты для MobileClient.dump_state() / load_state().
 Внешних сервисов не требует.
 """
 
 import pytest
 
 from insta_wizard.common.exceptions import InstaWizardError
-from insta_wizard.mobile.client import MobileInstagramClient
+from insta_wizard.mobile.client import MobileClient
 from insta_wizard.mobile.models.android_device_info import AndroidDeviceInfo, AndroidPreset
 
 
 @pytest.fixture()
 async def client():
-    c = MobileInstagramClient(
+    c = MobileClient(
         device=AndroidDeviceInfo.from_preset(AndroidPreset.SAMSUNG_A16, locale="ru_RU")
     )
     yield c
@@ -27,7 +27,7 @@ class TestDumpLoadStateValid:
     async def test_load_restores_device(self, client):
         state = client.dump_state()
 
-        other = MobileInstagramClient(
+        other = MobileClient(
             device=AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale="de_DE")
         )
         assert other.state.device.model != client.state.device.model
@@ -43,7 +43,7 @@ class TestDumpLoadStateValid:
 
         state = client.dump_state()
 
-        other = MobileInstagramClient()
+        other = MobileClient()
         other.load_state(state)
         assert other.state.local_data.user_id == "999888777"
         assert other.state.local_data.mid == "test_mid_xyz"
@@ -51,7 +51,7 @@ class TestDumpLoadStateValid:
 
     async def test_load_restores_version(self, client):
         state = client.dump_state()
-        other = MobileInstagramClient()
+        other = MobileClient()
         other.load_state(state)
         assert other.state.version_info.version == client.state.version_info.version
         await other.close()
@@ -60,7 +60,7 @@ class TestDumpLoadStateValid:
         """После load_state заголовки должны содержать UA нового устройства."""
         state = client.dump_state()
 
-        other = MobileInstagramClient(device=AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8))
+        other = MobileClient(device=AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8))
         other.load_state(state)
 
         ua = other._requester.api_headers()["User-Agent"]
@@ -74,7 +74,7 @@ class TestDumpLoadStateValid:
         client.state.local_data.user_id = "123"
         state = orjson.loads(orjson.dumps(client.dump_state()))
 
-        other = MobileInstagramClient()
+        other = MobileClient()
         other.load_state(state)
         assert other.state.local_data.user_id == "123"
         assert other.state.device.model == client.state.device.model

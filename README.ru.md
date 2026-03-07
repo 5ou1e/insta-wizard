@@ -1,18 +1,16 @@
-# InstaWizard
-<small>🌐 **Языки:** [English](README.md) · Русский</small>
+<p align="center">
+  <img src="logo.png" width="50%" alt="InstaWizard">
+</p>
 
-[![PyPI](https://img.shields.io/pypi/v/insta-wizard)](https://pypi.org/project/insta-wizard/)
-[![Python](https://img.shields.io/pypi/pyversions/insta-wizard)](https://pypi.org/project/insta-wizard/)
-[![License](https://img.shields.io/github/license/5ou1e/insta-wizard)](https://github.com/5ou1e/insta-wizard/blob/main/LICENSE)
+<p align="center">Python-клиент для работы с приватным мобильным и веб API Instagram — с синхронным и асинхронным интерфейсом.</p>
 
-Асинхронная Python-библиотека для работы с приватным API Instagram.
+<p align="center">
+  <a href="https://pypi.org/project/insta-wizard/"><img src="https://img.shields.io/pypi/v/insta-wizard" alt="PyPI"></a>
+  <a href="https://pypi.org/project/insta-wizard/"><img src="https://img.shields.io/pypi/pyversions/insta-wizard" alt="Python"></a>
+  <a href="https://github.com/5ou1e/insta-wizard/blob/main/LICENSE"><img src="https://img.shields.io/github/license/5ou1e/insta-wizard" alt="License"></a>
+</p>
 
-Управляйте профилями, подписывайтесь на пользователей, отправляйте сообщения в Direct, работайте с медиа и комментариями — через чистый, типизированный, полностью асинхронный интерфейс.
-
-Библиотека предоставляет два клиента:
-
-- **`MobileInstagramClient`** — имитирует официальное Android-приложение (приватный мобильный API, v374)
-- **`WebInstagramClient`** — имитирует поведение браузера (веб-API Instagram)
+<p align="center"><small>🌐 <strong>Языки:</strong> <a href="README.md">English</a> · Русский</small></p>
 
 ---
 
@@ -20,12 +18,16 @@
 
 ### Общее
 
-- ⚡ **Полностью асинхронный** — asyncio + aiohttp
-- 💾 **Сохранение сессии** — `dump_state()` / `load_state()`, без повторной авторизации при каждом запуске
-- 🖥️ **Отпечатки устройств и браузеров** — встроенные пресеты и случайная генерация
-- 🔐 **Обнаружение и обработка Checkpoint / Challenge**
+- ⚡ **Async & sync** — нативные async-клиенты и синхронные обёртки из коробки
+- 💻 **Мобильный и веб-клиенты**
+  - `MobileClient` / `SyncMobileClient` — приватный мобильный API (имитирует официальное Android-приложение)
+  - `WebClient` / `SyncWebClient` — веб-API (имитирует поведение браузера)
 - 🌐 **Поддержка HTTP-прокси** — статический или с автоматической ротацией через провайдер
+- 📱 **Отпечатки устройств и браузеров** — встроенные пресеты и случайная генерация
+- 💾 **Сохранение сессии** — `dump_state()` / `load_state()`, без повторной авторизации при каждом запуске
 - 📋 **Интеграция со стандартным модулем `logging`** из коробки
+
+Весь функционал ниже доступен в async и sync клиентах.
 
 ### Мобильный клиент
 
@@ -67,15 +69,15 @@ pip install git+https://github.com/5ou1e/insta-wizard.git
 
 ## Быстрый старт
 
-**Mobile:**
+**Mobile (async):**
 
 ```python
 import asyncio
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 
 async def main() -> None:
-    async with MobileInstagramClient() as client:
-        await client.account.login("USERNAME", "PASSWORD")
+    async with MobileClient() as client:
+        await client.login("USERNAME", "PASSWORD")
 
         me = await client.account.get_current_user()
         print("Вы вошли как:", me.username)
@@ -86,20 +88,35 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
-**Web:**
+**Web (async):**
 
 ```python
 import asyncio
-from insta_wizard import WebInstagramClient
+from insta_wizard import WebClient
 
 async def main() -> None:
-    async with WebInstagramClient() as client:
+    async with WebClient() as client:
         await client.login("USERNAME", "PASSWORD")
 
         await client.likes.like("MEDIA_ID")
         await client.likes.unlike("MEDIA_ID")
 
 asyncio.run(main())
+```
+
+**Sync — без asyncio:**
+
+```python
+from insta_wizard import SyncMobileClient
+
+with SyncMobileClient() as client:
+    client.login("USERNAME", "PASSWORD")
+
+    me = client.account.get_current_user()
+    print("Вы вошли как:", me.username)
+
+    user = client.users.get_info_by_username("instagram")
+    client.friendships.follow(user.pk)
 ```
 
 ---
@@ -109,12 +126,12 @@ asyncio.run(main())
 Клиент поддерживает работу через прокси. На данный момент поддерживаются только HTTP/HTTPS прокси — с авторизацией и без.
 
 ```python
-from insta_wizard import MobileInstagramClient, ProxyInfo
+from insta_wizard import MobileClient, ProxyInfo
 
 # Поддерживаемые форматы: "1.2.3.4:8080", "user:pass@1.2.3.4:8080", "1.2.3.4:8080:user:pass"
 proxy = ProxyInfo.from_string("user:pass@1.2.3.4:8080")
 
-async with MobileInstagramClient(proxy=proxy) as client:
+async with MobileClient(proxy=proxy) as client:
     ...
     await client.set_proxy(ProxyInfo.from_string("..."))  # сменить прокси во время работы
     await client.set_proxy(None)                          # или отключить
@@ -148,9 +165,10 @@ settings = TransportSettings(
     proxy_provider=MyProxyPool(),
 )
 
-async with MobileInstagramClient(transport_settings=settings) as client:
+async with MobileClient(transport_settings=settings) as client:
     ...
 ```
+После исчерпания всех попыток клиент вызывает `proxy_provider.provide_new()` и повторяет запрос с новым прокси.
 
 ---
 
@@ -161,14 +179,14 @@ async with MobileInstagramClient(transport_settings=settings) as client:
 **Mobile (Android):**
 
 ```python
-from insta_wizard import AndroidDeviceInfo, MobileInstagramClient
+from insta_wizard import AndroidDeviceInfo, MobileClient
 from insta_wizard.mobile.models.android_device_info import AndroidPreset
 
 device = AndroidDeviceInfo.from_preset(AndroidPreset.SAMSUNG_A16)
 device = AndroidDeviceInfo.from_preset(AndroidPreset.PIXEL_8, locale="en_US", timezone="America/New_York")
 device = AndroidDeviceInfo.random()  # случайный пресет из реально существующих Android-устройств
 
-async with MobileInstagramClient(device=device) as client:
+async with MobileClient(device=device) as client:
     ...
 ```
 
@@ -177,13 +195,13 @@ async with MobileInstagramClient(device=device) as client:
 **Web (браузер):**
 
 ```python
-from insta_wizard import BrowserDeviceInfo, WebInstagramClient
+from insta_wizard import BrowserDeviceInfo, WebClient
 from insta_wizard.web.models.device_info import BrowserPreset
 
 device = BrowserDeviceInfo.from_preset(BrowserPreset.CHROME_143_WIN11)
 device = BrowserDeviceInfo.random()  # случайный пресет из реально существующих конфигураций браузеров
 
-async with WebInstagramClient(device=device) as client:
+async with WebClient(device=device) as client:
     ...
 ```
 
@@ -197,11 +215,11 @@ async with WebInstagramClient(device=device) as client:
 
 ```python
 import asyncio, json
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 
 async def main() -> None:
-    async with MobileInstagramClient() as client:
-        await client.account.login("USERNAME", "PASSWORD")
+    async with MobileClient() as client:
+        await client.login("USERNAME", "PASSWORD")
 
         with open("session.json", "w", encoding="utf-8") as f:
             json.dump(client.dump_state(), f)
@@ -213,10 +231,10 @@ asyncio.run(main())
 
 ```python
 import asyncio, json
-from insta_wizard import MobileInstagramClient
+from insta_wizard import MobileClient
 
 async def main() -> None:
-    async with MobileInstagramClient() as client:
+    async with MobileClient() as client:
         with open("session.json", encoding="utf-8") as f:
             client.load_state(json.load(f))
 
@@ -242,9 +260,9 @@ logging.basicConfig(level=logging.INFO)
 Для использования **собственного логгера** или отключения логирования:
 
 ```python
-from insta_wizard import MobileInstagramClient, NoOpInstagramClientLogger
+from insta_wizard import MobileClient, NoOpInstagramClientLogger
 
-async with MobileInstagramClient(logger=NoOpInstagramClientLogger()) as client:
+async with MobileClient(logger=NoOpInstagramClientLogger()) as client:
     ...
 ```
 
@@ -282,7 +300,6 @@ print_help()  # выводит таблицу: название команды, 
 
 - [ ] Прохождение Login Checkpoint
 - [ ] Расширение покрытия API
-- [ ] Синхронная обёртка клиента
 
 ---
 
