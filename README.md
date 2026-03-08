@@ -8,7 +8,7 @@
   <a href="https://pypi.org/project/insta-wizard/"><img src="https://img.shields.io/pypi/v/insta-wizard?cacheSeconds=0" alt="PyPI"></a>
   <a href="https://pypi.org/project/insta-wizard/"><img src="https://img.shields.io/pypi/pyversions/insta-wizard" alt="Python"></a>
   <a href="https://github.com/5ou1e/insta-wizard/blob/main/LICENSE"><img src="https://img.shields.io/github/license/5ou1e/insta-wizard" alt="License"></a>
-</p>
+  <a href="https://github.com/5ou1e/insta-wizard/actions/workflows/tests.yml"><img src="https://github.com/5ou1e/insta-wizard/actions/workflows/tests.yml/badge.svg" alt="Tests"></a></p>
 
 <p align="center"><small>🌐 <strong>Languages:</strong> English · <a href="README.ru.md">Русский</a></small></p>
 
