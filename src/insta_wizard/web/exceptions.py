@@ -44,7 +44,7 @@ class NetworkError(WebClientError):
     message: str
 
     def __str__(self) -> str:
-        return "Network error"
+        return self.message
 
 
 @dataclass(kw_only=True, slots=True)

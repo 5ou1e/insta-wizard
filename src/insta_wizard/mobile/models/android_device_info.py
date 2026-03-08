@@ -124,7 +124,7 @@ class AndroidDeviceInfo(DataClassDictMixin):
 
 
 @dataclass(frozen=True, slots=True)
-class _AndroidHardwareProfile:
+class _AndroidHardwareProfile(DataClassDictMixin):
     manufacturer: str
     brand: str
     model: str

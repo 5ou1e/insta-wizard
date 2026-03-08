@@ -6,7 +6,7 @@ from insta_wizard.common.models.checkpoint import (
     UfacCheckpoint,
     UfacStep,
     UnknownCheckpoint,
-    VettedDeltaCheckpoint,
+    VettedDeltaCheckpoint, LegacyForceSetNewPasswordFormCheckpoint,
 )
 from insta_wizard.common.utils import iter_strings
 from insta_wizard.web.commands import BloksNavigationTakeChallenge, ChallengeWeb
@@ -35,6 +35,8 @@ class ChallengeSection(BaseSection):
             return VettedDeltaCheckpoint()
         if challenge_type == "ScrapingWarningForm":
             return ScrapingWarningCheckpoint()
+        if challenge_type == "LegacyForceSetNewPasswordForm":
+            return LegacyForceSetNewPasswordFormCheckpoint()
 
         # if challenge_type == "UFACWWWBloksScreen":
         #     return UfacCheckpoint()

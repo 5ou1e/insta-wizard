@@ -8,7 +8,7 @@ class CheckpointType(StrEnum):
     UFAC_WWW_BLOKS = "UFAC_WWW_BLOKS"
     VETTED_DELTA = "VETTED_DELTA"  # delta_login_review
     SCRAPING_WARNING = "SCRAPING_WARNING"
-
+    FORCE_SET_NEW_PASSWORD = "FORCE_SET_NEW_PASSWORD"
 
 class UnknownCheckpointStep(StrEnum):
     UNKNOWN = "UNKNOWN"
@@ -32,6 +32,8 @@ class VettedDeltaStep(StrEnum):
 class ScrapingWarningStep(StrEnum):
     UNKNOWN = "UNKNOWN"
 
+class LegacyForceSetNewPasswordFormStep(StrEnum):
+    UNKNOWN = "UNKNOWN"
 
 @dataclass(slots=True)
 class UfacCheckpoint:
@@ -50,6 +52,10 @@ class ScrapingWarningCheckpoint:
     type: ClassVar[CheckpointType] = CheckpointType.SCRAPING_WARNING
     step: ScrapingWarningStep = ScrapingWarningStep.UNKNOWN
 
+@dataclass(slots=True)
+class LegacyForceSetNewPasswordFormCheckpoint:
+    type: ClassVar[CheckpointType] = CheckpointType.FORCE_SET_NEW_PASSWORD
+    step: LegacyForceSetNewPasswordFormStep = LegacyForceSetNewPasswordFormStep.UNKNOWN
 
 @dataclass(kw_only=True, slots=True)
 class UnknownCheckpoint:
@@ -59,5 +65,5 @@ class UnknownCheckpoint:
 
 
 Checkpoint: TypeAlias = (
-    UnknownCheckpoint | UfacCheckpoint | VettedDeltaCheckpoint | ScrapingWarningCheckpoint
+    UnknownCheckpoint | UfacCheckpoint | VettedDeltaCheckpoint | ScrapingWarningCheckpoint | LegacyForceSetNewPasswordFormCheckpoint
 )

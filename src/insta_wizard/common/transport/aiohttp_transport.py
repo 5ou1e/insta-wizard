@@ -71,6 +71,7 @@ class AioHttpTransport(HttpTransport):
                 cookies=request.cookies,
                 proxy=self._proxy_url,
                 allow_redirects=follow_redirects,
+                ssl=False if not self._settings.ssl_verify else None,
             ) as resp:
                 content = await resp.read()
 
@@ -85,7 +86,7 @@ class AioHttpTransport(HttpTransport):
         except TimeoutError as e:
             raise TransportTimeoutError("Request timeout") from e
         except aiohttp.ClientError as e:
-            raise TransportNetworkError(f"aiohttp error: {e}") from e
+            raise TransportNetworkError(f"{e}") from e
 
     async def close(self) -> None:
         await self._session.close()

@@ -53,6 +53,7 @@ class TransportSettings:
     change_proxies: bool = False
     proxy_change_limit: int | None = None
     proxy_provider: ProxyProvider | None = None
+    ssl_verify: bool = True
 
     def __post_init__(self) -> None:
         if self.network_timeout < 0:
